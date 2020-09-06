@@ -1,5 +1,5 @@
 import React,{useState} from 'react';
-import { fade, makeStyles } from '@material-ui/core/styles';
+import {makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -7,7 +7,7 @@ import InputBase from '@material-ui/core/InputBase';
 import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
+// import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
@@ -15,14 +15,16 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import mainLogo from '../images/Logo.png'
 import HomeIcon from '@material-ui/icons/Home';
-import { Icon } from '@material-ui/core';
+// import { Icon } from '@material-ui/core';
 import {Button } from '@material-ui/core'
 import axios from 'axios'
+import {Link, Router} from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     navColor:{
-        // backgroundColor:'#8e9fff',
-        backgroundColor:'#606060FF',
+        backgroundColor:'#00d5ff86',
+        // backgroundColor:'transparent',
+        backdropFilter:'blur(8px)'
     },
   grow: {
     flexGrow: 1,
@@ -35,6 +37,17 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('sm')]: {
       display: 'block',
     },
+  },  
+  logoResponsive:{
+    [theme.breakpoints.down('sm')]: {
+      width: 110,
+      height: 40,
+      marginLeft: -40,  
+    },
+  } ,
+  allBlack:{
+    backgroundColor:'black',
+    color:'white'
   },
   search: {
     position: 'relative',
@@ -42,6 +55,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'white',
     '&:hover': {
       backgroundColor: '#f5f5f5',
+      // backgroundColor: '#000',
+
     },
     marginRight: theme.spacing(2),
     marginLeft: 0,
@@ -51,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
       width: 'auto',
     },
   },
+
   searchIcon: {
     padding: theme.spacing(0, 2),
     height: '100%',
@@ -90,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navbar() {
   const [searchUser,setSearchUser] =useState('');
-
+  
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -127,7 +143,7 @@ export default function Navbar() {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>Log Out</MenuItem>
+      <Link to="/"> <MenuItem onClick={handleMenuClose}>Log Out</MenuItem></Link>
     </Menu>
   );
 
@@ -142,12 +158,16 @@ export default function Navbar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton color="inherit">
-            <HomeIcon/>
-        </IconButton>
-            <p>Home</p>
-      </MenuItem>
+      {/* <Router> */}
+      <Link to="/">
+        <MenuItem>
+          <IconButton color="inherit">
+              <HomeIcon/>
+          </IconButton>
+              <p>Home</p>
+        </MenuItem>
+      </Link>
+      {/* </Router> */}
 
       <MenuItem>
         <IconButton aria-label="show 4 new mails" color="inherit">
@@ -184,8 +204,8 @@ export default function Navbar() {
 
   return (
     <div className={classes.grow}>
-      <AppBar position="fixed">
-        <Toolbar className={classes.navColor}>
+      <AppBar position="fixed" className={classes.navColor}>
+        <Toolbar >
           <IconButton
             edge="start"
             className={classes.menuButton}
@@ -194,52 +214,49 @@ export default function Navbar() {
           >
             {/* <MenuIcon /> */}
           </IconButton>
-          <img src={mainLogo} alt="logo"/>
+          <img src={mainLogo} alt="logo" className={classes.logoResponsive} height='40px' width='auto' />
 
           {/* <Typography className={classes.title} noWrap>
           </Typography> */}
           <div className={classes.search}>
             <InputBase
               placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput,
-              }}
-              // }}setSearchUser(val.target.value)
               onChange={(val)=>{
-                if(!val.target.value) 
-                setSearchUser('');
-                else
-                axios.get(`http://localhost:4000/show/${val.target.value}`).then(d=>setSearchUser(d.data[0]));
+                  setSearchUser(val.target.value);
+                  console.log(searchUser)
               }}
-              style={{color:'black'}}
+              style={{color:'black',padding:'3px 10px'}}
               inputProps={{ 'aria-label': 'search' }}
               
             />
 
 
           </div>
-              {/* <Button variant="outlined" color="primary" style={{border:"1px solid green"}} onClick={
+              <Button variant="outlined" color="primary" style={{border:"1px solid white"}} onClick={
                 (search)=>{
                 const user =searchUser;
                 console.log(user)
                 axios.get(`http://localhost:4000/show/${user}`).then(d=>setSearchUser(d.data[0]));
               }
-              }><SearchIcon style={{color:'white',}}/></Button> */}
+              }><SearchIcon style={{color:'black',}}/></Button>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
             <IconButton color="inherit">
-                <HomeIcon style={{color:'white',fontSize:28}}/> 
+                {/* <Router> */}
+                  <Link to="/">
+                   <HomeIcon style={{color:'black',fontSize:28}}/> 
+                  </Link>
+                {/* </Router> */}
             </IconButton>
             <IconButton aria-label="show 4 new mails" color="inherit">
               {/* //! */}
               <Badge badgeContent={400} color="secondary">
-                <MailIcon />
+                <MailIcon style={{color:'black'}}/>
               </Badge>
             </IconButton>
             <IconButton aria-label="show 17 new notifications" color="inherit">
               <Badge badgeContent={200} color="secondary">
-                <NotificationsIcon />
+                <NotificationsIcon style={{color:'black'}}/>
               </Badge>
             </IconButton>
             <IconButton
@@ -250,7 +267,7 @@ export default function Navbar() {
               onClick={handleProfileMenuOpen}
               color="inherit"
             >
-              <AccountCircle />
+              <AccountCircle style={{color:'black'}}/>
             </IconButton>
           </div>
           <div className={classes.sectionMobile}>
@@ -261,7 +278,7 @@ export default function Navbar() {
               onClick={handleMobileMenuOpen}
               color="inherit"
             >
-              <MoreIcon />
+              <MoreIcon style={{color:'black'}}/>
             </IconButton>
           </div>
         </Toolbar>
