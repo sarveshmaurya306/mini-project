@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react'
 import Navbar from './Navbar'
-import axios from 'axios'
+// import axios from 'axios'
 import Join from './Join'
+import Login from './Login'
+import Footer from './Footer'
 import Home from './Home'
+import Myprofile from './Myprofile'
+
+
+
 import {
     BrowserRouter as Router,
     Switch,
@@ -12,36 +18,38 @@ import {
 
   
 export default function App() {
-    const [user ,setUser]= useState();
 
-    useEffect(()=>{
-        axios.get('http://localhost:4000/show').then(d=>{console.log(d);setUser(d)})
-    },[])
 
     return (
         <Router>
+        
             <Switch>
-                <Route exact path="/">
-                    <Home/>
-                    {/* <p style={{marginBottom:0,height:'100vh'}}>Copyright to KIET Talks</p> */}
+                <Route exact path="/" >
+
+                    <Login />
 
                 </Route>
+
+
                 <Route exact path="/join">
-                    <Navbar/>
+
                     <Join/>
-                    <br/>
-                    <br/><br/><br/>
-                    <h1>Total User...</h1><br/><br/>
-                    {
-                        !user?'':user.data.map((item,index)=><div key={index}>
-                            <p>id: = {item._id}</p>
-                            <p>name: = {item.name}</p><br/>
-                            <p>email: = {item.email}</p><br/>
-                            <p>password: = {item.password}</p><hr/><br/><br/>
-                            </div>)
-                    }
+
+                </Route>
+
+
+                <Route exact path="/home">
+                   <Navbar/>
+                   <Home/>
+                </Route>
+                <Route exact path="/profile">
+                    // <Navbar />
+                    <Myprofile />
                 </Route>
             </Switch>
-        </Router>
+
+            {/*<Footer/>*/}
+
+        </Router>                    
     )
 }

@@ -1,55 +1,80 @@
-import React from 'react'
+import React, {useEffect, useState} from "react";
+
 import backgroundImg from '../images/back.png'
-import logo from '../images/Logo.png';
-import {Button, Typography} from '@material-ui/core'
-import {Link} from 'react-router-dom'
-import useStyles from './Styles'
-export default function Home() {
-    const classes = useStyles();
 
-    return (
-        <>
-            <div style={{
-                position:"absolute",
-                background:`url(${backgroundImg}) `,
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'cover',
-                backgroundPosition:'center',
-                // height:'',
-                width:'100vw',
-                // paddingBottom:'40%',
-                // overflowX:'hidden'
-                }}>
-                    <div className="container" style={{display:'flex',justifyContent:'space-between',marginTop:22,}}>
-                        <img src={logo} style={{
-                        width: 117,
-                        height:'auto'
-                    }}/>
-                    <Link to="/join">
-                        <Button variant="outlined" color="primary" className={classes.main_button}>Join Us</Button>
-                    </Link>
-                    </div>
-                    <div className="container">
+import Pagination from '@material-ui/lab/Pagination';
 
-                        <div className="row " style={{marginTop:'7%'}}>
-                            <div className={` col-sm-12 col-md-6 d-none mt-5 mb-3 d-md-block ${classes.home_text} `}>
-                                Place where Kietins will talk to each other and get solution of their problems.
-                            </div>
-                            <div className="col-sm-12 col-md-6">
-                                <form className={`${classes.form} `} onSubmit={()=>{  }}>
-                                    <div className="p-5">
-                                        <div className={classes.form_header}>Login Here</div>
-                                            <input type="text" placeholder="Username" className="mt-3 mb-5 p-2" style={{backgroundColor:'transparent',border:'2px solid black',borderRadius:'8px'}}/><br/>
-                                            <input type="password" placeholder="Password" className="mb-5 p-2" style={{backgroundColor:'transparent',border:'2px solid black',borderRadius:'8px'}}/><br/>
-                                        <Button variant="outlined" color="primary" type="submit" className={classes.main_button}>Login</Button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
 
-                    </div>
-                    <br/><br/><br/> <br/>   <br/><br/><br/> <br/>    <br/>    <br/>   
-                </div>
-        </>
-    )
+import Cards from './Cards.jsx'
+import Footer from './Footer.jsx'
+import axios from 'axios'
+import  { useHistory } from 'react-router-dom'
+
+export default function RecipeReviewCard() {
+
+  const [status, setStatus]=useState(false);
+  const [userData, setUserData]=useState()
+  const history= useHistory();
+
+   useEffect(()=>{
+    const url=`http://127.0.0.1`
+    axios({
+      method: 'POST',
+      url: `/home`,
+      headers: {
+        Authorization: "Bearer "+sessionStorage.getItem('token')
+      },
+    })
+    .then(res=>setStatus(true)).catch(e=>history.push('/'));
+/*
+    axios({
+      method:'GET',
+      url:"/user/5f60f1b8a808a1158564e1ef/post",
+
+    }).then(buf=>setUserData(buf.data))
+    .catch(e=>console.log(e))
+*/
+  },[])
+  return (<>
+                                     <div className="container">
+                      <div className="d-flex flex-md-nowrap flex-wrap justify-content-between">
+
+                        <Cards/>    
+                        <Cards/>    
+
+                      </div>
+
+                      <div className="d-flex flex-md-nowrap flex-wrap justify-content-between">
+
+                        <Cards/>    
+                        <Cards/>    
+
+                      </div>
+
+                      <div className="d-flex flex-md-nowrap flex-wrap justify-content-between">
+
+                        <Cards/>    
+                        <Cards/>    
+
+                      </div>
+
+                       <div className="d-flex flex-md-nowrap flex-wrap justify-content-between">
+
+                        <Cards/>    
+                        <Cards/>    
+
+                      </div>
+                    {/**/}
+                      <div className="d-flex justify-content-center">
+                        <Pagination count={10} shape="rounded" className="text-center" onChange={(e,value)=>{
+                          console.log(value);
+                          window.scrollTo(0, 0);
+                        } } />
+                      </div>
+
+                    </div>                      
+                      <div>
+                         <Footer/>
+                      </div>
+  </>);
 }

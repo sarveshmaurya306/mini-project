@@ -1,33 +1,23 @@
 const express =require('express');
 const app =express()
 require('./db/mongoConnect')
-const userModel= require('./models/signup')
+
+const userModel= require('./models/user')
 const bcrypt= require('bcryptjs');
 const cors= require('cors');
+const loginRouter=require('./router/login.js');
+const joinRouter= require('./router/join.js')
 
 const port = process.env.PORT || 4000
 
 app.use(express.json());
 app.use(cors());
+app.use(loginRouter);
+app.use(joinRouter)
 
 
-app.post('/signup',async (req,res)=>{
-    const {name, email, password}=req.body;
-    const hashPassword= await bcrypt.hash(password,8);
-    console.log(hashPassword);
-    const userDetail =new userModel({
-        name,
-        email,
-        password: hashPassword,
-    })
-    try{
-        await userDetail.save()
-        res.status(201).send(userDetail);
-    } catch(e) {
-        console.log(e.reason)
-        res.status(400).send({error:'please provide correct details...'})
-    }
-})
+
+
 
 app.get('/show', async (req,res)=>{
     try{
@@ -52,4 +42,33 @@ app.get('/show/:name', async (req,res)=>{
         res.status(500).send()
     }
 })
+
 app.listen(port, ()=>console.log(`running on ${port}`))
+
+
+
+//post user relationship 
+/*
+const Post = require('./models/post.js');
+
+const main=async()=>{
+    const task= await Post.findById("5f62085afd7dc62915ac4ee0");
+
+    await task.populate('owner').execPopulate();
+
+    console.log(task.owner)
+}
+
+main();*/
+
+
+/*const User =require('./models/user.js');
+
+const main=async()=>{
+    const user = await User.findById('5f62077d9737b52868b0fe3d');
+    // console.log(user);
+    await user.populate('userposts').execPopulate();
+
+    console.log(user.userposts)
+}
+main();*/

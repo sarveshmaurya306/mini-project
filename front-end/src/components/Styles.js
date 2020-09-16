@@ -2,15 +2,22 @@ import {makeStyles} from '@material-ui/core/styles'
 
 const useStyles = makeStyles({
     main_button:{
-        background: '#00d3ff8c',
+        // background: '#00d3ff8c',
+        background:'black',
+        color:'white',
         fontFamily: 'Roboto',
         fontStyle: 'normal',
         fontWeight: 'bold',
         fontSize: 16,
-        color: '#000000',
+        // color: '#000000',
         textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
         // border:'0px 0px 0px transparent',
         borderRadius: '8px',
+        '&:hover':{
+            background:'transparent',
+            color:'black',
+            textDecoration:"none"
+        }
     },
     home_text:{
         fontFamily: 'Roboto',
@@ -25,12 +32,13 @@ const useStyles = makeStyles({
         textShadow:' 7px 7px 7px rgba(0, 0, 0, 0.35)',
     },
     form:{
-        border: '2px solid #000000',
+        border: '3px solid #000000',
         boxSizing: 'border-box',
         borderRadius: '16px',
         textAlign:'center'
     },
     form_header:{
+        
         fontFamily: 'Roboto',
         fontStyle: 'normal',
         fontWeight:' bold',

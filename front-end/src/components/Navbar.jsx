@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState, useEffect} from 'react';
 import {makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -8,6 +8,7 @@ import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 // import MenuIcon from '@material-ui/icons/Menu';
+
 import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
@@ -15,10 +16,17 @@ import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import mainLogo from '../images/Logo.png'
 import HomeIcon from '@material-ui/icons/Home';
+import PostAddIcon from '@material-ui/icons/PostAdd';
+
 // import { Icon } from '@material-ui/core';
 import {Button } from '@material-ui/core'
 import axios from 'axios'
-import {Link, Router} from 'react-router-dom'
+import {Link,Router} from 'react-router-dom'
+
+
+import ForumIcon from '@material-ui/icons/Forum';
+
+import  { useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
     navColor:{
@@ -106,6 +114,21 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navbar() {
   const [searchUser,setSearchUser] =useState('');
+  const history= useHistory();
+
+  const [status, setStatus]=useState(true)
+/*  useEffect(()=>{
+    
+    axios({
+      method: 'POST',
+      url: "/home",
+      headers: {
+        Authorization: localStorage.token
+      },
+    })
+    .then(res=>{setStatus(true); }).catch(e=>{setStatus(false);history.push("/")})
+
+  },[])*/
   
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -123,6 +146,7 @@ export default function Navbar() {
   };
 
   const handleMenuClose = () => {
+    window.localStorage.removeItem('token');
     setAnchorEl(null);
     handleMobileMenuClose();
   };
@@ -142,7 +166,7 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <Link to="/profile"> <MenuItem onClick={handleMenuClose}>Profile</MenuItem> </Link>
       <Link to="/"> <MenuItem onClick={handleMenuClose}>Log Out</MenuItem></Link>
     </Menu>
   );
@@ -159,7 +183,7 @@ export default function Navbar() {
       onClose={handleMobileMenuClose}
     >
       {/* <Router> */}
-      <Link to="/">
+      <Link to="/home">
         <MenuItem>
           <IconButton color="inherit">
               <HomeIcon/>
@@ -172,22 +196,33 @@ export default function Navbar() {
       <MenuItem>
         <IconButton aria-label="show 4 new mails" color="inherit">
             {/* //! */}
-          <Badge badgeContent={4} color="secondary">
-            <MailIcon />
-          </Badge>
+          
+            <ForumIcon  />
         </IconButton>
         <p>Messages</p>
       </MenuItem>
 
-      <MenuItem>
+      {/* <MenuItem>
         <IconButton aria-label="show 11 new notifications" color="inherit">
-          <Badge badgeContent={11} color="secondary">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>        
+         <Badge badgeContent={11} color="secondary">
+                     
+            </Badge> 
+          <NotificationsIcon />
+        </IconButton>  
+
 
         <p>Notifications</p>
       </MenuItem>
+      */}
+      <MenuItem>
+        <IconButton aria-label="show 4 new mails" color="inherit">
+            {/* //! */}
+          
+            <PostAddIcon  />
+        </IconButton>
+        <p>Add post</p>
+      </MenuItem>
+
       <MenuItem onClick={handleProfileMenuOpen}>
         <IconButton
           aria-label="account of current user"
@@ -203,7 +238,9 @@ export default function Navbar() {
   );
 
   return (
-    <div className={classes.grow}>
+    <div>
+      
+    <div className={`${classes.grow} `}>
       <AppBar position="fixed" className={classes.navColor}>
         <Toolbar >
           <IconButton
@@ -241,24 +278,28 @@ export default function Navbar() {
               }><SearchIcon style={{color:'black',}}/></Button>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton color="inherit">
+
+            <IconButton color="inherit" title="home">
                 {/* <Router> */}
-                  <Link to="/">
+                  <Link to="/home">
                    <HomeIcon style={{color:'black',fontSize:28}}/> 
                   </Link>
                 {/* </Router> */}
             </IconButton>
-            <IconButton aria-label="show 4 new mails" color="inherit">
-              {/* //! */}
-              <Badge badgeContent={400} color="secondary">
-                <MailIcon style={{color:'black'}}/>
-              </Badge>
+            
+            <IconButton aria-label="show 4 new mails" color="inherit" title="chat">
+              <Link to="chat" > <ForumIcon  style={{color:'black'}}/> </Link>
             </IconButton>
+
+            <IconButton aria-label="show 4 new mails" color="inherit" title="create post">
+              <Link to="/createpost" > <PostAddIcon  style={{color:'black'}}/> </Link>
+            </IconButton>
+
+            {/*
             <IconButton aria-label="show 17 new notifications" color="inherit">
-              <Badge badgeContent={200} color="secondary">
-                <NotificationsIcon style={{color:'black'}}/>
-              </Badge>
+              <NotificationsIcon style={{color:'black'}}/>
             </IconButton>
+            */}
             <IconButton
               edge="end"
               aria-label="account of current user"
@@ -266,6 +307,7 @@ export default function Navbar() {
               aria-haspopup="true"
               onClick={handleProfileMenuOpen}
               color="inherit"
+              title="profile"
             >
               <AccountCircle style={{color:'black'}}/>
             </IconButton>
@@ -285,10 +327,12 @@ export default function Navbar() {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
-      <br/><br/><br/><br/><br/><br/><br/>
-      <h1>Searched User Details...</h1><br/><br/><br/>
+       <br/><br/>
+      {/*<h1>Searched User Details...</h1><br/><br/><br/>
             <div>{ !searchUser?'No user found by this name':<div><h3>name :- </h3>{searchUser.name}<br/><br/>  <h3>email :-</h3>{searchUser.email}<br/><br/> <h3>password :-</h3>{searchUser.password}<br/><br/> </div>}</div>
-      <br/><br/><br/>
+      <br/><br/><br/>*/}
+    </div>
+
     </div>
   );
 }
