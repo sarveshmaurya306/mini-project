@@ -1,34 +1,35 @@
-const express=require('express');
-const router =new express.Router();
-const bcrypt= require('bcryptjs')
-const auth= require('../middleware/auth.js')
-const multer =require('multer');
+const express = require('express');
+const router = new express.Router();
+const bcrypt = require('bcryptjs')
+const auth = require('../middleware/auth.js')
+const multer = require('multer');
 
 const User = require('../models/user.js')
-const Post =require('../models/post.js')
+const Post = require('../models/post.js')
 
 
 
-router.post('/join',async (req,res)=>{
-    const {name, email, password}=req.body;
-    const hashPassword= await bcrypt.hash(password,8);
+router.post('/join', async (req, res) => {
+    const { name, email, password, currentStatus } = req.body;
+    const hashPassword = await bcrypt.hash(password, 8);
     // console.log(hashPassword);
 
-    const user =new User({
+    const user = new User({
         name,
         email,
+        currentStatus,
         password: hashPassword,
     })
 
-    try{
+    try {
         await user.generateAuthToken();
         await user.save()
 
         // console.log(user)
         res.status(201).send(user.token);
-    } catch(e) {
+    } catch (e) {
         console.log(e)
-        res.status(400).send({error:'please provide correct details...'})
+        res.status(400).send({ error: 'please provide correct details...' })
     }
 })
 
@@ -36,18 +37,18 @@ router.post('/join',async (req,res)=>{
 
 //! creating post.
 
-router.post('/home', auth ,async (req,res)=>{
+router.post('/home', auth, async (req, res) => {
     // console.log(req.user);
     console.log('logged in');
-    res.send({message:'authorised'});
-    
+    res.send({ message: 'authorised' });
+
 })
 
 
-router.post('/user/createpost', auth, async (req,res)=>{
-
-    try{
-
+router.post('/user/createpost', auth, async (req, res) => {
+    console.log(req.body)
+    try {
+        
         const post = new Post({
             ...req.body,
             owner: req.user._id
@@ -55,32 +56,33 @@ router.post('/user/createpost', auth, async (req,res)=>{
         await post.save()
         res.send('post created');
 
-    } catch(e ){
+    } catch (e) {
+        console.log(e)
         res.status(500).send();
     }
 
 })
 
 
-router.post('/user/getpost', auth, async (req, res)=>{
-    try{
+router.post('/user/getpost', auth, async (req, res) => {
+    try {
 
-        const user= await User.findById(req.user._id);
+        const user = await User.findById(req.user._id);
 
         await user.populate('userposts').execPopulate();
 
-        res.send({userData:user.userposts,user});
+        res.send({ userData: user.userposts, user });
 
-    } catch(e) {
+    } catch (e) {
 
         res.status(500).send();
     }
 })
 
 
-/*const upload= multer({
+const upload= multer({
     limits:{
-        fileSize:1000000, //1mb
+        fileSize:3000000, //3(mb)*1000*1000
     },
     fileFilter(req, file, cb) {
          if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
@@ -91,30 +93,49 @@ router.post('/user/getpost', auth, async (req, res)=>{
 })
 
 
-router.post('/user/:id/post',upload.single('image') ,async (req,res) =>{
+router.post('/user/avatar',upload.single('photo'), auth,async (req,res) =>{
     try{
-        const user =await User.findById(req.params.id);
+        const user =await User.findByIdAndUpdate(req.user._id, {avatar:req.file.buffer});
 
-        if(!user)
-            throw new Error();
 
-        const post= user.posts;
+        if(!user){
+            throw new Error('error');
+        }
+        // console.log(req.file.buffer)
+        // await user.avatar(req.file.buffer)
+        // const post= user.posts;
 
-        console.log(req.body);
-
-        post.push({...req.body, ...req.file, image:req.file.buffer})
         await user.save();
-
-        console.log(post)
+        console.log(user)
+        // console.log(user.avatar)
 
         res.send(user._id);
 
     } catch(e ){
+        console.log(e)
         res.status(500).send(e);
     }
 
 })
 
+router.get('/user/:id/getavatar',  async(req,res)=>{
+    try{
+        // const user= await User.findById(req.user._id);
+        const user =await User.findById(req.params.id)
+
+        if(!user){
+            throw new Error()
+        }
+        res.set('Content-Type','image/jpg')
+        console.log(user.avatar)
+        res.send(user.avatar);
+    } catch(e) {
+        console.log(e)
+        res.status(404).send()
+    }
+})
+
+/*
 router.get('/user/:id/post', async (req,res) =>{
     try{
         const user= await User.findById(req.params.id);    
@@ -127,6 +148,6 @@ router.get('/user/:id/post', async (req,res) =>{
         res.send(500,e)
     }
 })*/
-    
 
-module.exports= router
+
+module.exports = router

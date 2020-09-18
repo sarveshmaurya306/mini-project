@@ -1,49 +1,49 @@
-const express =require('express');
-const app =express()
+const express = require('express');
+const app = express()
+const cors = require('cors');
+app.use(cors());
+
 require('./db/mongoConnect')
 
-const userModel= require('./models/user')
-const bcrypt= require('bcryptjs');
-const cors= require('cors');
-const loginRouter=require('./router/login.js');
-const joinRouter= require('./router/join.js')
+const userModel = require('./models/user')
+const bcrypt = require('bcryptjs');
+const loginRouter = require('./router/login.js');
+const joinRouter = require('./router/join.js')
 
 const port = process.env.PORT || 4000
 
 app.use(express.json());
-app.use(cors());
+
 app.use(loginRouter);
 app.use(joinRouter)
 
 
 
-
-
-app.get('/show', async (req,res)=>{
-    try{
+app.get('/show', async (req, res) => {
+    try {
         const user = await userModel.find({});
-        if(!user)
-        return res.send('no user found')
+        if (!user)
+            return res.send('no user found')
 
         res.send(user);
-    } catch(e) {
-        res.send({error:'connection error...'})
+    } catch (e) {
+        res.send({ error: 'connection error...' })
     }
 })
 
-app.get('/show/:name', async (req,res)=>{
+app.get('/show/:name', async (req, res) => {
     console.log(req.params.name)
-    try{
-        const user= await userModel.find({"name":req.params.name})
-        if(!user)
-        return res.status(404).send();
+    try {
+        const user = await userModel.find({ "name": req.params.name })
+        if (!user)
+            return res.status(404).send();
         res.send(user);
-    } catch(e) {
+    } catch (e) {
         res.status(500).send()
     }
 })
 
-app.listen(port, ()=>console.log(`running on ${port}`))
+app.listen(port, () => console.log(`running on ${port}`))
 
 
 

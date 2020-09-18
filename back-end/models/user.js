@@ -1,41 +1,55 @@
-const mongoose =require('mongoose');
-const validator= require('validator');
-const bcrypt= require('bcryptjs')
+const mongoose = require('mongoose');
+const validator = require('validator');
+const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 // const Card =require('./card');
 
 
 
-const userSchema =mongoose.Schema({
-    name:{
+const userSchema = mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        trim: true,
+    },
+    currentStatus:{
         type:String,
         required:true,
         trim:true,
-    },
-    email:{
-        type:String,
-        required:true,
-        trim:true,
-        unique:true,
-        validate(value){
-            if(!validator.isEmail(value))
-            throw new Error("Email is invalid...");
-        }  
-    },
-    password:{
-        type:String,
-        required:true,
-        validate(value){
-            if(value.toLowerCase().includes('password')){
-                pass=value;
-                throw new Error({error:'password can not contain "password"'})
+        validate(value) {
+            xvalue= value.toLowerCase();
+            if(!(xvalue==='student' || xvalue==="teacher" || xvalue==="principle" )){
+                throw new Error("not acceptable user.")
             }
         }
     },
-    token:{
-        type:String,
-        required:true,
-    }, 
+    email: {
+        type: String,
+        required: true,
+        trim: true,
+        unique: true,
+        validate(value) {
+            if (!validator.isEmail(value))
+                throw new Error("Email is invalid...");
+        }
+    },
+    password: {
+        type: String,
+        required: true,
+        validate(value) {
+            if (value.toLowerCase().includes('password')) {
+                pass = value;
+                throw new Error({ error: 'password can not contain "password"' })
+            }
+        }
+    },
+    token: {
+        type: String,
+        required: true,
+    },
+    avatar:{
+        type:Buffer,
+    }
 
 })
 
@@ -47,26 +61,26 @@ userSchema.virtual('userposts', {
 })
 
 
-userSchema.methods.generateAuthToken= async function(){
-    const user= this;
-    const token = jwt.sign({_id:user._id.toString()},'miniproject',{ expiresIn: '1 hour' })
+userSchema.methods.generateAuthToken = async function () {
+    const user = this;
+    const token = jwt.sign({ _id: user._id.toString() }, 'miniproject', { expiresIn: '1 hour' })
 
-    user.token= token;
+    user.token = token;
 
     return token;
 }
 
 
-userSchema.statics.findByCredentials = async (email, password)=>{
-    const user =await User.findOne({email});
+userSchema.statics.findByCredentials = async (email, password) => {
+    const user = await User.findOne({ email });
     console.log(user)
 
-    if(!user)
+    if (!user)
         throw new Error('unable to login.')
 
-    const isMatch= await bcrypt.compare(password, user.password)
+    const isMatch = await bcrypt.compare(password, user.password)
 
-    if(!isMatch)
+    if (!isMatch)
         throw new Error("unable to login.")
     return user
 }
@@ -78,6 +92,6 @@ userSchema.statics.findByCredentials = async (email, password)=>{
     delete userObject.tokens
     return userObject
 }*/
-const User= mongoose.model('User', userSchema)
+const User = mongoose.model('User', userSchema)
 // const Post = mongoose.model("Post", postSchema)
-module.exports=User
+module.exports = User

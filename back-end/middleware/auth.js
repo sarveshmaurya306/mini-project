@@ -1,13 +1,13 @@
-const jwt= require('jsonwebtoken');
-const User= require('../models/user.js');
+const jwt = require('jsonwebtoken');
+const User = require('../models/user.js');
 
-const auth=async function(req, res, next){
+const auth = async function (req, res, next) {
 	try {
 		const token = req.header('Authorization').replace('Bearer ', '')
 		const decoded = jwt.verify(token, 'miniproject')
 		// const decoded= req.body.id
 		// const user = await User.findOne({ _id: decoded})
-		const user = await User.findById({ _id: decoded._id, token: token})
+		const user = await User.findById({ _id: decoded._id, token: token })
 
 		if (!user) {
 			throw new Error()
@@ -16,12 +16,12 @@ const auth=async function(req, res, next){
 		req.user = user
 		next()
 
-	} catch(e) {
-		res.status(401).send({error:'unathorised'});
+	} catch (e) {
+		res.status(401).send({ error: 'unathorised' });
 	}
 }
 
-module.exports=auth;
+module.exports = auth;
 /*
 
 

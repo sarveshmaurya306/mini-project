@@ -1,33 +1,37 @@
-const mongoose =require('mongoose');
+const mongoose = require('mongoose');
 
-const postSchema= mongoose.Schema({
-	title:{
-		type:String,
+
+const postSchema = mongoose.Schema({
+	title: {
+		type: String,
 		// required:true,
-		trim:true,
+		trim: true,
 	},
 
-	description:{
-		type:String,
-		trim:true,
+	description: {
+		type: String,
+		trim: true,
+		// required:true,
 	},
 
-	image:{
-		type:Buffer,
-	}, 
+	image: {
+		type: Buffer,
+	},
 
-	owner:{
-		type:mongoose.Schema.Types.ObjectId,
-		required:true,
-		ref:'User' //for tast user relationship
+	owner: {
+		type: mongoose.Schema.Types.ObjectId,
+		required: true,
+		ref: 'User' //for tast user relationship
+	},
+	timestamp: {
+		type:String, 
+		default: new Date().toJSON().slice(0,10).replace(/-/g,'/')
 	}
 
-}, {
-	timestamps:true
 })
 
 
 
 const Post = mongoose.model("Post", postSchema);
 
-module.exports=Post;
+module.exports = Post;
