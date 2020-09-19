@@ -6,7 +6,7 @@ import CreatePostImg from '../images/createpost.svg'
 
 export default function CreatePost(){
 
-	const [detail, setDetail] = useState({title:'', description:''})
+	const [detail, setDetail] = useState({title:'', description:'', comment:''})
       const sendPost=(e)=>{
       	e.preventDefault();
       	(!detail.title || !detail.description)?alert('please provide some value'):axios({
@@ -32,6 +32,7 @@ export default function CreatePost(){
 
 				<input type='text ' name='title' placeholder="title " onChange={(e)=>setDetail({...detail,  title:e.target.value})} /><br/>
 				<input type='text ' name='description' placeholder="description " onChange={(e)=>setDetail({...detail,  description:e.target.value})} /><br/>
+				<input type='text ' name='comment' placeholder="any comment? " onChange={(e)=>setDetail({...detail,  comment:e.target.value})} /><br/>
 				<input type='submit' value='post' />
 			</form>
 

@@ -14,7 +14,7 @@ export default function Footer() {
       >
         <center>
           Copyright &copy; 2020 KietTalks Web Application{" "}
-          <a href="#" style={{ textDecoration: "none", color: "orange" }}>
+          <a href="https://www.linkedin.com/in/sarvesh-kumar-53986861" style={{ textDecoration: "none", color: "orange" }}>
             Contact Us.
           </a>
         </center>

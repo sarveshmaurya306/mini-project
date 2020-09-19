@@ -26,8 +26,17 @@ const postSchema = mongoose.Schema({
 	timestamp: {
 		type:String, 
 		default: new Date().toJSON().slice(0,10).replace(/-/g,'/')
-	}
-
+	},
+	like:{
+		type:Number,
+		default:0,
+	},
+	comments:[{
+		comment:{
+			type:String,
+			trim:true,
+		}
+	}]
 })
 
 

@@ -84,7 +84,7 @@ function Join() {
 
   const sendJoinForm = (e) => {
     e.preventDefault();
-    console.log(userDetails)
+    // console.log(userDetails)
     const url = `http://127.0.0.1`;
     axios
       .post(`/join`, userDetails)
@@ -94,7 +94,7 @@ function Join() {
         history.push("/home");
       })
       .catch((e) => {
-        console.log(e);
+        // console.log(e);
         setLoading(false);
         alert("user cannot be added please try again.");
       });
@@ -174,7 +174,7 @@ function Join() {
                 <input
                   type="text"
                   value={userDetails.name}
-                  placeholder="full name"
+                  placeholder="Full name"
                   className="mt-2 mb-4 p-2"
                   style={{
                     backgroundColor: "transparent",
@@ -191,7 +191,7 @@ function Join() {
                 <input
                   type="text"
                   value={userDetails.currentStatus}
-                  placeholder="position in collage"
+                  placeholder="Position in collage"
                   className="mt-2 p-2"
                   style={{
                     backgroundColor: "transparent",
@@ -269,7 +269,6 @@ function Join() {
               </div>
             </Paper>
           </div>
-          {console.log("login loaded")}
         </form>
       </div>
 

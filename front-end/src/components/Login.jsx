@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import backgroundImg from "../images/back.png";
 import logo from "../images/Logo.png";
-import { Button, Typography } from "@material-ui/core";
+import { Button} from "@material-ui/core";
 import { Link } from "react-router-dom";
 import useStyles from "./Styles";
-import M from "materialize-css";
+// import M from "materialize-css";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
@@ -23,7 +23,7 @@ export default function Login() {
 
   const sendLoginForm = (e) => {
     e.preventDefault();
-    const url = `http://127.0.0.1`;
+    
     axios
       .post(`/login`, { ...loginDetails })
       .then((res) => {

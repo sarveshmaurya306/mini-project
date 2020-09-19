@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect} from "react";
 
-import backgroundImg from "../images/back.png";
+// import backgroundImg from "../images/back.png";
 
 import Pagination from "@material-ui/lab/Pagination";
 
@@ -10,12 +10,12 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 
 export default function RecipeReviewCard() {
-  const [status, setStatus] = useState(false);
-  const [userData, setUserData] = useState();
+  // const [status, setStatus] = useState(false);
+  // const [userData, setUserData] = useState();
   const history = useHistory();
 
   useEffect(() => {
-    const url = `http://127.0.0.1`;
+    
     axios({
       method: "POST",
       url: `/home`,
@@ -23,7 +23,7 @@ export default function RecipeReviewCard() {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
     })
-      .then((res) => setStatus(true))
+      .then((res) =>{ })
       .catch((e) => history.push("/"));
     /*
     axios({
@@ -63,7 +63,7 @@ export default function RecipeReviewCard() {
             shape="rounded"
             className="text-center"
             onChange={(e, value) => {
-              console.log(value);
+              // console.log(value);
               window.scrollTo(0, 0);
             }}
           />

@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
+// import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-import Collapse from "@material-ui/core/Collapse";
+// import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-import ShareIcon from "@material-ui/icons/Share";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import MoreVertIcon from "@material-ui/icons/MoreVert";
+// import ShareIcon from "@material-ui/icons/Share";
+// import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+// import MoreVertIcon from "@material-ui/icons/MoreVert";
 import TextField from "@material-ui/core/TextField";
 import { Button } from "@material-ui/core";
-import axios from "axios";
+// import axios from "axios";
 
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -56,7 +56,7 @@ export default function Cards() {
     value: { title: "this is title", description: "this is description" },
   };
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
+  // const [expanded, setExpanded] = React.useState(false);
 
   // const handleExpandClick = () => {
   //   setExpanded(!expanded);
@@ -79,7 +79,7 @@ export default function Cards() {
   // const [image, setImage]=useState('')
 
   //
-  console.log(props.value);
+  // console.log(props.value);
   /*  const deletePost=(e)=>{
                 const confirm=window.confirm('do you want to delete this?');
                 return !confirm?'':axios({

@@ -47,12 +47,18 @@ router.post('/home', auth, async (req, res) => {
 
 router.post('/user/createpost', auth, async (req, res) => {
     console.log(req.body)
+    const {title, description, comment}=req.body;
     try {
         
         const post = new Post({
-            ...req.body,
-            owner: req.user._id
+            title,
+            description,
+            owner: req.user._id,
+            
         })
+        post.comments=post.comments.concat({comment})
+        // const comment= req.body.comment.toString();
+        // post.comments.push(comment)
         await post.save()
         res.send('post created');
 
@@ -70,11 +76,11 @@ router.post('/user/getpost', auth, async (req, res) => {
         const user = await User.findById(req.user._id);
 
         await user.populate('userposts').execPopulate();
-
+        console.log(user)
         res.send({ userData: user.userposts, user });
 
     } catch (e) {
-
+        console.log(e)
         res.status(500).send();
     }
 })
@@ -135,6 +141,34 @@ router.get('/user/:id/getavatar',  async(req,res)=>{
     }
 })
 
+//get single user post
+router.get('/user/:postId/getpost',  async(req,res)=>{
+    try{
+        const post= await Post.findById(req.params.postId);
+        if(!post ){
+            throw new Error();
+        }
+        console.log(post.comment)
+        res.send(post);
+
+    } catch(e) {
+        res.send(500, 'failed to get post.');
+    }
+})
+
+//get single post
+router.get('/user/:postId/inclike', async(req,res)=>{
+    try{
+        const post =await Post.findByIdAndUpdate(req.params.postId, {$inc: {like: 1 } });
+        if(!post){
+            throw new Error();
+        }
+        await post.save();
+        res.send('done')
+    } catch(e) {
+        res.status(500).send('faild to get likes')
+    }
+})
 /*
 router.get('/user/:id/post', async (req,res) =>{
     try{

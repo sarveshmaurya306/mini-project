@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState} from "react";
 import { makeStyles } from "@material-ui/core/styles";
 /*import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
@@ -7,28 +7,28 @@ import InputBase from "@material-ui/core/InputBase";
 import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";*/
-import {Paper, Menu, MenuItem, Badge, InputBase, IconButton, Toolbar, AppBar} from '@material-ui/core'
+import {Paper, Menu, MenuItem, InputBase, IconButton, Toolbar, AppBar} from '@material-ui/core'
 // import MenuIcon from '@material-ui/icons/Menu';
 
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
-import MailIcon from "@material-ui/icons/Mail";
-import NotificationsIcon from "@material-ui/icons/Notifications";
+// import MailIcon from "@material-ui/icons/Mail";
+// import NotificationsIcon from "@material-ui/icons/Notifications";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import mainLogo from "../images/Logo.png";
 import HomeIcon from "@material-ui/icons/Home";
 import PostAddIcon from "@material-ui/icons/PostAdd";
 import CancelIcon from '@material-ui/icons/Cancel';
-
+// import {IconButton} from '@material-ui/icons'
 
 // import { Icon } from '@material-ui/core';
 import { Button } from "@material-ui/core";
 import axios from "axios";
-import { Link, Router } from "react-router-dom";
+import { Link} from "react-router-dom";
 
 import ForumIcon from "@material-ui/icons/Forum";
 
-import { useHistory } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   navColor: {
@@ -116,16 +116,15 @@ const useStyles = makeStyles((theme) => ({
 export default function Navbar() {
   const [searchUser, setSearchUser] = useState("");
   const [result, setResult] = useState()
+  // const history = useHistory();
 
-  const history = useHistory();
-
-  const [status, setStatus] = useState(true);
+  // const [status, setStatus] = useState(true);
 
   const search=(search) => {
                 const user = searchUser;
                 axios
                   .get(`http://localhost:4000/show/${user}`)
-                  .then(d => {d.data.length===0?alert('no user found on this name'):setResult(d) })
+                  .then(d => {d.data.length===0? setResult('') : setResult(d) })
                   .catch(e => alert('connection failed'))
               }
   /*  useEffect(()=>{
@@ -141,13 +140,14 @@ export default function Navbar() {
 
   },[])*/
 
-  React.useEffect(()=>{
-    window.addEventListener('scroll',()=>{
+/*  React.useEffect(()=>{
+    window.addEventListener('click',()=>{
+
       setResult();
     })
   },[result])
 
-
+*/
 
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -284,6 +284,7 @@ export default function Navbar() {
                 className={classes.logoResponsive}
                 height="40px"
                 width="auto"
+                style={{ marginTop:5 }}
               />
             </Link >
 
@@ -307,7 +308,7 @@ export default function Navbar() {
             <Button
               variant="outlined"
               color="primary"
-              style={{ border: "1px solid white" }}
+              style={{ border: "1px solid black" }}
               onClick={search}
             >
               <SearchIcon style={{ color: "black" }} />
@@ -328,7 +329,7 @@ export default function Navbar() {
                 color="inherit"
                 title="chat"
               >
-                <Link to="chat">
+                <Link to="/chat">
                   {" "}
                   <ForumIcon style={{ color: "black" }} />{" "}
                 </Link>
@@ -378,16 +379,21 @@ export default function Navbar() {
 
         {/* to be noted */}
           {
+            !result?"":<div style={{display:'flex', alignItems:'center', justifyContent:'flex-end', paddingRight:'48px'}} >  <IconButton color="secondary" onClick={()=>{
+              setResult('');
+            }}>  <CancelIcon style={{color:'black'}}  />  </IconButton></div>
+          }
+          {
 
             !result?'':result.data.map(item => {
-              return <Link to='/other/profile' key={item._id} className="container-fluid bg-white ">
-                <hr/ >
-                <Paper elevation= {3} >  
-                  
-                  <p className='p-4'> {item.name} is a {item.currentStatus}.  </p>
-               
-
-                </Paper>
+              console.log(item)
+              return <Link to='/other/profile' key={item._id} className="container-fluid " style={{ margin:"20px 0px", }}>
+                  <div className="d-flex justify-content-around flex-wrap " style={{ alignItems: "baseline"}} >
+                    <Paper elevation= {2} className="p-3" style={{width:'90vw'}} >  
+                      <img className="rounded-circle bg-secondary " alt="profile pic" src={!item.avatar?'https://f.v1.n0.cdn.getcloudapp.com/items/0L2l2K3f3e1H2o1O3p0f/robot.png':`http://127.0.0.1:4000/user/${item._id}/getavatar`} width="50" height="50" />
+                      <span className='p-4'> {item.name} is a {item.currentStatus}.  </span>
+                    </Paper>
+                </div>
               </Link>
             })
           }

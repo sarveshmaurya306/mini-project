@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import Navbar from './Navbar'
 // import axios from 'axios'
 import Join from './Join'
 import Login from './Login'
-import Footer from './Footer'
+// import Footer from './Footer'
 import Home from './Home'
 import Myprofile from './Myprofile'
 import CreatePost from './CreatePost'
@@ -12,8 +12,7 @@ import Chat from './Chat'
 import {
     BrowserRouter as Router,
     Switch,
-    Route,
-    Link
+    Route
   } from "react-router-dom";
 
   
