@@ -9,15 +9,15 @@ const postSchema = mongoose.Schema({
 	},
 
 	description: {
-		type: String,
-		trim: true,
-		// required:true,
-	},
+		type: String,	},
 
 	image: {
 		type: Buffer,
 	},
-
+	ownername:{
+		type:String,
+		required:true,
+	},
 	owner: {
 		type: mongoose.Schema.Types.ObjectId,
 		required: true,
@@ -27,16 +27,23 @@ const postSchema = mongoose.Schema({
 		type:String, 
 		default: new Date().toJSON().slice(0,10).replace(/-/g,'/')
 	},
-	like:{
-		type:Number,
-		default:0,
-	},
+	likes:[{
+		like:{
+			type:mongoose.Schema.Types.ObjectId,
+			ref:'User',
+		},
+
+	}],
 	comments:[{
 		comment:{
 			type:String,
-			trim:true,
-		}
-	}]
+		},
+		commentowner:{
+			type:String,		}
+	}],
+	image:{
+		type:Buffer,
+	}
 })
 
 

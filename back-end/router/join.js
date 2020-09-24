@@ -9,6 +9,22 @@ const Post = require('../models/post.js')
 
 
 
+const upload= multer({
+    limits:{
+        fileSize:3000000, //3(mb)*1000*1000
+    },
+    fileFilter(req, file, cb) {
+         if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
+            return cb(new Error('file should be of type image.'))
+        }
+        cb(undefined, true) //accept the given upload.
+    }
+})
+
+router.get("/",(req,res)=>{
+    res.send('in api')
+})
+
 router.post('/join', async (req, res) => {
     const { name, email, password, currentStatus } = req.body;
     const hashPassword = await bcrypt.hash(password, 8);
@@ -37,40 +53,35 @@ router.post('/join', async (req, res) => {
 
 //! creating post.
 
-router.post('/home', auth, async (req, res) => {
-    // console.log(req.user);
-    console.log('logged in');
-    res.send({ message: 'authorised' });
 
-})
+router.post('/user/createpost', upload.single('photo'),auth, async (req, res) => {
 
-
-router.post('/user/createpost', auth, async (req, res) => {
+    const {title, description,comment}=req.body;
     console.log(req.body)
-    const {title, description, comment}=req.body;
-    try {
-        
+    try{    
         const post = new Post({
             title,
             description,
             owner: req.user._id,
-            
+            image:req.file.buffer,
+            ownername:req.user.name,
+
         })
-        post.comments=post.comments.concat({comment})
+        post.comments=post.comments.concat({comment:comment,commentowner:req.user.name})
         // const comment= req.body.comment.toString();
         // post.comments.push(comment)
         await post.save()
-        res.send('post created');
+        res.send(post._id);
 
     } catch (e) {
         console.log(e)
         res.status(500).send();
     }
-
 })
 
 
-router.post('/user/getpost', auth, async (req, res) => {
+
+router.get('/user/getpost', auth, async (req, res) => {
     try {
 
         const user = await User.findById(req.user._id);
@@ -85,18 +96,6 @@ router.post('/user/getpost', auth, async (req, res) => {
     }
 })
 
-
-const upload= multer({
-    limits:{
-        fileSize:3000000, //3(mb)*1000*1000
-    },
-    fileFilter(req, file, cb) {
-         if(!file.originalname.match(/\.(jpg|jpeg|png)$/)){
-            return cb(new Error('file should be of type image.'))
-        }
-        cb(undefined, true) //accept the given upload.
-    }
-})
 
 
 router.post('/user/avatar',upload.single('photo'), auth,async (req,res) =>{
@@ -148,7 +147,7 @@ router.get('/user/:postId/getpost',  async(req,res)=>{
         if(!post ){
             throw new Error();
         }
-        console.log(post.comment)
+        // console.log(post.comment)
         res.send(post);
 
     } catch(e) {
@@ -156,19 +155,52 @@ router.get('/user/:postId/getpost',  async(req,res)=>{
     }
 })
 
-//get single post
-router.get('/user/:postId/inclike', async(req,res)=>{
+//like single post
+router.post('/user/:postId/inclike', auth, async(req,res)=>{
+    // console.log(typeof req.user._id)
     try{
-        const post =await Post.findByIdAndUpdate(req.params.postId, {$inc: {like: 1 } });
-        if(!post){
-            throw new Error();
-        }
+        const post=await Post.findById(req.params.postId);
+        const liked= post.likes.map(user=>user.like.toString()==req.user._id.toString())
+        const isLiked= liked.includes(true);
+
+        if(isLiked)
+            throw new Error("post is already liked")
+        if(!post)
+            throw new Error('post not found');
+
+        post.likes.push({
+            like:req.user._id,
+        })
         await post.save();
-        res.send('done')
+        console.log('liked')
+        res.send('post liked');
+
     } catch(e) {
-        res.status(500).send('faild to get likes')
+        console.log(e)
+        res.status(500).send('failed ')
     }
 })
+
+
+router.post('/user/:postId/comment',auth, async(req,res)=>{
+    try{
+        const {comment} =req.body;
+        const post =await Post.findById(req.params.id);
+        post.comments=post.comments.concat({comment:comment,commentowner:req.user.name})
+
+        post.save();
+    } catch(e){
+        res.status(404).send('failed');
+    }
+})
+
+
+router.get('/user/getallpost', auth, async(req,res)=>{
+    const post =await Post.find({})
+
+    res.send(post)
+})
+
 /*
 router.get('/user/:id/post', async (req,res) =>{
     try{
@@ -182,6 +214,10 @@ router.get('/user/:id/post', async (req,res) =>{
         res.send(500,e)
     }
 })*/
+
+router.get('/checkuserauth', auth, (req,res)=>{
+    res.send('authenticated');
+})
 
 
 module.exports = router

@@ -59,8 +59,13 @@ userSchema.virtual('userposts', {
     localField: '_id',
     foreignField: 'owner'
 })
-
-
+/*
+userSchema.virtual('userlikes', {
+    ref:'Post',
+    localField:'_id',
+    foreignField:'likes'
+})
+*/
 userSchema.methods.generateAuthToken = async function () {
     const user = this;
     const token = jwt.sign({ _id: user._id.toString() }, 'miniproject', { expiresIn: '1 hour' })

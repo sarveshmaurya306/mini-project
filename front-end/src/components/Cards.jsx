@@ -1,24 +1,25 @@
 import React, { useState, useEffect } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
-// import clsx from "clsx";
+import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
-// import Collapse from "@material-ui/core/Collapse";
+import Collapse from "@material-ui/core/Collapse";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
 import { red } from "@material-ui/core/colors";
 import FavoriteIcon from "@material-ui/icons/Favorite";
-// import ShareIcon from "@material-ui/icons/Share";
-// import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-// import MoreVertIcon from "@material-ui/icons/MoreVert";
+import ShareIcon from "@material-ui/icons/Share";
+import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 import TextField from "@material-ui/core/TextField";
-import { Button } from "@material-ui/core";
-// import axios from "axios";
+import { Button,Badge } from "@material-ui/core";
+import axios from "axios";
+// import {Paper} from '@material-ui/core'
 
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -38,31 +39,32 @@ const useStyles = makeStyles((theme) => ({
   },
   expand: {
     transform: "rotate(0deg)",
+    color:'',
     marginLeft: "auto",
     transition: theme.transitions.create("transform", {
       duration: theme.transitions.duration.shortest,
     }),
   },
   expandOpen: {
-    transform: "rotate(180deg)",
+    // transform: "rotate(180deg)",
+    color:'blue'
   },
   avatar: {
     backgroundColor: red[500],
   },
 }));
 
-export default function Cards() {
-  const props = {
-    value: { title: "this is title", description: "this is description" },
-  };
-  const classes = useStyles();
-  // const [expanded, setExpanded] = React.useState(false);
+export default function Cards(props) {
 
-  // const handleExpandClick = () => {
-  //   setExpanded(!expanded);
-  // };
+  const classes = useStyles();
+  const [expanded, setExpanded] = React.useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
 
   const [isLiked, setIsLiked] = useState(false);
+  // const likes=props.value.likes
 
   const liked = { color: "red" };
 
@@ -76,17 +78,17 @@ export default function Cards() {
   });
 
   const [commentValue, setCommentValue] = useState("");
-  // const [image, setImage]=useState('')
+  const [image, setImage]=useState('')
 
   //
-  // console.log(props.value);
-  /*  const deletePost=(e)=>{
+  console.log(props.value);
+    const deletePost=(e)=>{
                 const confirm=window.confirm('do you want to delete this?');
                 return !confirm?'':axios({
                   method:'delete',
                   url:`/user/${e.target.key}/post`
                 })
-              }*/
+              }
   useEffect(() => {
     AOS.init({
       duration: 2500,
@@ -97,13 +99,34 @@ export default function Cards() {
     AOS.refresh();
   }, []);
 
+const postLiked=()=>{
+  const url=`http://127.0.0.1:4000`
+    axios({
+      method:'post',
+      url:`${url}/user/${props.value._id}/inclike`,
+       headers: {
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
+    }).then(r=>{ 
+      setIsLiked((e) => !e);
+      setUserLikedComment({ ...userLikedComment, like: !isLiked });
+    }).catch(e=>console.log(e)) 
+}
+
+  const avatarDp= props.value.ownername.split('');
+  const avatarChar=avatarDp[0]
+  // console.log(props.value)
+    const buffer = props.value.image.data; // e.g., <Buffer 89 50 4e ... >
+    const b64 = new Buffer(buffer).toString("base64");
+    const mimeType = "image/jpg"; // e.g., image/png
+
   return (
     <div className="my-4 container" data-aos="zoom-in">
-      <Card style={{}}>
+      <Card  >
         <CardHeader
           avatar={
             <Avatar aria-label="recipe" className={classes.avatar}>
-              S
+              {avatarChar}
             </Avatar>
           }
           action={
@@ -111,15 +134,16 @@ export default function Cards() {
               <DeleteIcon />
             </IconButton>
           }
-          title="Sarvesh Kumar"
-          subheader="September 14, 2016"
+          title={props.value.ownername}
+          subheader={props.value.timestamp}
         />
 
         <CardMedia
           className={classes.media}
-          image="https://f.v1.n0.cdn.getcloudapp.com/items/0L2l2K3f3e1H2o1O3p0f/robot.png"
-          title="Paella dish"
+          image={`data:${mimeType};base64,${b64}`}
+          title="post image"
         />
+        
 
         <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
@@ -131,13 +155,12 @@ export default function Cards() {
         <CardActions disableSpacing>
           <IconButton
             aria-label="add to favorites"
-            onClick={() => {
-              setIsLiked((e) => !e);
-              setUserLikedComment({ ...userLikedComment, like: !isLiked });
-            }}
+            onClick={postLiked}
             title="like"
           >
+           <Badge color="secondary" badgeContent={!isLiked?props.value.likes.length:props.value.likes.length+1} >
             <FavoriteIcon style={isLiked ? liked : {}} />
+           </Badge>
           </IconButton>
 
           <IconButton
@@ -150,9 +173,20 @@ export default function Cards() {
             />
           </IconButton>
 
-          <IconButton>
+          <IconButton
+            className={clsx(classes.expand, {
+              [classes.expandOpen]: expanded,
+            })}
+            onClick={handleExpandClick}
+            aria-expanded={expanded}
+            aria-label="show more"
+          >
+            
             <CommentIcon />
+
           </IconButton>
+ 
+
         </CardActions>
 
         {!userLikedComment.comment ? (
@@ -183,15 +217,15 @@ export default function Cards() {
                 setShowComment(false);
               }}
             >
-              {" "}
-              <SendIcon />{" "}
+              
+              <SendIcon />
             </Button>
           </div>
         ) : (
           ""
         )}
-        {/*
-
+        
+{/*
           <IconButton
             className={clsx(classes.expand, {
               [classes.expandOpen]: expanded,
@@ -202,41 +236,22 @@ export default function Cards() {
           >
             <ExpandMoreIcon />
           </IconButton>
- 
+ */}
         
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography paragraph>Method:</Typography>
-            <Typography paragraph>
-              Heat 1/2 cup of the broth in a pot until simmering, add saffron
-              and set aside for 10 minutes.
-            </Typography>
-            <Typography paragraph>
-              Heat oil in a (14- to 16-inch) paella pan or a large, deep skillet
-              over medium-high heat. Add chicken, shrimp and chorizo, and cook,
-              stirring occasionally until lightly browned, 6 to 8 minutes.
-              Transfer shrimp to a large plate and set aside, leaving chicken
-              and chorizo in the pan. Add pimentón, bay leaves, garlic,
-              tomatoes, onion, salt and pepper, and cook, stirring often until
-              thickened and fragrant, about 10 minutes. Add saffron broth and
-              remaining 4 1/2 cups chicken broth; bring to a boil.
-            </Typography>
-            <Typography paragraph>
-              Add rice and stir very gently to distribute. Top with artichokes
-              and peppers, and cook without stirring, until most of the liquid
-              is absorbed, 15 to 18 minutes. Reduce heat to medium-low, add
-              reserved shrimp and mussels, tucking them down into the rice, and
-              cook again without stirring, until mussels have opened and rice is
-              just tender, 5 to 7 minutes more. (Discard any mussels that don’t
-              open.)
-            </Typography>
-            <Typography>
-              Set aside off of the heat to let rest for 10 minutes, and then
-              serve.
-            </Typography>
+            <Typography paragraph style={{float:'left',fontWidth:"bolder"}}>Comments:</Typography><br/>
+            {
+              props.value.comments.map(comment=>{
+               return <Typography paragraph>
+                 <strong>user says:</strong> { comment.comment}
+                </Typography>
+              })
+            }
+            
           </CardContent>
         </Collapse>
-      */}
+      
       </Card>
     </div>
   );

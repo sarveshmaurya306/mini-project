@@ -224,7 +224,6 @@ function Join() {
                 <br />
                 <input
                   value={userDetails.password}
-                  value={userDetails.password}
                   type="password"
                   placeholder="Password"
                   className="mb-4 p-2"
