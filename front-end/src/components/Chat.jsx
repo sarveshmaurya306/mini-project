@@ -9,8 +9,8 @@ export default function Chat() {
 
   useEffect(() => {
     axios({
-      method: "POST",
-      url: `/home`,
+      method: "get",
+      url: `/checkuserauth`,
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },

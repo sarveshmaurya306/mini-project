@@ -19,20 +19,38 @@ function Home() {
   // const [loading, setLoading]= useState(true);
   const [posts, setPosts] = useState(false);
 
+  const [pageCount, setPageCount] =useState(1);
+
   useEffect(() => {
     const url = `http://127.0.0.1:4000`;
     axios({
       method: "get",
-      url: `${url}/user/getallpost`,
+      url: `${url}/user/getallpost/1/5`,
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
     })
       .then((res) => {
-        setPosts(res);
+        setPageCount(Math.ceil(res.data.count/5))
+        setPosts(res.data.posts);
       })
-      .catch((e) => {});
+      .catch((e) => {alert('please try again')});
   }, []);
+
+  const nextPage=(e, value) => {      
+      axios({
+          method: "get",
+          url: `/user/getallpost/${value}/5`,
+          headers: {
+            Authorization: "Bearer " + sessionStorage.getItem("token"),
+          },
+      }).then((res) => {
+        window.scrollTo(0, 0);   
+        setPosts(res.data.posts);
+      })
+      .catch((e) => {alert('please try again ')});
+  }
+
   console.log(posts);
   return (
     <>
@@ -42,9 +60,9 @@ function Home() {
         <div>
           <div className="container">
             <div className=" col-md-8 col-auto">
-              {!posts.data
+              {!posts
                 ? ""
-                : posts.data.map((post) => {
+                : posts.map((post) => {
                     console.log(post);
                     return (
                       <div className=" d-flex flex-md-nowrap flex-wrap justify-content-between">
@@ -72,13 +90,10 @@ function Home() {
 
           <div className="d-flex justify-content-center">
             <Pagination
-              count={10}
+              count={pageCount}
               shape="rounded"
               className="text-center"
-              onChange={(e, value) => {
-                // console.log(value);
-                window.scrollTo(0, 0);
-              }}
+              onChange={nextPage}
             />
           </div>
 

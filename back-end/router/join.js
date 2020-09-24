@@ -190,10 +190,22 @@ router.post("/user/:postId/addcomment/:comment", auth, async (req, res) => {
     }
 });
 
-router.get("/user/getallpost", auth, async (req, res) => {
-    const post = await Post.find({});
-
-    res.send(post);
+router.get("/user/getallpost/:page/:limit", auth, async (req, res) => {
+    const {page=1, limit=5}= req.params;
+    try{
+        const posts=await Post.find()
+            .limit(limit*1)
+            .sort({timestamp:-1})
+            .skip((page-1)*limit)
+            .exec();
+        const count= await Post.countDocuments();
+        console.log({posts,count})
+        res.send({posts,count});
+    } catch(e) {
+        console.log(e)
+        res.send();
+    }
+    
 });
 
 

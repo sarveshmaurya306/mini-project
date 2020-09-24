@@ -27,7 +27,7 @@ import "aos/dist/aos.css";
 import CommentIcon from "@material-ui/icons/Comment";
 import AddCommentIcon from "@material-ui/icons/AddComment";
 import SendIcon from "@material-ui/icons/Send";
-import DeleteIcon from "@material-ui/icons/Delete";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -80,7 +80,7 @@ export default function Cards(props) {
   const [image, setImage] = useState("");
 
   //
-  console.log(props.value);
+  /*console.log(props.value);
   const deletePost = (e) => {
     const confirm = window.confirm("do you want to delete this?");
     return !confirm
@@ -89,7 +89,8 @@ export default function Cards(props) {
           method: "delete",
           url: `/user/${e.target.key}/post`,
         });
-  };
+  };*/
+  
   useEffect(() => {
     AOS.init({
       duration: 2500,
@@ -155,11 +156,6 @@ export default function Cards(props) {
             <Avatar aria-label="recipe" className={classes.avatar}>
               {avatarChar}
             </Avatar>
-          }
-          action={
-            <IconButton aria-label="delete">
-              <DeleteIcon />
-            </IconButton>
           }
           title={props.value.ownername}
           subheader={props.value.timestamp}
