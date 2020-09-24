@@ -17,7 +17,7 @@ import ShareIcon from "@material-ui/icons/Share";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import TextField from "@material-ui/core/TextField";
-import { Button,Badge } from "@material-ui/core";
+import { Button, Badge } from "@material-ui/core";
 import axios from "axios";
 // import {Paper} from '@material-ui/core'
 
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   },
   expand: {
     transform: "rotate(0deg)",
-    color:'',
+    color: "",
     marginLeft: "auto",
     transition: theme.transitions.create("transform", {
       duration: theme.transitions.duration.shortest,
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
   expandOpen: {
     // transform: "rotate(180deg)",
-    color:'blue'
+    color: "blue",
   },
   avatar: {
     backgroundColor: red[500],
@@ -55,7 +55,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Cards(props) {
-
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -78,17 +77,19 @@ export default function Cards(props) {
   });
 
   const [commentValue, setCommentValue] = useState("");
-  const [image, setImage]=useState('')
+  const [image, setImage] = useState("");
 
   //
   console.log(props.value);
-    const deletePost=(e)=>{
-                const confirm=window.confirm('do you want to delete this?');
-                return !confirm?'':axios({
-                  method:'delete',
-                  url:`/user/${e.target.key}/post`
-                })
-              }
+  const deletePost = (e) => {
+    const confirm = window.confirm("do you want to delete this?");
+    return !confirm
+      ? ""
+      : axios({
+          method: "delete",
+          url: `/user/${e.target.key}/post`,
+        });
+  };
   useEffect(() => {
     AOS.init({
       duration: 2500,
@@ -99,30 +100,56 @@ export default function Cards(props) {
     AOS.refresh();
   }, []);
 
-const postLiked=()=>{
-  const url=`http://127.0.0.1:4000`
+  const postLiked = () => {
+    const url = `http://127.0.0.1:4000`;
     axios({
-      method:'post',
-      url:`${url}/user/${props.value._id}/inclike`,
-       headers: {
+      method: "post",
+      url: `${url}/user/${props.value._id}/inclike`,
+      headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
-    }).then(r=>{ 
-      setIsLiked((e) => !e);
-      setUserLikedComment({ ...userLikedComment, like: !isLiked });
-    }).catch(e=>console.log(e)) 
-}
+    })
+      .then((r) => {
+        console.log(r);
+        setIsLiked((e) => !e);
+        setUserLikedComment({ ...userLikedComment, like: !isLiked });
+      })
+      .catch((e) => alert("you have already liked"));
+  };
+  console.log(userLikedComment.comment + "\n " + commentValue);
 
-  const avatarDp= props.value.ownername.split('');
-  const avatarChar=avatarDp[0]
+  const [numberComment, setNumberComment]=useState(0);
+
+  const sendComment = () => {
+    const url = `http://127.0.0.1:4000`;
+    axios({
+      method: "post",
+      url: `${url}/user/${props.value._id}/addcomment/${commentValue}`,
+      data: commentValue,
+      headers: {
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
+    })
+      .then((r) => {
+        // setCommentValue("");
+        setNumberComment(e=>e+1);
+        setShowComment(false);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  };
+
+  const avatarDp = props.value.ownername.split("");
+  const avatarChar = avatarDp[0];
   // console.log(props.value)
-    const buffer = props.value.image.data; // e.g., <Buffer 89 50 4e ... >
-    const b64 = new Buffer(buffer).toString("base64");
-    const mimeType = "image/jpg"; // e.g., image/png
+  const buffer = props.value.image.data; // e.g., <Buffer 89 50 4e ... >
+  const b64 = new Buffer(buffer).toString("base64");
+  const mimeType = "image/jpg"; // e.g., image/png
 
   return (
     <div className="my-4 container" data-aos="zoom-in">
-      <Card  >
+      <Card>
         <CardHeader
           avatar={
             <Avatar aria-label="recipe" className={classes.avatar}>
@@ -143,7 +170,6 @@ const postLiked=()=>{
           image={`data:${mimeType};base64,${b64}`}
           title="post image"
         />
-        
 
         <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
@@ -158,9 +184,16 @@ const postLiked=()=>{
             onClick={postLiked}
             title="like"
           >
-           <Badge color="secondary" badgeContent={!isLiked?props.value.likes.length:props.value.likes.length+1} >
-            <FavoriteIcon style={isLiked ? liked : {}} />
-           </Badge>
+            <Badge
+              color="secondary"
+              badgeContent={
+                !isLiked
+                  ? props.value.likes.length
+                  : props.value.likes.length + 1
+              }
+            >
+              <FavoriteIcon style={isLiked ? liked : {}} />
+            </Badge>
           </IconButton>
 
           <IconButton
@@ -181,19 +214,17 @@ const postLiked=()=>{
             aria-expanded={expanded}
             aria-label="show more"
           >
-            
-            <CommentIcon />
-
+            <Badge color="secondary" badgeContent={props.value.comments.length+numberComment}>
+              <CommentIcon />
+            </Badge>
           </IconButton>
- 
-
         </CardActions>
 
-        {!userLikedComment.comment ? (
+        {!commentValue ? (
           ""
         ) : (
           <div className="container mb-4">
-            you: <strong>{userLikedComment.comment}</strong>
+            you: <strong>{commentValue}</strong>
           </div>
         )}
         {showComment ? (
@@ -207,25 +238,15 @@ const postLiked=()=>{
               value={commentValue}
               onChange={(e) => setCommentValue(e.target.value)}
             />
-            <Button
-              variant="contained"
-              onClick={() => {
-                setUserLikedComment({
-                  ...userLikedComment,
-                  comment: commentValue,
-                });
-                setShowComment(false);
-              }}
-            >
-              
+            <Button variant="contained" onClick={sendComment}>
               <SendIcon />
             </Button>
           </div>
         ) : (
           ""
         )}
-        
-{/*
+
+        {/*
           <IconButton
             className={clsx(classes.expand, {
               [classes.expandOpen]: expanded,
@@ -237,21 +258,21 @@ const postLiked=()=>{
             <ExpandMoreIcon />
           </IconButton>
  */}
-        
+
         <Collapse in={expanded} timeout="auto" unmountOnExit>
           <CardContent>
-            <Typography paragraph style={{float:'left',fontWidth:"bolder"}}>Comments:</Typography><br/>
-            {
-              props.value.comments.map(comment=>{
-               return <Typography paragraph>
-                 <strong>user says:</strong> { comment.comment}
-                </Typography>
-              })
-            }
-            
+            {props.value.comments.map((comment) => {
+              return (
+                <div className="container row" >
+                  <Typography paragraph className="row" style={{ float: "left"}}>
+                    <strong>{comment.commentowner} says:</strong>
+                    <p>{comment.comment}</p>
+                  </Typography>
+                </div>
+              );
+            })}
           </CardContent>
         </Collapse>
-      
       </Card>
     </div>
   );

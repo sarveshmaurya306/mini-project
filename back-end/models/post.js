@@ -1,5 +1,4 @@
-const mongoose = require('mongoose');
-
+const mongoose = require("mongoose");
 
 const postSchema = mongoose.Schema({
 	title: {
@@ -9,44 +8,47 @@ const postSchema = mongoose.Schema({
 	},
 
 	description: {
-		type: String,	},
+		type: String,
+	},
 
 	image: {
 		type: Buffer,
 	},
-	ownername:{
-		type:String,
-		required:true,
+	ownername: {
+		type: String,
+		required: true,
 	},
 	owner: {
 		type: mongoose.Schema.Types.ObjectId,
 		required: true,
-		ref: 'User' //for tast user relationship
+		ref: "User", //for tast user relationship
 	},
 	timestamp: {
-		type:String, 
-		default: new Date().toJSON().slice(0,10).replace(/-/g,'/')
+		type: String,
+		default: new Date().toJSON().slice(0, 10).replace(/-/g, "/"),
 	},
-	likes:[{
-		like:{
-			type:mongoose.Schema.Types.ObjectId,
-			ref:'User',
+	likes: [
+		{
+			like: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: "User",
+			},
 		},
-
-	}],
-	comments:[{
-		comment:{
-			type:String,
+	],
+	comments: [
+		{
+			comment: {
+				type: String,
+			},
+			commentowner: {
+				type: String,
+			},
 		},
-		commentowner:{
-			type:String,		}
-	}],
-	image:{
-		type:Buffer,
-	}
-})
-
-
+	],
+	image: {
+		type: Buffer,
+	},
+});
 
 const Post = mongoose.model("Post", postSchema);
 

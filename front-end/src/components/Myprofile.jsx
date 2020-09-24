@@ -9,6 +9,8 @@ import IconButton from "@material-ui/core/IconButton";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 // import {Avatar } from '@material-ui/core'
 import { Button } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
+// import IconButton from "@material-ui/core/IconButton";
 
 import { Paper } from "@material-ui/core";
 import Loading from "./Loading.jsx";
@@ -78,6 +80,18 @@ export default function Myprofile() {
       .catch((e) => alert("something went wrong please try again..."));
   };
   // console.log(userData);
+
+  const deletePost=(id)=>{
+    axios({
+      method:'delete',
+      url:`/user/${id}/deletepost`,
+      headers:{
+        Authorization:"Bearer "+sessionStorage.getItem('token'),
+      }
+    }).then(r=>window.location.reload()).catch(e=> alert('server error please retry.'))
+
+ }
+
   return (
     <div>
       {!userData ? (
@@ -202,33 +216,24 @@ export default function Myprofile() {
                         <br />
                       </div>
                       <div className="col flex-direction-column">
-
-                        <span style={{ fontWeight: "bold" }}>
-                          created on =
-                        </span>
+                        <span style={{ fontWeight: "bold" }}>created on =</span>
                         {item.timestamp} <br />
-                        
                         <span style={{ fontWeight: "bold" }}>Title = </span>
                         {item.title} <br />
-
                         <span style={{ fontWeight: "bold" }}>
                           description =
                         </span>
                         {item.description} <br />
-
-                        <span style={{ fontWeight: "bold" }}>
-                          {" "}
-                          likes =
-                        </span>
+                        <span style={{ fontWeight: "bold" }}> likes =</span>
                         {item.likes.length} <br />
-
-                        <span style={{ fontWeight: "bold" }}>
-                          comments =
-                        </span>
-                        {
-                            item.comments.length
-                        }
+                        <span style={{ fontWeight: "bold" }}>comments =</span>
+                        {item.comments.length}
                       </div>
+
+                      <IconButton aria-label="delete" onClick={()=>deletePost(item._id)} >
+                        <DeleteIcon />
+                      </IconButton>
+
                     </div>
                     <hr />
                   </Paper>
@@ -237,7 +242,7 @@ export default function Myprofile() {
             </div>
           </div>
 
-          <Footer style={{marginBottom:0}} />
+          <Footer style={{ marginBottom: 0 }} />
         </div>
       )}
     </div>
