@@ -45,43 +45,10 @@ export default function Myprofile() {
         setUserData(data.data);
       })
       .catch((e) => history.push("/"));
-
-    /*   axios({
-      method:'get',
-      url:'/user/getavatar',
-      headers:{
-        Authorization:'Bearer '+ sessionStorage.getItem('token')
-      }
-    }).then(res=>{console.log();setProfile(res.data.toString('base64'))}).catch(e=>console.log(e))*/
   }, []);
 
   const classes = useStyles();
-
-  const [photo, setPhoto] = useState(null);
   const [follow, setFollow] = useState(true);
-
-  const setAvatar = (e) => {
-    const file = e.target.files[0];
-    setPhoto(file);
-  };
-
-  const sendAvatar = (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append("photo", photo);
-    axios({
-      method: "post",
-      url: "/user/avatar",
-      data: formData,
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-        "content-type": "multipart/form-data",
-      },
-    })
-      .then((r) => window.location.reload())
-      .catch((e) => alert("something went wrong please try again..."));
-  };
-  // console.log(userData);
 
 
   return (
@@ -113,40 +80,6 @@ export default function Myprofile() {
                     height="180"
                   />
                   <br />
-
-                  <form
-                    onSubmit={sendAvatar}
-                    method="post"
-                    style={{ display: "flex", alignItems: "baseline" }}
-                  >
-                    <input
-                      accept="image/*"
-                      className={`${classes.input}`}
-                      id="icon-button-file"
-                      type="file"
-                      name="photo"
-                      onChange={setAvatar}
-                    />
-                    <label htmlFor="icon-button-file">
-                      <IconButton
-                        color="primary"
-                        aria-label="upload picture"
-                        component="span"
-                        title="image should be less than 3mb"
-                      >
-                        <PhotoCamera />
-                      </IconButton>
-                    </label>
-                    <Button
-                      disabled={!photo ? true : false}
-                      variant="contained"
-                      color="primary"
-                      type="submit"
-                    >
-                      {" "}
-                      upload{" "}
-                    </Button>
-                  </form>
                 </div>
 
                 <Button

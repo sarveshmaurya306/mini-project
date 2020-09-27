@@ -127,7 +127,7 @@ router.get("/user/:id/getavatar", async (req, res) => {
 });
 
 //get single user post
-router.get("/user/:postId/getpost", async (req, res) => {
+router.get("/user/:postId/getpost", auth,async (req, res) => {
     try {
         const post = await Post.findById(req.params.postId);
         if (!post) {
@@ -156,6 +156,7 @@ router.post("/user/:postId/inclike", auth, async (req, res) => {
 
         post.likes.push({
             like: req.user._id,
+            isLiked:true,
         });
         await post.save();
         console.log("liked");
@@ -212,8 +213,9 @@ router.get("/user/getallpost/:page/:limit", auth, async (req, res) => {
             .skip((page-1)*limit)
             .exec();
         const count= await Post.countDocuments();
-        console.log({posts,count})
-        res.send({posts,count});
+        // console.log(req.user._id)
+        console.log({posts,count,Id:req.user._id})
+        res.send({posts,count,Id:req.user._id});
     } catch(e) {
         console.log(e)
         res.send();

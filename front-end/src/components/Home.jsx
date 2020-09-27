@@ -21,6 +21,8 @@ function Home() {
   const history = useHistory();
   // const [loading, setLoading]= useState(true);
   const [posts, setPosts] = useState(false);
+  // const [user,setUser]=useState();
+  const [user,setUser]=useState('');
 
   const [pageCount, setPageCount] =useState(1);
 
@@ -34,8 +36,10 @@ function Home() {
       },
     })
       .then((res) => {
+        setUser(res.data.Id);
         setPageCount(Math.ceil(res.data.count/5))
         setPosts(res.data.posts);
+        // user=res.data.Id;
       })
       .catch((e) => {history.push("/")});
   }, []);
@@ -54,7 +58,7 @@ function Home() {
       .catch((e) => {alert('please try again ')});
   }
 
-  console.log(posts);
+  // console.log(user);
   return (
     <>
       {!posts ? (
@@ -66,11 +70,12 @@ function Home() {
               {!posts
                 ? ""
                 : posts.map((post) => {
-                    console.log(post);
+                    // console.log(post)
+                    // console.log(post);
                     return (
                       <div className=" d-flex flex-md-nowrap flex-wrap justify-content-between">
                         <div className="text-center w-100">
-                          <Cards value={post} />
+                          <Cards value={post} cuser={user}/>
                         </div>
                       </div>
                     );

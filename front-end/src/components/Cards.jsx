@@ -63,7 +63,23 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Cards(props) {
-  // console.log(props.value)
+
+  // console.log(props.cuser)
+  // console.log(props.value.likes)
+
+  var x=false;
+  
+  const length=props.value.likes.length;
+  const user=props.cuser;
+  console.log(user, length)
+
+  props.value.likes.forEach((like)=>{
+      if(like.like==user){
+        return x=true;
+      }
+    })
+
+  const [isLiked, setIsLiked] = useState(x);
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -71,8 +87,9 @@ export default function Cards(props) {
     setExpanded(!expanded);
   };
 
-  const [isLiked, setIsLiked] = useState(false);
-  // const likes=props.value.likes
+  // console.log(props.value.data.likes)
+  
+  const likes=props.value.likes
 
   const liked = { color: "red" };
 
@@ -81,7 +98,7 @@ export default function Cards(props) {
   const comment = { color: "green" };
 
   const [userLikedComment, setUserLikedComment] = useState({
-    like: false,
+    like: x,
     comment: "",
   });
 
@@ -108,12 +125,14 @@ export default function Cards(props) {
       once: true,
     });
     AOS.refresh();
+
+    
   }, []);
 
   const postLiked = () => {
     const url = `http://127.0.0.1:4000`;
     //if user isliking first time.
-    if(!userLikedComment.like){
+    if(!userLikedComment.like|| !isLiked){
 
       axios({
         method: "post",
@@ -128,7 +147,7 @@ export default function Cards(props) {
         }).catch((e) => {
           setIsLiked((e) => !e);
           setUserLikedComment({ ...userLikedComment, like: !isLiked });
-          alert('you have already liked this post.')
+          // alert('you have already liked this post.')
         });
 
     } else { //user has already liked and trying to dislike it.

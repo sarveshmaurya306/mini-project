@@ -33,6 +33,10 @@ const postSchema = mongoose.Schema({
 				type: mongoose.Schema.Types.ObjectId,
 				ref: "User",
 			},
+			isLiked:{
+				type:Boolean,
+				default:false,
+			},
 		},
 	],
 	comments: [
