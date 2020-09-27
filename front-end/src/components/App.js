@@ -8,8 +8,12 @@ import Home from "./Home";
 import Myprofile from "./Myprofile";
 import CreatePost from "./CreatePost";
 import Chat from "./Chat";
+import Checking from './Checking.jsx'
+import OtherProfile from './OthersProfile.jsx'
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import {IconButton} from '@material-ui/core'
+import { BrowserRouter as Router, Switch, Route,Link } from "react-router-dom";
 
 export default function App() {
     return (
@@ -45,6 +49,21 @@ export default function App() {
                     <div className="mt-4">
                         <Chat />
                     </div>
+                </Route>
+                <Route exact path="/check">
+                    <Checking/>
+                </Route>
+                <Route exact path="/other/profile">
+                      <div className="mt-4">
+                       <Link to="/home"style={{position:'fixed'}}>
+                            <IconButton color="secondary">
+                                <ArrowBackIcon />
+                            </IconButton>
+                        </Link>
+                        <center><h2>Searched Result</h2></center>
+                       
+                        <OtherProfile/>
+                      </div>
                 </Route>
             </Switch>
 

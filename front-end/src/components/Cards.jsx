@@ -52,9 +52,18 @@ const useStyles = makeStyles((theme) => ({
   avatar: {
     backgroundColor: red[500],
   },
+  cardHover: {
+    boxShadow: "0px 3px 5px grey",
+    borderRadius: 7,
+    transition: "0.4s all",
+    "&:hover": {
+      boxShadow: "grey 0px 0px 2px",
+    },
+  },
 }));
 
 export default function Cards(props) {
+  // console.log(props.value)
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -103,21 +112,42 @@ export default function Cards(props) {
 
   const postLiked = () => {
     const url = `http://127.0.0.1:4000`;
-    axios({
-      method: "post",
-      url: `${url}/user/${props.value._id}/inclike`,
-      headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
-      },
-    })
-      .then((r) => {
-        console.log(r);
+    //if user isliking first time.
+    if(!userLikedComment.like){
+
+      axios({
+        method: "post",
+        url: `${url}/user/${props.value._id}/inclike`,
+        headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
+        },
+      }).then((r) => {
+          // console.log(r);
+          setIsLiked((e) => !e);
+          setUserLikedComment({ ...userLikedComment, like: !isLiked });
+        }).catch((e) => {
+          setIsLiked((e) => !e);
+          setUserLikedComment({ ...userLikedComment, like: !isLiked });
+          alert('you have already liked this post.')
+        });
+
+    } else { //user has already liked and trying to dislike it.
+
+      axios({
+        method:'delete',
+        url: `${url}/user/${props.value._id}/declike`,
+        headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
+        },
+      }).then(r=>{
         setIsLiked((e) => !e);
         setUserLikedComment({ ...userLikedComment, like: !isLiked });
-      })
-      .catch((e) => alert("you have already liked"));
+        // console.log(r)
+      }) .catch(e=>alert('you have not like this post.'))
+
+    }
   };
-  console.log(userLikedComment.comment + "\n " + commentValue);
+  // console.log(userLikedComment.comment + "\n " + commentValue);
 
   const [numberComment, setNumberComment]=useState(0);
 
@@ -137,7 +167,8 @@ export default function Cards(props) {
         setShowComment(false);
       })
       .catch((e) => {
-        console.log(e);
+        // console.log(e);
+        alert('failed to post comment.')
       });
   };
 
@@ -150,7 +181,7 @@ export default function Cards(props) {
 
   return (
     <div className="my-4 container" data-aos="zoom-in">
-      <Card>
+      <Card className={`${classes.cardHover} `} >
         <CardHeader
           avatar={
             <Avatar aria-label="recipe" className={classes.avatar}>
@@ -182,11 +213,7 @@ export default function Cards(props) {
           >
             <Badge
               color="secondary"
-              badgeContent={
-                !isLiked
-                  ? props.value.likes.length
-                  : props.value.likes.length + 1
-              }
+              badgeContent={props.value.likes.length}
             >
               <FavoriteIcon style={isLiked ? liked : {}} />
             </Badge>
@@ -273,3 +300,11 @@ export default function Cards(props) {
     </div>
   );
 }
+
+/*
+
+likes
+!isLiked
+                 ? props.value.likes.length
+                 : props.value.likes.length + 1
+*/

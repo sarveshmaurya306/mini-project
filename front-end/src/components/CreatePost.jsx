@@ -51,7 +51,7 @@ export default function CreatePost() {
 
 	const sendPost = (e) => {
 		e.preventDefault();
-
+		const url=`http://127.0.0.1:4000`
 		const formData = new FormData();
 		formData.append("photo", photo);
 		formData.append("title", detail.title);
@@ -61,12 +61,12 @@ export default function CreatePost() {
 			? alert("please provide some value")
 			: axios({
 					method: "post",
-					url: "/user/createPost",
+					url: `${url}/user/createpost`,
 					data: formData,
 					headers: {
 						Authorization:
 							"Bearer " + sessionStorage.getItem("token"),
-						"Content-Type": "multipart/form-data",
+							"Content-Type": "multipart/form-data",
 					},
 			  })
 					.then((res) => {

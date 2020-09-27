@@ -234,7 +234,7 @@ export default function Navbar() {
         <p>Notifications</p>
       </MenuItem>
       */}
-      <Link to="createpost">
+      <Link to="/createpost">
         <MenuItem style={{display:'flex', color:'black', textDecoration:'none' }}>
           <IconButton  >
             <PostAddIcon />
@@ -376,11 +376,15 @@ export default function Navbar() {
               setResult('');
             }}>  <CancelIcon style={{color:'black'}}  />  </IconButton></div>
           }
+        {
+           !result?"":<div style={{position:'relative', height:'75vh', overflowY:'scroll'}} > 
           {
-
             !result?'':result.data.map(item => {
-              console.log(item)
-              return <Link to='/other/profile' key={item._id} className="container-fluid " style={{ margin:"20px 0px", }}>
+              return <Link to='/other/profile' key={item._id} onClick={()=>{
+                console.log(item._id)
+                window.sessionStorage.setItem('userId', item._id);  //saving user id in sessionStorage;
+                
+              }} className="container-fluid mb-2" style={{ margin:"10px 0px", }}>
                   <div className="d-flex justify-content-around flex-wrap " style={{ alignItems: "baseline"}} >
                     <Paper elevation= {2} className="p-3" style={{width:'90vw'}} >  
                       <img className="rounded-circle bg-secondary " alt="profile pic" src={!item.avatar?'https://f.v1.n0.cdn.getcloudapp.com/items/0L2l2K3f3e1H2o1O3p0f/robot.png':`http://127.0.0.1:4000/user/${item._id}/getavatar`} width="50" height="50" />
@@ -390,6 +394,12 @@ export default function Navbar() {
               </Link>
             })
           }
+          </div>
+        }
+
+
+
+
         </AppBar>
         {renderMobileMenu}
         {renderMenu}

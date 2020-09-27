@@ -10,14 +10,14 @@ require('./db/mongoConnect')
 const userModel = require('./models/user')
 const bcrypt = require('bcryptjs');
 const loginRouter = require('./router/login.js');
-const joinRouter = require('./router/join.js')
+const userRouter = require('./router/user.js')
 
 const port = process.env.PORT || 4000
 
 app.use(express.json());
 
 app.use(loginRouter);
-app.use(joinRouter)
+app.use(userRouter)
 
 const bodyParser= require('body-parser')
 app.use(bodyParser.urlencoded({extended:true}))

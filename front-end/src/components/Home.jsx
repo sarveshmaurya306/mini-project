@@ -2,15 +2,18 @@ import React, { useEffect, useState } from "react";
 
 // import backgroundImg from "../images/back.png";
 
+import { SnackbarProvider, useSnackbar } from 'notistack';
 import Pagination from "@material-ui/lab/Pagination";
 
 import Cards from "./Cards.jsx";
 import Footer from "./Footer.jsx";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
-
+import {Button} from '@material-ui/core'
 // import {Skeleton} from '@material-ui/lab'
 import Loading from "./Loading.jsx";
+
+
 
 function Home() {
   // const [status, setStatus] = useState(false);
@@ -34,7 +37,7 @@ function Home() {
         setPageCount(Math.ceil(res.data.count/5))
         setPosts(res.data.posts);
       })
-      .catch((e) => {alert('please try again')});
+      .catch((e) => {history.push("/")});
   }, []);
 
   const nextPage=(e, value) => {      
@@ -86,8 +89,10 @@ function Home() {
 
         <div className="d-flex flex-md-nowrap flex-wrap justify-content-between">
           <Cards />
-        </div>*/}
-
+        </div>
+            <SnackbarProvider maxSnack={3} autoHideDuration={2000}>
+              <MyApp />
+            </SnackbarProvider>*/}
           <div className="d-flex justify-content-center">
             <Pagination
               count={pageCount}

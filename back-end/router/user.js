@@ -49,11 +49,7 @@ router.post("/join", async (req, res) => {
 
 //! creating post.
 
-router.post(
-    "/user/createpost",
-    upload.single("photo"),
-    auth,
-    async (req, res) => {
+router.post("/user/createpost",upload.single("photo"), auth, async (req, res) => {
         const { title, description } = req.body;
         console.log(req.body);
         try {
@@ -149,13 +145,14 @@ router.post("/user/:postId/inclike", auth, async (req, res) => {
     // console.log(typeof req.user._id)
     try {
         const post = await Post.findById(req.params.postId);
+        if (!post) throw new Error("post not found");
         const liked = post.likes.map(
             (user) => user.like.toString() == req.user._id.toString()
         );
         const isLiked = liked.includes(true);
 
         if (isLiked) throw new Error("post is already liked");
-        if (!post) throw new Error("post not found");
+        
 
         post.likes.push({
             like: req.user._id,
@@ -168,6 +165,22 @@ router.post("/user/:postId/inclike", auth, async (req, res) => {
         res.status(500).send("failed ");
     }
 });
+
+router.delete('/user/:postId/declike', auth, async(req,res)=>{
+    try{
+        const post =await Post.findById(req.params.postId);
+        if(!post) throw new Error('post not found');
+
+        await Post.update({_id:req.params.postId},{$pull:{likes:{like:req.user._id}}},{new:true, multi:true}  )
+
+        await post.save();
+
+        res.send('done');
+    } catch(e){
+        console.log(e)
+        res.status(500).send();
+    }
+})
 
 router.post("/user/:postId/addcomment/:comment", auth, async (req, res) => {
     try {
@@ -230,6 +243,8 @@ router.delete('/user/:postId/deletepost', auth, async(req,res)=>{
     }
 })
 
+
+
 /*
 router.get('/user/:id/post', async (req,res) =>{
     try{
@@ -243,6 +258,18 @@ router.get('/user/:id/post', async (req,res) =>{
         res.send(500,e)
     }
 })*/
+router.get('/user/other/profile/:userId', auth, async(req,res)=>{
+     try {
+        const user = await User.findById(req.params.userId);
+
+        await user.populate("userposts").execPopulate();
+        console.log(user);
+        res.send({ userData: user.userposts, user });
+    } catch (e) {
+        console.log(e);
+        res.status(500).send();
+    }
+})
 
 router.get("/checkuserauth", auth, (req, res) => {
     res.send("authenticated");

@@ -32,9 +32,11 @@ export default function Myprofile() {
   const [userData, setUserData] = useState();
 
   useEffect(() => {
+    const userId= window.sessionStorage.getItem('userId');
+    window.sessionStorage.removeItem('userId');
     axios({
       method: "get",
-      url: "/user/getpost",
+      url: `/user/other/profile/${userId}`,
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
@@ -81,16 +83,6 @@ export default function Myprofile() {
   };
   // console.log(userData);
 
-  const deletePost=(id)=>{
-    axios({
-      method:'delete',
-      url:`/user/${id}/deletepost`,
-      headers:{
-        Authorization:"Bearer "+sessionStorage.getItem('token'),
-      }
-    }).then(r=>alert("post has been deleted kindly refresh...")).catch(e=> alert('server error please retry.'))
-
- }
 
   return (
     <div>
@@ -228,11 +220,6 @@ export default function Myprofile() {
                         <span style={{ fontWeight: "bold" }}>Comments =</span>
                         {item.comments.length}
                       </div>
-
-                      <IconButton aria-label="delete" onClick={()=>deletePost(item._id)} >
-                        <DeleteIcon style={{color:'red'}} />
-                      </IconButton>
-
                     </div>
                     <hr />
                   </Paper>
