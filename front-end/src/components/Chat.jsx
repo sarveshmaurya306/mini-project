@@ -3,6 +3,10 @@ import Loading from "./Loading.jsx";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
+
 export default function Chat() {
   const [loading, setLoading] = useState(true);
   const history = useHistory();

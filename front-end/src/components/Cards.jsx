@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import moment from "moment";
 
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
@@ -19,7 +20,6 @@ import MoreVertIcon from "@material-ui/icons/MoreVert";
 import TextField from "@material-ui/core/TextField";
 import { Button, Badge } from "@material-ui/core";
 import axios from "axios";
-// import {Paper} from '@material-ui/core'
 
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -28,6 +28,9 @@ import CommentIcon from "@material-ui/icons/Comment";
 import AddCommentIcon from "@material-ui/icons/AddComment";
 import SendIcon from "@material-ui/icons/Send";
 
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
     paddingTop: "56.25%", // 16:9
   },
   expand: {
-    transform: "rotate(0deg)",
+    // transform: "rotate(0deg)",
     color: "",
     marginLeft: "auto",
     transition: theme.transitions.create("transform", {
@@ -53,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: red[500],
   },
   cardHover: {
-    boxShadow: "0px 3px 5px grey",
+    boxShadow: "0px 2px 5px grey",
     borderRadius: 7,
     transition: "0.4s all",
     "&:hover": {
@@ -63,21 +66,20 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Cards(props) {
-
   // console.log(props.cuser)
   // console.log(props.value.likes)
 
-  var x=false;
-  
-  const length=props.value.likes.length;
-  const user=props.cuser;
-  console.log(user, length)
+  var x = false;
 
-  props.value.likes.forEach((like)=>{
-      if(like.like==user){
-        return x=true;
-      }
-    })
+  const length = props.value.likes.length;
+  const user = props.cuser;
+  console.log(user, length);
+
+  props.value.likes.forEach((like) => {
+    if (like.like == user) {
+      return (x = true);
+    }
+  });
 
   const [isLiked, setIsLiked] = useState(x);
   const classes = useStyles();
@@ -88,8 +90,8 @@ export default function Cards(props) {
   };
 
   // console.log(props.value.data.likes)
-  
-  const likes=props.value.likes
+
+  const likes = props.value.likes;
 
   const liked = { color: "red" };
 
@@ -116,7 +118,7 @@ export default function Cards(props) {
           url: `/user/${e.target.key}/post`,
         });
   };*/
-  
+
   useEffect(() => {
     AOS.init({
       duration: 2500,
@@ -125,50 +127,57 @@ export default function Cards(props) {
       once: true,
     });
     AOS.refresh();
-
-    
   }, []);
+
+  console.log(props.value);
 
   const postLiked = () => {
     const url = `http://127.0.0.1:4000`;
     //if user isliking first time.
-    if(!userLikedComment.like|| !isLiked){
-
+    if (!userLikedComment.like || !isLiked) {
       axios({
         method: "post",
         url: `${url}/user/${props.value._id}/inclike`,
         headers: {
           Authorization: "Bearer " + sessionStorage.getItem("token"),
         },
-      }).then((r) => {
+      })
+        .then((r) => {
           // console.log(r);
           setIsLiked((e) => !e);
           setUserLikedComment({ ...userLikedComment, like: !isLiked });
-        }).catch((e) => {
+        })
+        .catch((e) => {
           setIsLiked((e) => !e);
           setUserLikedComment({ ...userLikedComment, like: !isLiked });
           // alert('you have already liked this post.')
         });
-
-    } else { //user has already liked and trying to dislike it.
+    } else {
+      //user has already liked and trying to dislike it.
 
       axios({
-        method:'delete',
+        method: "delete",
         url: `${url}/user/${props.value._id}/declike`,
         headers: {
           Authorization: "Bearer " + sessionStorage.getItem("token"),
         },
-      }).then(r=>{
-        setIsLiked((e) => !e);
-        setUserLikedComment({ ...userLikedComment, like: !isLiked });
-        // console.log(r)
-      }) .catch(e=>alert('you have not like this post.'))
-
+      })
+        .then((r) => {
+          setIsLiked((e) => !e);
+          setUserLikedComment({ ...userLikedComment, like: !isLiked });
+          // console.log(r)
+        })
+        .catch((e) =>
+          toast.warn("you have not like this post.", {
+            position: "bottom-left",
+            autoClose: 4000,
+          })
+        );
     }
   };
   // console.log(userLikedComment.comment + "\n " + commentValue);
 
-  const [numberComment, setNumberComment]=useState(0);
+  const [numberComment, setNumberComment] = useState(0);
 
   const sendComment = () => {
     const url = `http://127.0.0.1:4000`;
@@ -181,26 +190,29 @@ export default function Cards(props) {
       },
     })
       .then((r) => {
-        // setCommentValue("");
-        setNumberComment(e=>e+1);
+        setCommentValue("");
+        setNumberComment((e) => e + 1);
         setShowComment(false);
       })
       .catch((e) => {
         // console.log(e);
-        alert('failed to post comment.')
+        toast.error("failed to post comment.", {
+          position: "bottom-left",
+          autoClose: 4000,
+        });
       });
   };
 
   const avatarDp = props.value.ownername.split("");
   const avatarChar = avatarDp[0];
-  // console.log(props.value)
+  const time=parseInt(props.value.timestamp);
   const buffer = props.value.image.data; // e.g., <Buffer 89 50 4e ... >
   const b64 = new Buffer(buffer).toString("base64");
   const mimeType = "image/jpg"; // e.g., image/png
 
   return (
     <div className="my-4 container" data-aos="zoom-in">
-      <Card className={`${classes.cardHover} `} >
+      <Card className={`${classes.cardHover} `}>
         <CardHeader
           avatar={
             <Avatar aria-label="recipe" className={classes.avatar}>
@@ -208,7 +220,7 @@ export default function Cards(props) {
             </Avatar>
           }
           title={props.value.ownername}
-          subheader={props.value.timestamp}
+          subheader={moment(time).format("dddd, Do MMMM YYYY, h:mm:ss a")}
         />
 
         <CardMedia
@@ -230,10 +242,7 @@ export default function Cards(props) {
             onClick={postLiked}
             title="like"
           >
-            <Badge
-              color="secondary"
-              badgeContent={props.value.likes.length}
-            >
+            <Badge color="secondary" badgeContent={props.value.likes.length}>
               <FavoriteIcon style={isLiked ? liked : {}} />
             </Badge>
           </IconButton>
@@ -256,7 +265,10 @@ export default function Cards(props) {
             aria-expanded={expanded}
             aria-label="show more"
           >
-            <Badge color="secondary" badgeContent={props.value.comments.length+numberComment}>
+            <Badge
+              color="secondary"
+              badgeContent={props.value.comments.length + numberComment}
+            >
               <CommentIcon />
             </Badge>
           </IconButton>
@@ -266,7 +278,8 @@ export default function Cards(props) {
           ""
         ) : (
           <div className="container mb-4">
-            you: <strong>{commentValue}</strong>
+            <strong style={{ color: "skyblue" }}>you: </strong>
+            {commentValue}
           </div>
         )}
         {showComment ? (
@@ -305,10 +318,16 @@ export default function Cards(props) {
           <CardContent>
             {props.value.comments.map((comment) => {
               return (
-                <div className="container row" >
-                  <Typography paragraph className="row" style={{ float: "left"}}>
-                    <strong>{comment.commentowner} says:</strong>
-                    <p>{comment.comment}</p>
+                <div className="container row">
+                  <Typography
+                    paragraph
+                    className="row"
+                    style={{ float: "left" }}
+                  >
+                    <strong style={{ color: "skyblue" }}>
+                      {comment.commentowner} says:{" "}
+                    </strong>
+                    <p> {comment.comment}</p>
                   </Typography>
                 </div>
               );
@@ -319,11 +338,3 @@ export default function Cards(props) {
     </div>
   );
 }
-
-/*
-
-likes
-!isLiked
-                 ? props.value.likes.length
-                 : props.value.likes.length + 1
-*/

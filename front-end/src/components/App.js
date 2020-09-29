@@ -8,7 +8,7 @@ import Home from "./Home";
 import Myprofile from "./Myprofile";
 import CreatePost from "./CreatePost";
 import Chat from "./Chat";
-import Checking from './Checking.jsx'
+
 import OtherProfile from './OthersProfile.jsx'
 
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
@@ -19,7 +19,9 @@ export default function App() {
     return (
         <Router>
             <Switch>
-                <Route exact path="/">
+
+            
+                <Route exact path="/" >
                     <Login />
                 </Route>
 
@@ -50,12 +52,10 @@ export default function App() {
                         <Chat />
                     </div>
                 </Route>
-                <Route exact path="/check">
-                    <Checking/>
-                </Route>
+
                 <Route exact path="/other/profile">
-                      <div className="mt-4">
-                       <Link to="/home"style={{position:'fixed'}}>
+                    <div className="mt-4">
+                        <Link to="/home"style={{position:'fixed'}}>
                             <IconButton color="secondary">
                                 <ArrowBackIcon />
                             </IconButton>
@@ -63,11 +63,12 @@ export default function App() {
                         <center><h2>Searched Result</h2></center>
                        
                         <OtherProfile/>
-                      </div>
+                    </div>
                 </Route>
+
+
             </Switch>
 
-            {/*<Footer/>*/}
         </Router>
     );
 }

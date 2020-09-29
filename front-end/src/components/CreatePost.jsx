@@ -11,6 +11,10 @@ import Loading from "./Loading.jsx";
 import IconButton from "@material-ui/core/IconButton";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
+
 const useStyles = makeStyles((theme) => ({
 	cardHover: {
 		boxShadow: "0px 3px 5px grey",
@@ -51,14 +55,17 @@ export default function CreatePost() {
 
 	const sendPost = (e) => {
 		e.preventDefault();
-		const url=`http://127.0.0.1:4000`
+		const url = `http://127.0.0.1:4000`;
 		const formData = new FormData();
 		formData.append("photo", photo);
 		formData.append("title", detail.title);
 		formData.append("description", detail.description);
 		// console.log(data)
 		!detail.title || !detail.description
-			? alert("please provide some value")
+			? toast.warn("please provide some value", {
+					position: "bottom-left",
+					autoClose: 4000,
+			  })
 			: axios({
 					method: "post",
 					url: `${url}/user/createpost`,
@@ -66,14 +73,22 @@ export default function CreatePost() {
 					headers: {
 						Authorization:
 							"Bearer " + sessionStorage.getItem("token"),
-							"Content-Type": "multipart/form-data",
+						"Content-Type": "multipart/form-data",
 					},
 			  })
 					.then((res) => {
-						alert("Post created");
+						toast.success("Post created", {
+							position: "bottom-left",
+							autoClose: 4000,
+						});
 						setDetail({ title: "", description: "", comment: "" });
 					})
-					.catch((e) => alert("please try again..."));
+					.catch((e) =>
+						toast.error("Post photo must be less than 3MB.", {
+							position: "bottom-left",
+							autoClose: 4000,
+						})
+					);
 	};
 
 	useEffect(() => {

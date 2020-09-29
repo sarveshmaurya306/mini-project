@@ -1,58 +1,60 @@
-const express = require('express');
-const app = express()
+const express = require("express");
+const app = express();
 
-
-const cors = require('cors');
+const cors = require("cors");
 app.use(cors());
 
-require('./db/mongoConnect')
+require("./db/mongoConnect");
 
-const userModel = require('./models/user')
-const bcrypt = require('bcryptjs');
-const loginRouter = require('./router/login.js');
-const userRouter = require('./router/user.js')
+const userModel = require("./models/user");
+const bcrypt = require("bcryptjs");
+const loginRouter = require("./router/login.js");
+const userRouter = require("./router/user.js");
 
-const port = process.env.PORT || 4000
+const port = process.env.PORT || 4000;
 
 app.use(express.json());
 
 app.use(loginRouter);
-app.use(userRouter)
+app.use(userRouter);
 
-const bodyParser= require('body-parser')
-app.use(bodyParser.urlencoded({extended:true}))
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({ extended: true }));
 
-
-
-app.get('/show', async (req, res) => {
+app.get("/show", async (req, res) => {
     try {
         const user = await userModel.find({});
-        if (!user)
-            return res.send('no user found')
+        if (!user) return res.send("no user found");
 
         res.send(user);
     } catch (e) {
-        res.send({ error: 'connection error...' })
+        res.send({ error: "connection error..." });
     }
-})
+});
 
-app.get('/show/:name', async (req, res) => {
-    console.log(req.params.name)
+app.get("/show/:name", async (req, res) => {
+    console.log(req.params.name);
     try {
-        const user = await userModel.find({ "name": req.params.name })
-        if (!user)
-            return res.status(404).send();
+        const user = await userModel.find({ name: req.params.name });
+        if (!user) return res.status(404).send();
         res.send(user);
     } catch (e) {
-        res.status(500).send()
+        res.status(500).send();
     }
-})
+});
 
-app.listen(port, () => console.log(`running on ${port}`))
+app.listen(port, () => console.log(`running on ${port}`));
 
+const moment = require("moment");
 
+const show = () => {
+    const time = new Date().getTime();
+    console.log(typeof time)
+    return moment(time).format("dddd, MMMM Do YYYY, h:mm:ss a");
+};
 
-//post user relationship 
+console.log(show());
+//post user relationship
 /*
 const Post = require('./models/post.js');
 
@@ -65,7 +67,6 @@ const main=async()=>{
 }
 
 main();*/
-
 
 /*const User =require('./models/user.js');
 

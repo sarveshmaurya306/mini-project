@@ -25,7 +25,7 @@ const postSchema = mongoose.Schema({
 	},
 	timestamp: {
 		type: String,
-		default: new Date().toJSON().slice(0, 10).replace(/-/g, "/"),
+		default:new Date().getTime(),
 	},
 	likes: [
 		{
@@ -33,9 +33,9 @@ const postSchema = mongoose.Schema({
 				type: mongoose.Schema.Types.ObjectId,
 				ref: "User",
 			},
-			isLiked:{
-				type:Boolean,
-				default:false,
+			isLiked: {
+				type: Boolean,
+				default: false,
 			},
 		},
 	],
@@ -49,11 +49,10 @@ const postSchema = mongoose.Schema({
 			},
 		},
 	],
-	image: {
-		type: Buffer,
-	},
 });
 
 const Post = mongoose.model("Post", postSchema);
 
 module.exports = Post;
+
+// default: new Date().toJSON().slice(0, 10).replace(/-/g, "/"),

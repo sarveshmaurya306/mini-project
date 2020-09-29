@@ -13,10 +13,17 @@ export default function Footer() {
         }}
       >
         <center>
-          Copyright &copy; 2020 KietTalks Web Application{" "}
-          <a href="https://www.linkedin.com/in/sarvesh-kumar-53986861" style={{ textDecoration: "none", color: "orange" }}>
-            Contact Us.
-          </a>
+          Copyright &copy; {new Date().getFullYear()} KietTalks Web Application
+          <strong>
+            &nbsp;
+            <a
+              href="https://www.linkedin.com/in/sarvesh-kumar-53986861"
+              target="_blank"
+              style={{ textDecoration: "none", color: "orange" }}
+            >
+              Contact Us.
+            </a>
+          </strong>
         </center>
       </div>
     </div>

@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import backgroundImg from "../images/back.png";
 import logo from "../images/Logo.png";
-import { Button} from "@material-ui/core";
+import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import useStyles from "./Styles";
-// import M from "materialize-css";
+
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
@@ -12,6 +12,10 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 
 import Footer from "./Footer.jsx";
+
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
 
 export default function Login() {
   const classes = useStyles();
@@ -23,16 +27,36 @@ export default function Login() {
 
   const sendLoginForm = (e) => {
     e.preventDefault();
-    
-    axios
-      .post(`/login`, { ...loginDetails })
-      .then((res) => {
-        setMessage(res.data.message);
-        window.sessionStorage.setItem("token", res.data.token);
-        history.push("/home");
-      })
-      .catch((err) => window.alert("not authorized user"));
-    // M.toast({html: 'I am a toast', classes:"bg-danger p-3 text-light mb-0"})
+    // console.log(loginDetails);
+
+    const checkUserDetails = (loginDetails) => {
+      if (loginDetails.email && loginDetails.password.length >= 7) {
+        return true;
+      } else {
+        toast.error("Please provide currect details.", {
+          position: "bottom-left",
+          autoClose: 4000,
+        });
+        return false;
+      }
+    };
+    const isCurrect = checkUserDetails(loginDetails);
+
+    if (isCurrect) {
+      axios
+        .post(`/login`, { ...loginDetails })
+        .then((res) => {
+          setMessage(res.data.message);
+          window.sessionStorage.setItem("token", res.data.token);
+          history.push("/home");
+        })
+        .catch((err) =>
+          toast.error("Please provide currect details.", {
+            position: "bottom-left",
+            autoClose: 4000,
+          })
+        );
+    }
   };
 
   useEffect(() => {

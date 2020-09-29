@@ -1,6 +1,14 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import {Paper, Menu, MenuItem, InputBase, IconButton, Toolbar, AppBar} from '@material-ui/core'
+import {
+  Paper,
+  Menu,
+  MenuItem,
+  InputBase,
+  IconButton,
+  Toolbar,
+  AppBar,
+} from "@material-ui/core";
 // import MenuIcon from '@material-ui/icons/Menu';
 
 import SearchIcon from "@material-ui/icons/Search";
@@ -11,15 +19,19 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import mainLogo from "../images/Logo.png";
 import HomeIcon from "@material-ui/icons/Home";
 import PostAddIcon from "@material-ui/icons/PostAdd";
-import CancelIcon from '@material-ui/icons/Cancel';
+import CancelIcon from "@material-ui/icons/Cancel";
 // import {IconButton} from '@material-ui/icons'
 
 // import { Icon } from '@material-ui/core';
 import { Button } from "@material-ui/core";
 import axios from "axios";
-import { Link} from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 import ForumIcon from "@material-ui/icons/Forum";
+
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
 
 // import { useHistory } from "react-router-dom";
 
@@ -108,18 +120,25 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Navbar() {
   const [searchUser, setSearchUser] = useState("");
-  const [result, setResult] = useState()
+  const [result, setResult] = useState();
   // const history = useHistory();
 
   // const [status, setStatus] = useState(true);
 
-  const search=(search) => {
-                const user = searchUser;
-                axios
-                  .get(`http://localhost:4000/show/${user}`)
-                  .then(d => {d.data.length===0? setResult('') : setResult(d) })
-                  .catch(e => alert('connection failed'))
-              }
+  const search = (search) => {
+    const user = searchUser;
+    axios
+      .get(`http://localhost:4000/show/${user}`)
+      .then((d) => {
+        d.data.length === 0 ? setResult("") : setResult(d);
+      })
+      .catch((e) =>
+        toast.warn("connection failed", {
+          position: "bottom-left",
+          autoClose: 4000,
+        })
+      );
+  };
   /*  useEffect(()=>{
     
     axios({
@@ -133,7 +152,7 @@ export default function Navbar() {
 
   },[])*/
 
-/*  React.useEffect(()=>{
+  /*  React.useEffect(()=>{
     window.addEventListener('click',()=>{
 
       setResult();
@@ -178,14 +197,27 @@ export default function Navbar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <Link to="/profile">
+      <NavLink to="/profile" activeStyle={{ borderBottom: "2px solid black" }}>
         {" "}
-        <MenuItem style={{color:'black', textDecoration:'none'}} onClick={handleMenuClose}>Profile</MenuItem>{" "}
-      </Link>
-      <Link to="/">
+        <MenuItem
+          style={{ color: "black", textDecoration: "none" }}
+          onClick={handleMenuClose}
+        >
+          Profile
+        </MenuItem>{" "}
+      </NavLink>
+      <NavLink to="/" activeStyle={{ borderBottom: "2px solid black" }}>
         {" "}
-        <MenuItem style={{color:'black', textDecoration:'none'}} onClick={()=>{ handleMenuClose(); window.sessionStorage.removeItem('token')}}>Log Out</MenuItem>
-      </Link>
+        <MenuItem
+          style={{ color: "black", textDecoration: "none" }}
+          onClick={() => {
+            handleMenuClose();
+            window.sessionStorage.removeItem("token");
+          }}
+        >
+          Log Out
+        </MenuItem>
+      </NavLink>
     </Menu>
   );
 
@@ -201,27 +233,33 @@ export default function Navbar() {
       onClose={handleMobileMenuClose}
     >
       {/* <Router> */}
-      <Link to="/home">
-        <MenuItem style={{display:'flex', alignItems:'baseline', color:'black', textDecoration:'none' }}>
+      <NavLink to="/home" activeStyle={{ borderBottom: "2px solid black" }}>
+        <MenuItem
+          style={{
+            display: "flex",
+            alignItems: "baseline",
+            color: "black",
+            textDecoration: "none",
+          }}
+        >
           <IconButton color="inherit">
             <HomeIcon />
           </IconButton>
           <p>Home</p>
         </MenuItem>
-      </Link>
+      </NavLink>
       {/* </Router> */}
 
-      <Link to="/chat">
-
-          <MenuItem style={{display:'flex',color:'black', textDecoration:'none' }}>
-              <IconButton aria-label="show 4 new mails" color="inherit">
-                <ForumIcon />
-              </IconButton>
-              <p style={{ marginBottom:0}} >chat</p>
-         </MenuItem>
-
-
-      </Link>
+      <NavLink to="/chat" activeStyle={{ borderBottom: "2px solid black" }}>
+        <MenuItem
+          style={{ display: "flex", color: "black", textDecoration: "none" }}
+        >
+          <IconButton aria-label="show 4 new mails" color="inherit">
+            <ForumIcon />
+          </IconButton>
+          <p style={{ marginBottom: 0 }}>chat</p>
+        </MenuItem>
+      </NavLink>
       {/* <MenuItem>
         <IconButton aria-label="show 11 new notifications" color="inherit">
          <Badge badgeContent={11} color="secondary">
@@ -234,16 +272,24 @@ export default function Navbar() {
         <p>Notifications</p>
       </MenuItem>
       */}
-      <Link to="/createpost">
-        <MenuItem style={{display:'flex', color:'black', textDecoration:'none' }}>
-          <IconButton  >
+      <NavLink
+        to="/createpost"
+        activeStyle={{ borderBottom: "2px solid black" }}
+      >
+        <MenuItem
+          style={{ display: "flex", color: "black", textDecoration: "none" }}
+        >
+          <IconButton>
             <PostAddIcon />
           </IconButton>
-          <p style={{ marginBottom:0}} >create post</p>
+          <p style={{ marginBottom: 0 }}>create post</p>
         </MenuItem>
-      </Link>
+      </NavLink>
 
-      <MenuItem onClick={handleProfileMenuOpen} style={{display:'flex', color:'black', textDecoration:'none' }}>
+      <MenuItem
+        onClick={handleProfileMenuOpen}
+        style={{ display: "flex", color: "black", textDecoration: "none" }}
+      >
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
@@ -252,7 +298,7 @@ export default function Navbar() {
         >
           <AccountCircle />
         </IconButton>
-        <p style={{ marginBottom:0}} >Profile</p>
+        <p style={{ marginBottom: 0 }}>Profile</p>
       </MenuItem>
     </Menu>
   );
@@ -270,16 +316,16 @@ export default function Navbar() {
             >
               {/* <MenuIcon /> */}
             </IconButton>
-            <Link to="/home">
+            <NavLink to="/home">
               <img
                 src={mainLogo}
                 alt="logo"
                 className={classes.logoResponsive}
                 height="40px"
                 width="auto"
-                style={{ marginTop:5 }}
+                style={{ marginTop: 5 }}
               />
-            </Link >
+            </NavLink>
 
             {/* <Typography className={classes.title} noWrap>
           </Typography> */}
@@ -292,11 +338,10 @@ export default function Navbar() {
                 style={{ color: "black", padding: "3px 10px" }}
                 inputProps={{ "aria-label": "search" }}
               />
-             {/* <CancelIcon  style={{color:'black'}} onClick={()=>{
+              {/* <CancelIcon  style={{color:'black'}} onClick={()=>{
                 setSearchUser('');
                 return ;
               }} />*/}
-
             </div>
             <Button
               variant="outlined"
@@ -306,14 +351,17 @@ export default function Navbar() {
             >
               <SearchIcon style={{ color: "black" }} />
             </Button>
-            
+
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
               <IconButton color="inherit" title="home">
                 {/* <Router> */}
-                <Link to="/home">
+                <NavLink
+                  to="/home"
+                  activeStyle={{ borderBottom: "2px solid black" }}
+                >
                   <HomeIcon style={{ color: "black", fontSize: 28 }} />
-                </Link>
+                </NavLink>
                 {/* </Router> */}
               </IconButton>
 
@@ -322,10 +370,13 @@ export default function Navbar() {
                 color="inherit"
                 title="chat"
               >
-                <Link to="/chat">
+                <NavLink
+                  to="/chat"
+                  activeStyle={{ borderBottom: "2px solid black" }}
+                >
                   {" "}
                   <ForumIcon style={{ color: "black" }} />{" "}
-                </Link>
+                </NavLink>
               </IconButton>
 
               <IconButton
@@ -333,10 +384,13 @@ export default function Navbar() {
                 color="inherit"
                 title="create post"
               >
-                <Link to="/createpost">
+                <NavLink
+                  to="/createpost"
+                  activeStyle={{ borderBottom: "2px solid black" }}
+                >
                   {" "}
                   <PostAddIcon style={{ color: "black" }} />{" "}
-                </Link>
+                </NavLink>
               </IconButton>
 
               {/*
@@ -369,45 +423,91 @@ export default function Navbar() {
             </div>
           </Toolbar>
 
-
-        {/* to be noted */}
-          {
-            !result?"":<div style={{display:'flex', alignItems:'center', justifyContent:'flex-end', paddingRight:'48px'}} >  <IconButton color="secondary" onClick={()=>{
-              setResult('');
-            }}>  <CancelIcon style={{color:'black'}}  />  </IconButton></div>
-          }
-        {
-           !result?"":<div style={{position:'relative', height:'75vh', overflowY:'scroll'}} > 
-          {
-            !result?'':result.data.map(item => {
-              return <Link to='/other/profile' key={item._id} onClick={()=>{
-                console.log(item._id)
-                window.sessionStorage.setItem('userId', item._id);  //saving user id in sessionStorage;
-                
-              }} className="container-fluid mb-2" style={{ margin:"10px 0px", }}>
-                  <div className="d-flex justify-content-around flex-wrap " style={{ alignItems: "baseline"}} >
-                    <Paper elevation= {2} className="p-3" style={{width:'90vw'}} >  
-                      <img className="rounded-circle bg-secondary " alt="profile pic" src={!item.avatar?'https://f.v1.n0.cdn.getcloudapp.com/items/0L2l2K3f3e1H2o1O3p0f/robot.png':`http://127.0.0.1:4000/user/${item._id}/getavatar`} width="50" height="50" />
-                      <span className='p-4'> {item.name} is a {item.currentStatus}.  </span>
-                    </Paper>
-                </div>
-              </Link>
-            })
-          }
-          </div>
-        }
-
-
-
-
+          {/* to be noted */}
+          {!result ? (
+            ""
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "flex-end",
+                paddingRight: "48px",
+              }}
+            >
+              {" "}
+              <IconButton
+                color="secondary"
+                onClick={() => {
+                  setResult("");
+                }}
+              >
+                {" "}
+                <CancelIcon style={{ color: "black" }} />{" "}
+              </IconButton>
+            </div>
+          )}
+          {!result ? (
+            ""
+          ) : (
+            <div
+              style={{
+                position: "relative",
+                height: "75vh",
+                overflowY: "scroll",
+              }}
+            >
+              {!result
+                ? ""
+                : result.data.map((item) => {
+                    return (
+                      <NavLink
+                        to="/other/profile"
+                        key={item._id}
+                        onClick={() => {
+                          console.log(item._id);
+                          window.sessionStorage.setItem("userId", item._id); //saving user id in sessionStorage;
+                        }}
+                        className="container-fluid mb-2"
+                        style={{ margin: "10px 0px" }}
+                      >
+                        <div
+                          className="d-flex justify-content-around flex-wrap "
+                          style={{ alignItems: "baseline" }}
+                        >
+                          <Paper
+                            elevation={2}
+                            className="p-3"
+                            style={{ width: "90vw" }}
+                          >
+                            <img
+                              className="rounded-circle bg-secondary "
+                              alt="profile pic"
+                              src={
+                                !item.avatar
+                                  ? "https://f.v1.n0.cdn.getcloudapp.com/items/0L2l2K3f3e1H2o1O3p0f/robot.png"
+                                  : `http://127.0.0.1:4000/user/${item._id}/getavatar`
+                              }
+                              width="50"
+                              height="50"
+                            />
+                            <span className="p-4">
+                              {" "}
+                              {item.name} is a {item.currentStatus}.{" "}
+                            </span>
+                          </Paper>
+                        </div>
+                      </NavLink>
+                    );
+                  })}
+            </div>
+          )}
         </AppBar>
         {renderMobileMenu}
         {renderMenu}
 
-
         <br />
         <br />
-        
       </div>
     </div>
   );

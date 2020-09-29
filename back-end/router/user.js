@@ -49,7 +49,11 @@ router.post("/join", async (req, res) => {
 
 //! creating post.
 
-router.post("/user/createpost",upload.single("photo"), auth, async (req, res) => {
+router.post(
+    "/user/createpost",
+    upload.single("photo"),
+    auth,
+    async (req, res) => {
         const { title, description } = req.body;
         console.log(req.body);
         try {
@@ -77,7 +81,7 @@ router.get("/user/getpost", auth, async (req, res) => {
         const user = await User.findById(req.user._id);
 
         await user.populate("userposts").execPopulate();
-        console.log(user);
+        // console.log(user);
         res.send({ userData: user.userposts, user });
     } catch (e) {
         console.log(e);
@@ -127,7 +131,7 @@ router.get("/user/:id/getavatar", async (req, res) => {
 });
 
 //get single user post
-router.get("/user/:postId/getpost", auth,async (req, res) => {
+router.get("/user/:postId/getpost", auth, async (req, res) => {
     try {
         const post = await Post.findById(req.params.postId);
         if (!post) {
@@ -152,11 +156,10 @@ router.post("/user/:postId/inclike", auth, async (req, res) => {
         const isLiked = liked.includes(true);
 
         if (isLiked) throw new Error("post is already liked");
-        
 
         post.likes.push({
             like: req.user._id,
-            isLiked:true,
+            isLiked: true,
         });
         await post.save();
         console.log("liked");
@@ -167,21 +170,25 @@ router.post("/user/:postId/inclike", auth, async (req, res) => {
     }
 });
 
-router.delete('/user/:postId/declike', auth, async(req,res)=>{
-    try{
-        const post =await Post.findById(req.params.postId);
-        if(!post) throw new Error('post not found');
+router.delete("/user/:postId/declike", auth, async (req, res) => {
+    try {
+        const post = await Post.findById(req.params.postId);
+        if (!post) throw new Error("post not found");
 
-        await Post.update({_id:req.params.postId},{$pull:{likes:{like:req.user._id}}},{new:true, multi:true}  )
+        await Post.update(
+            { _id: req.params.postId },
+            { $pull: { likes: { like: req.user._id } } },
+            { new: true, multi: true }
+        );
 
         await post.save();
 
-        res.send('done');
-    } catch(e){
-        console.log(e)
+        res.send("done");
+    } catch (e) {
+        console.log(e);
         res.status(500).send();
     }
-})
+});
 
 router.post("/user/:postId/addcomment/:comment", auth, async (req, res) => {
     try {
@@ -205,47 +212,41 @@ router.post("/user/:postId/addcomment/:comment", auth, async (req, res) => {
 });
 
 router.get("/user/getallpost/:page/:limit", auth, async (req, res) => {
-    const {page=1, limit=5}= req.params;
-    try{
-        const posts=await Post.find()
-            .limit(limit*1)
-            .sort({timestamp:-1})
-            .skip((page-1)*limit)
+    const { page = 1, limit = 5 } = req.params;
+    try {
+        const posts = await Post.find()
+            .limit(limit * 1)
+            .sort({ timestamp: -1 })
+            .skip((page - 1) * limit)
             .exec();
-        const count= await Post.countDocuments();
+        const count = await Post.countDocuments();
         // console.log(req.user._id)
-        console.log({posts,count,Id:req.user._id})
-        res.send({posts,count,Id:req.user._id});
-    } catch(e) {
-        console.log(e)
+        console.log({ posts, count, Id: req.user._id });
+        res.send({ posts, count, Id: req.user._id });
+    } catch (e) {
+        console.log(e);
         res.send();
     }
-    
 });
 
-
-router.delete('/user/:postId/deletepost', auth, async(req,res)=>{
+router.delete("/user/:postId/deletepost", auth, async (req, res) => {
     try {
-       let post = await Post.findById(req.params.postId);
-       
-       const isVerified= post.owner.toString()===req.user._id.toString();
-       console.log(isVerified)
-       
-        if(!isVerified)
-            throw new Error('not verified user');
+        let post = await Post.findById(req.params.postId);
 
-        post =await Post.findByIdAndDelete(req.params.postId)
+        const isVerified = post.owner.toString() === req.user._id.toString();
+        console.log(isVerified);
+
+        if (!isVerified) throw new Error("not verified user");
+
+        post = await Post.findByIdAndDelete(req.params.postId);
         // console.log(post)
-        res.send('post deleted')
-
-    } catch(e) {
+        res.send("post deleted");
+    } catch (e) {
         // statements
         console.log(e);
-        res.status(404).send('cannot delete')
+        res.status(404).send("cannot delete");
     }
-})
-
-
+});
 
 /*
 router.get('/user/:id/post', async (req,res) =>{
@@ -260,8 +261,8 @@ router.get('/user/:id/post', async (req,res) =>{
         res.send(500,e)
     }
 })*/
-router.get('/user/other/profile/:userId', auth, async(req,res)=>{
-     try {
+router.get("/user/other/profile/:userId", auth, async (req, res) => {
+    try {
         const user = await User.findById(req.params.userId);
 
         await user.populate("userposts").execPopulate();
@@ -271,7 +272,7 @@ router.get('/user/other/profile/:userId', auth, async(req,res)=>{
         console.log(e);
         res.status(500).send();
     }
-})
+});
 
 router.get("/checkuserauth", auth, (req, res) => {
     res.send("authenticated");

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 // import PersonIcon from "@material-ui/icons/Person";
-
+import moment from "moment";
 import { useHistory } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -10,11 +10,16 @@ import PhotoCamera from "@material-ui/icons/PhotoCamera";
 // import {Avatar } from '@material-ui/core'
 import { Button } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
+import DoneAllIcon from "@material-ui/icons/DoneAll";
 // import IconButton from "@material-ui/core/IconButton";
 
 import { Paper } from "@material-ui/core";
 import Loading from "./Loading.jsx";
 import Footer from "./Footer.jsx";
+
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -76,22 +81,45 @@ export default function Myprofile() {
         "content-type": "multipart/form-data",
       },
     })
-      .then((r) => window.location.reload())
-      .catch((e) => alert("something went wrong please try again..."));
+      .then((r) =>
+        toast.success("Profile photo has been uploaded please refresh.", {
+          position: "bottom-left",
+          autoClose: 4000,
+        })
+      )
+      .catch((e) =>
+        toast.error("Profile photo must be less than 3MB.", {
+          position: "bottom-left",
+          autoClose: 4000,
+        })
+      );
   };
   // console.log(userData);
 
-  const deletePost=(id)=>{
-    axios({
-      method:'delete',
-      url:`/user/${id}/deletepost`,
-      headers:{
-        Authorization:"Bearer "+sessionStorage.getItem('token'),
-      }
-    }).then(r=>alert("post has been deleted kindly refresh...")).catch(e=> alert('server error please retry.'))
-
- }
-
+  const deletePost = (id) => {
+    const userRxn = window.confirm("Do you want to delete this post?");
+    if (userRxn) {
+      axios({
+        method: "delete",
+        url: `/user/${id}/deletepost`,
+        headers: {
+          Authorization: "Bearer " + sessionStorage.getItem("token"),
+        },
+      })
+        .then((r) =>
+          toast.success("Post deletions successful.", {
+            position: "bottom-left",
+            autoClose: 4000,
+          })
+        )
+        .catch((e) =>
+          toast.warn("Server error please try again.", {
+            position: "bottom-left",
+            autoClose: 4000,
+          })
+        );
+    }
+  };
   return (
     <div>
       {!userData ? (
@@ -171,16 +199,22 @@ export default function Myprofile() {
 
                 <div>
                   <h2 className="text-center " style={{ fontWeight: "bold" }}>
-                   <small>Name: </small>{userData.user.name}
+                    <small>Name: </small>
+                    {userData.user.name}
                   </h2>
-                  <h3 className="text-center"><small>Current Position:</small> {userData.user.currentStatus}</h3>
+                  <h3 className="text-center">
+                    <small>Current Position:</small>{" "}
+                    {userData.user.currentStatus}
+                  </h3>
                 </div>
               </div>
 
               <hr />
               <div className="d-flex flex-nowrap justify-content-around">
-                <div> <h3>{userData.userData.length} posts</h3> </div>
-               
+                <div>
+                  {" "}
+                  <h3>{userData.userData.length} posts</h3>{" "}
+                </div>
               </div>
               <hr />
               <br />
@@ -188,8 +222,9 @@ export default function Myprofile() {
                 const buffer = item.image.data; // e.g., <Buffer 89 50 4e ... >
                 const b64 = new Buffer(buffer).toString("base64");
                 const mimeType = "image/jpg"; // e.g., image/png
-                console.log(item);
-
+                // console.log(item);
+                // var isDelete=false;
+                // console.log(isDelete)
                 return (
                   <Paper
                     elevation={2}
@@ -216,7 +251,7 @@ export default function Myprofile() {
                       </div>
                       <div className="col flex-direction-column">
                         <span style={{ fontWeight: "bold" }}>Created on =</span>
-                        {item.timestamp} <br />
+                        {moment(parseInt(item.timestamp )).format("dddd, Do MMMM YYYY, h:mm:ss a")} <br />
                         <span style={{ fontWeight: "bold" }}>Title = </span>
                         {item.title} <br />
                         <span style={{ fontWeight: "bold" }}>
@@ -229,10 +264,12 @@ export default function Myprofile() {
                         {item.comments.length}
                       </div>
 
-                      <IconButton aria-label="delete" onClick={()=>deletePost(item._id)} >
-                        <DeleteIcon style={{color:'red'}} />
+                      <IconButton
+                        aria-label="delete"
+                        onClick={() => deletePost(item._id)}
+                      >
+                        <DeleteIcon style={{ color: "red" }} />
                       </IconButton>
-
                     </div>
                     <hr />
                   </Paper>

@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Button, Paper } from "@material-ui/core";
-//
-// import { AccountCircle, MailOutline, Https, } from '@material-ui/icons';
 import axios from "axios";
 //setting aos
 import { Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
-// import {Button, Typography} from '@material-ui/core'
-// import useStyles from './Styles'
 import { useHistory } from "react-router-dom";
 
 import backgroundImg from "../images/back.png";
 import logo from "../images/Logo.png";
 
 import Footer from "./Footer.jsx";
+
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -66,7 +66,7 @@ function Join() {
 
   const [userDetails, setUserDetails] = useState({
     name: "",
-    currentStatus:'',
+    currentStatus: "",
     email: "",
     password: "",
   });
@@ -84,20 +84,48 @@ function Join() {
 
   const sendJoinForm = (e) => {
     e.preventDefault();
-    // console.log(userDetails)
+
+    console.log(userDetails);
     const url = `http://127.0.0.1`;
-    axios
-      .post(`/join`, userDetails)
-      .then((res) => {
-        window.sessionStorage.setItem("token", res.data);
-        setLoading(false);
-        history.push("/home");
-      })
-      .catch((e) => {
-        // console.log(e);
-        setLoading(false);
-        alert("user cannot be added please try again.");
-      });
+
+    const isCurrect = (data) => {
+      if (
+        (data.currentStatus.toLowerCase() === "principle" ||
+          data.currentStatus.toLowerCase() === "student" ||
+          data.currentStatus.toLowerCase() === "teacher") &&
+        data.email &&
+        data.password.length >= 7 &&
+        data.name
+      ) {
+        return true;
+      } else {
+        toast.error("Password must be greater than 7.", {
+          position: "bottom-left",
+          autoClose: 4000,
+        });
+        return false;
+      }
+    };
+
+    const isDataCurect = isCurrect(userDetails);
+
+    if (isDataCurect) {
+      axios
+        .post(`/join`, userDetails)
+        .then((res) => {
+          window.sessionStorage.setItem("token", res.data);
+          setLoading(false);
+          history.push("/home");
+        })
+        .catch((e) => {
+          // console.log(e);
+          toast.error("Please provide currect details", {
+            position: "bottom-left",
+            autoClose: 4000,
+          });
+          setLoading(false);
+        });
+    }
   };
 
   return (
@@ -200,11 +228,18 @@ function Join() {
                     fontWeight: "bolder",
                   }}
                   onChange={(e) => {
-                    setUserDetails({ ...userDetails, currentStatus: e.target.value });
+                    setUserDetails({
+                      ...userDetails,
+                      currentStatus: e.target.value,
+                    });
                   }}
                 />
-                <p>  <small className="text-danger">only "student" "teacher" "principle" are accepted.</small></p>
-
+                <p>
+                  {" "}
+                  <small className="text-danger">
+                    only "student" "teacher" "principle" are accepted.
+                  </small>
+                </p>
 
                 <input
                   value={userDetails.email}
@@ -256,13 +291,15 @@ function Join() {
                     className={classes.main_button}
                     onClick={(e) => {
                       setLoading(true);
-                      loading? (e.target.innerHTML = "adding..."): (e.target.innerHTML = "add me");
+                      loading
+                        ? (e.target.innerHTML = "adding...")
+                        : (e.target.innerHTML = "add me");
                     }}
                   >
                     Add me
                   </Button>
                   <Link to="/" className="ml-md-3 ml-0">
-                    <strong>*Already have an account.</strong>
+                    <strong>&nbsp; *Already have an account.</strong>
                   </Link>
                 </div>
               </div>
@@ -277,30 +314,3 @@ function Join() {
 }
 
 export default Join;
-
-// <Grid container spacing={1} alignItems="flex-end" >
-//   <Grid item>
-//     <AccountCircle />
-//   </Grid>
-//   <Grid item>
-//     <TextField autoComplete="off" onChange={e => setUserDetails({ ...userDetails, name: e.target.value })} id="input-with-icon-grid" autoCorrect='off' autoComplete='off' type="text" label="Name" />
-//   </Grid>
-// </Grid>
-// <Grid container spacing={1} alignItems="flex-end">
-//   <Grid item>
-//     <MailOutline />
-//   </Grid>
-//   <Grid item>
-//     <TextField autoComplete="off" onChange={e => setUserDetails({ ...userDetails, email: e.target.value })} id="input-with-icon-grid" type="email" label="Email" />
-//   </Grid>
-// </Grid>
-// <Grid container spacing={1} alignItems="flex-end">
-//   <Grid item>
-//     <Https />
-//   </Grid>
-//   <Grid item>
-//     <TextField autoComplete="off" onChange={e => setUserDetails({ ...userDetails, password: e.target.value })} id="input-with-icon-grid" type="password" label="Password" />
-//   </Grid>
-// </Grid>
-
-// <br/>

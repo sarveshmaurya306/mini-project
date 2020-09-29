@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 // import PersonIcon from "@material-ui/icons/Person";
-
+import moment from "moment";
 import { useHistory } from "react-router-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
@@ -32,8 +32,8 @@ export default function Myprofile() {
   const [userData, setUserData] = useState();
 
   useEffect(() => {
-    const userId= window.sessionStorage.getItem('userId');
-    window.sessionStorage.removeItem('userId');
+    const userId = window.sessionStorage.getItem("userId");
+    window.sessionStorage.removeItem("userId");
     axios({
       method: "get",
       url: `/user/other/profile/${userId}`,
@@ -49,7 +49,6 @@ export default function Myprofile() {
 
   const classes = useStyles();
   const [follow, setFollow] = useState(true);
-
 
   return (
     <div>
@@ -96,16 +95,22 @@ export default function Myprofile() {
 
                 <div>
                   <h2 className="text-center " style={{ fontWeight: "bold" }}>
-                   <small>Name: </small>{userData.user.name}
+                    <small>Name: </small>
+                    {userData.user.name}
                   </h2>
-                  <h3 className="text-center"><small>Current Position:</small> {userData.user.currentStatus}</h3>
+                  <h3 className="text-center">
+                    <small>Current Position:</small>{" "}
+                    {userData.user.currentStatus}
+                  </h3>
                 </div>
               </div>
 
               <hr />
               <div className="d-flex flex-nowrap justify-content-around">
-                <div> <h3>{userData.userData.length} posts</h3> </div>
-               
+                <div>
+                  {" "}
+                  <h3>{userData.userData.length} posts</h3>{" "}
+                </div>
               </div>
               <hr />
               <br />
@@ -141,7 +146,7 @@ export default function Myprofile() {
                       </div>
                       <div className="col flex-direction-column">
                         <span style={{ fontWeight: "bold" }}>Created on =</span>
-                        {item.timestamp} <br />
+                        {moment(parseInt(item.timestamp )).format("dddd, Do MMMM YYYY, h:mm:ss a")} <br />
                         <span style={{ fontWeight: "bold" }}>Title = </span>
                         {item.title} <br />
                         <span style={{ fontWeight: "bold" }}>
