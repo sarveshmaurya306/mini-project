@@ -237,16 +237,18 @@ export default function Myprofile() {
                     >
                       <div className="col">
                         {" "}
-                        <img
-                          style={{ maxWidth: 300 }}
-                          className=" img-fluid rounded bg-secondary"
-                          alt="post image"
-                          src={
-                            !item.image.data
-                              ? ""
-                              : `data:${mimeType};base64,${b64}`
-                          }
-                        />
+                        <a href={`http://127.0.0.1:4000/user/64fe0f${item._id}5erx90/getpost`} target="_blank">
+                          <img
+                            style={{ maxWidth: 300 }}
+                            className=" img-fluid rounded bg-secondary"
+                            alt="post image"
+                            src={
+                              !item.image.data
+                                ? ""
+                                : `data:${mimeType};base64,${b64}`
+                            }
+                          />
+                        </a>
                         <br />
                       </div>
                       <div className="col flex-direction-column">

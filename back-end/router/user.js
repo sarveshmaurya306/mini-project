@@ -55,7 +55,7 @@ router.post(
     auth,
     async (req, res) => {
         const { title, description } = req.body;
-        console.log(req.body);
+        // console.log(req.body);
         try {
             const post = new Post({
                 title,
@@ -103,7 +103,7 @@ router.post("/user/avatar", upload.single("photo"), auth, async (req, res) => {
         // const post= user.posts;
 
         await user.save();
-        console.log(user);
+        // console.log(user);
         // console.log(user.avatar)
 
         res.send(user._id);
@@ -122,7 +122,7 @@ router.get("/user/:id/getavatar", async (req, res) => {
             throw new Error();
         }
         res.set("Content-Type", "image/jpg");
-        console.log(user.avatar);
+        // console.log(user.avatar);
         res.send(user.avatar);
     } catch (e) {
         console.log(e);
@@ -131,14 +131,19 @@ router.get("/user/:id/getavatar", async (req, res) => {
 });
 
 //get single user post
-router.get("/user/:postId/getpost", auth, async (req, res) => {
+router.get("/user/:postId/getpost", async (req, res) => {
     try {
-        const post = await Post.findById(req.params.postId);
+        const id=req.params.postId.replace('64fe0f','').replace('5erx90','');
+        // console.log(id)
+        // const post = await Post.findById(req.params.postId);
+        const post =await Post.findById(id);
         if (!post) {
             throw new Error();
         }
         // console.log(post.comment)
-        res.send(post);
+        res.set('Content-Type','image/jpg')
+        // console.log(post.image)
+        res.send(post.image);
     } catch (e) {
         res.send(500, "failed to get post.");
     }
@@ -162,7 +167,7 @@ router.post("/user/:postId/inclike", auth, async (req, res) => {
             isLiked: true,
         });
         await post.save();
-        console.log("liked");
+        // console.log("liked");
         res.send("post liked");
     } catch (e) {
         console.log(e);
@@ -193,7 +198,7 @@ router.delete("/user/:postId/declike", auth, async (req, res) => {
 router.post("/user/:postId/addcomment/:comment", auth, async (req, res) => {
     try {
         const comment = req.params.comment;
-        console.log(comment);
+        // console.log(comment);
         const post = await Post.findById(req.params.postId);
         if (!post) throw new Error("post not found");
 
@@ -203,7 +208,7 @@ router.post("/user/:postId/addcomment/:comment", auth, async (req, res) => {
         });
 
         post.save();
-        console.log(post);
+        // console.log(post);
         res.send("post commented");
     } catch (e) {
         console.log(e);
@@ -221,7 +226,7 @@ router.get("/user/getallpost/:page/:limit", auth, async (req, res) => {
             .exec();
         const count = await Post.countDocuments();
         // console.log(req.user._id)
-        console.log({ posts, count, Id: req.user._id });
+        // console.log({ posts, count, Id: req.user._id });
         res.send({ posts, count, Id: req.user._id });
     } catch (e) {
         console.log(e);
@@ -234,7 +239,7 @@ router.delete("/user/:postId/deletepost", auth, async (req, res) => {
         let post = await Post.findById(req.params.postId);
 
         const isVerified = post.owner.toString() === req.user._id.toString();
-        console.log(isVerified);
+        // console.log(isVerified);
 
         if (!isVerified) throw new Error("not verified user");
 
@@ -248,25 +253,25 @@ router.delete("/user/:postId/deletepost", auth, async (req, res) => {
     }
 });
 
-/*
-router.get('/user/:id/post', async (req,res) =>{
-    try{
-        const user= await User.findById(req.params.id);    
 
-        // console.log(user.posts)
+// router.get('/user/:id/post', async (req,res) =>{
+//     try{
+//         const user= await User.findById(req.params.id);    
 
-        // res.set('Content-Type','image/jpg');
-        res.send(user.posts);
-    }catch(e ){
-        res.send(500,e)
-    }
-})*/
+//         // console.log(user.posts)
+
+//         // res.set('Content-Type','image/jpg');
+//         res.send(user.posts);
+//     }catch(e ){
+//         res.send(500,e)
+//     }
+// })
 router.get("/user/other/profile/:userId", auth, async (req, res) => {
     try {
         const user = await User.findById(req.params.userId);
 
         await user.populate("userposts").execPopulate();
-        console.log(user);
+        // console.log(user);
         res.send({ userData: user.userposts, user });
     } catch (e) {
         console.log(e);

@@ -144,7 +144,7 @@ export default function CreatePost() {
 								}
 							/>
 							<br />
-							<input
+							<textarea
 								type="text "
 								className="mb-4 p-2"
 								value={detail.description}
@@ -153,7 +153,10 @@ export default function CreatePost() {
 									border: "2px solid grey",
 									borderRadius: "8px",
 									fontWeight: "bolder",
+									maxHeight:'45vh'
 								}}
+								rows="4" 
+								cols="23"
 								name="description"
 								placeholder="Description "
 								onChange={(e) =>
@@ -162,7 +165,8 @@ export default function CreatePost() {
 										description: e.target.value,
 									})
 								}
-							/>
+							>
+							</textarea>
 							<br />
 
 							<input

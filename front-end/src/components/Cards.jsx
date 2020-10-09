@@ -58,6 +58,7 @@ const useStyles = makeStyles((theme) => ({
   cardHover: {
     boxShadow: "0px 2px 5px grey",
     borderRadius: 7,
+    
     transition: "0.4s all",
     "&:hover": {
       boxShadow: "grey 0px 0px 2px",
@@ -223,11 +224,13 @@ export default function Cards(props) {
           subheader={moment(time).format("dddd, Do MMMM YYYY, h:mm:ss a")}
         />
 
-        <CardMedia
-          className={classes.media}
-          image={`data:${mimeType};base64,${b64}`}
-          title="post image"
-        />
+        <a href={`http://127.0.0.1:4000/user/64fe0f${props.value._id}5erx90/getpost`} target="_blank">
+        	<CardMedia
+	          className={classes.media}
+	          image={`data:${mimeType};base64,${b64}`}
+	          title="post image"
+	        />
+        </a>
 
         <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">

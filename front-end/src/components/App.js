@@ -7,7 +7,7 @@ import Login from "./Login";
 import Home from "./Home";
 import Myprofile from "./Myprofile";
 import CreatePost from "./CreatePost";
-import Chat from "./Chat";
+import Chat from "./Chat/Chat.jsx";
 
 import OtherProfile from './OthersProfile.jsx'
 
