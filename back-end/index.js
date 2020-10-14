@@ -1,0 +1,175 @@
+const express = require("express");
+const socketio = require("socket.io");
+
+const http = require("http");
+
+const port = process.env.PORT || 4000;
+
+const app = express();
+
+const server = http.createServer(app);
+const io = socketio(server);
+const cors = require("cors");
+app.use(cors());
+
+require("./db/mongoConnect");
+
+const userModel = require("./models/user");
+const loginRouter = require("./router/login.js");
+const userRouter = require("./router/user.js");
+const auth = require("./middleware/auth.js");
+
+app.use(express.json());
+
+app.use(loginRouter);
+app.use(userRouter);
+
+const bodyParser = require("body-parser");
+
+app.use(bodyParser.urlencoded({ extended: true }));
+/* 
+io.on('connection',(socket)=>{
+  console.log('user has been connected')
+  socket.on('message',({name, message})=>{
+      console.log(message)
+      io.emit('message',{name, message})
+  })
+  socket.on('disconnect',()=>{
+    console.log('user has been disconnected')
+  })
+}) */
+
+app.get("/show", async (req, res) => {
+  try {
+    const user = await userModel.find({});
+    if (!user) return res.send("no user found");
+
+    res.send(user);
+  } catch (e) {
+    res.send({ error: "connection error..." });
+  }
+});
+
+app.get("/show/:name", async (req, res) => {
+  // console.log(req.params.name);
+  try {
+    const user = await userModel.find({ name: req.params.name });
+    if (!user) return res.status(404).send();
+    res.send(user);
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+
+
+//socket implementation started;
+let users = [];
+
+const addUser = ({ id, name, email, room }) => {
+  const isPresent = users.find((email) => user.email === email);
+  if (!isPresent) users.push({ id, room, email, name });
+}
+
+const getUser = (id) => {
+  const user = users.find((user) => user.id === id);
+  if (user) return user;
+};
+
+const updateUser = (id, room) => {
+  const user = users.find((user) => user.id === id);
+  if (user) user.room = room;
+};
+
+const deleteUser = (id) => {
+  users = users.filter((user) => user.id !== id);
+};
+
+const getUserInRoom = (room) => {
+  return users.filter((user) => user.room === room);
+};
+//basic commands end
+
+
+//total emits=> admin_message & server_user_message 
+//total calls/on=> new_user & user_message & change_user_room &( disconnect & connection)
+
+
+io.on("connection", (socket) => {
+  console.log("user connected");
+
+  socket.on('new_user', ({name, email, room})=>{
+    const promise = new Promise(resolve=>{
+      addUser({id: socket.id, name, email, room})
+      resolve();
+    })
+    promise.then(r=>{
+      socket.join(room);
+      console.log(room);
+      console.log(getUserInRoom('official'))
+      socket.in(room).emit('admin_message',{name: 'admin', message: `${name} has joined this room.`})
+    }).catch(e=>{ })  
+  })
+
+  socket.on('user_message',(message)=>{
+    var user;
+    const promise= new Promise(resolve=>{
+      user= getUser(socket.id)
+      resolve();
+    })
+    promise.then(r=>{
+      console.log(user.name, message, user.room)
+      io.in(user.room).emit('server_user_message',{name: user.name, message });
+    }).catch(e=>{ })  
+
+  })
+
+  socket.on('change_user_room',(room)=>{
+    var user;
+    const promise= new Promise(resolve=>{
+       user= getUser(socket.id);
+      resolve();
+    })
+    promise.then(r=>{
+      socket.leave(user.room);
+
+      updateUser(socket.id, room);
+      socket.join(room)
+      io.in(room).emit('admin_message',{name: 'admin', message: `${user.name} has joined this room. `})
+    }).catch(e=>{ })  
+  })
+
+
+  socket.on("disconnect", () => {
+    var user;
+    const promise=new Promise(resolve=>{
+      user= getUser(socket.id);
+      resolve();
+    })
+    promise.then(r=>{
+      io.in(user.room).emit('admin_message',{name: 'admin',message:`${user.name} has left this room.`})
+
+      socket.leave(user.room);
+      const deleteu=new Promise(res=>{
+      deleteUser(socket.id)
+      })
+      deleteu.then(r=>{ }).catch(e=>{ })
+      console.log("user disconnected.")
+    }).catch(e=>{ })  
+  });
+});
+
+server.listen(port, () => {
+  console.log(`running on ${port}`);
+});
+
+
+
+  /* var currentRoom = Object.keys(io.sockets.adapter.sids[socket.id]).filter(
+    (item) => item != socket.id
+  );
+  console.log(currentRoom); 
+  
+  console.log(addUser({id: socket.id, room: 'official'}))
+  console.log(getAllUsers());
+  console.log(getUser(socket.id)) */
