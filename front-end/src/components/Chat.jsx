@@ -10,6 +10,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputBase from "@material-ui/core/InputBase";
 import moment from "moment";
+import {Link} from 'react-router-dom'
 import { TextField, Button } from "@material-ui/core";
 const socket = io.connect("http://localhost:4000");
 
@@ -58,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: " 10px",
     padding: " 10px",
     backgroundColor: " #A8DDFD",
-    width: " 200px",
+    // width: " 200px",
     // height: '50px',
     textAlign: " left",
     font: "400 .9em ,sans-serif",
@@ -90,17 +91,17 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   messageSender: {
-    position: ` relative`,
-    marginBottom: ` 10px`,
     marginLeft: `calc(100% - 240px)`,
-    padding: ` 10px`,
+    marginBottom: " 10px",
+    padding: " 10px",
     backgroundColor: ` #f8e896`,
-    width: ` 200px`,
-    // height:` 50px`,
-    textAlign: `left`,
-    font: ` 400 .9em 'Open Sans', sans-serif`,
-    border: ` 1px solid #dfd087`,
-    borderRadius: ` 10px`,
+    // width: " 200px",
+    // height: '50px',
+    textAlign: " left",
+    font: "400 .9em ,sans-serif",
+    border: "1px solid #97C6E3",
+    borderRadius: " 10px",
+    position: "relative",
     "&::after": {
       content: `''`,
       position: `absolute`,
@@ -232,10 +233,11 @@ export default function Chat() {
       <div className="autoscroll-container">
         <div className="scroll-list">
           {chat.map((chat, index) => {
+            let current_name= sessionStorage.getItem('name');
             return (
               <div
                 style={
-                  chat.name === sessionStorage.getItem("name")
+                  chat.name === current_name
                     ? { display: "flex", justifyContent: "flex-end" }
                     : { display: "flex" }
                 }
@@ -243,14 +245,16 @@ export default function Chat() {
               >
                 <p
                   className={
-                    chat.name === sessionStorage.getItem("name")
+                    chat.name === current_name
                       ? classes.messageSender
                       : classes.messageReceiver
                   }
                 >
-                  <span style={{ color: "blue", fontWeight: "bold" }}>
-                    {chat.name} :
-                  </span>
+                  <Link to="/tobeimplemented" >
+                    <span style={{ color: "blue", fontWeight: "bold" }}>
+                      {current_name===chat.name?'You':chat.name} :
+                    </span>
+                  </Link>
                   <br />
 
                   {chat.message}
@@ -282,7 +286,7 @@ export default function Chat() {
         <Loading />
       ) : (
         <div>
-          <h3><center>Chatting</center></h3>
+          <h3 style={{color: 'skyblue', fontWeight:'bolder'}}><center>Chatting</center></h3>
           <div className="container-fluid">
             <div className="row">
               <div className="col-9 col-md-10" style={{borderRight:'1px solid black'}}>{displayChat()}</div>
