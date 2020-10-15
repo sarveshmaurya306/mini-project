@@ -114,6 +114,7 @@ io.on("connection", (socket) => {
       socket.join(room);
       // console.log(room);
       // console.log(getUserInRoom('both'))
+      io.to(socket.id).emit('admin_message', {name: 'admin', message: `Welcome ${name} in ${room} room`});
       socket.in(room).emit('admin_message',{name: 'admin', message: `${name} has joined this room.`})
     }).catch(e=>{ })  
   })
