@@ -114,6 +114,9 @@ function Join() {
         .post(`/join`, userDetails)
         .then((res) => {
           window.sessionStorage.setItem("token", res.data);
+          window.sessionStorage.setItem("name", res.data.name);
+          window.sessionStorage.setItem("email", res.data.email);
+          window.sessionStorage.setItem("currentRoom", "Both");
           setLoading(false);
           history.push("/home");
         })

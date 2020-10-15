@@ -67,8 +67,12 @@ app.get("/show/:name", async (req, res) => {
 let users = [];
 
 const addUser = ({ id, name, email, room }) => {
-  const isPresent = users.find((email) => user.email === email);
+  // console.log('in add user')
+  const isPresent = users.find((user) => user.email === email);
   if (!isPresent) users.push({ id, room, email, name });
+  // console.log(!isPresent)
+  // console.log(users.push({id, name, email, room }))
+  // console.log(users)
 }
 
 const getUser = (id) => {
@@ -86,7 +90,7 @@ const deleteUser = (id) => {
 };
 
 const getUserInRoom = (room) => {
-  return users.filter((user) => user.room === room);
+  return users.find((user) => user.room === room);
 };
 //basic commands end
 
@@ -94,19 +98,22 @@ const getUserInRoom = (room) => {
 //total emits=> admin_message & server_user_message 
 //total calls/on=> new_user & user_message & change_user_room &( disconnect & connection)
 
-
 io.on("connection", (socket) => {
   console.log("user connected");
 
   socket.on('new_user', ({name, email, room})=>{
     const promise = new Promise(resolve=>{
+      // console.log(socket.id, name, email, room)
       addUser({id: socket.id, name, email, room})
+      // console.log('in new user')
       resolve();
+
     })
     promise.then(r=>{
+      // console.log(count++)
       socket.join(room);
-      console.log(room);
-      console.log(getUserInRoom('official'))
+      // console.log(room);
+      // console.log(getUserInRoom('both'))
       socket.in(room).emit('admin_message',{name: 'admin', message: `${name} has joined this room.`})
     }).catch(e=>{ })  
   })
@@ -118,8 +125,9 @@ io.on("connection", (socket) => {
       resolve();
     })
     promise.then(r=>{
-      console.log(user.name, message, user.room)
+      // console.log(user.name, message, user.room)
       io.in(user.room).emit('server_user_message',{name: user.name, message });
+      // users.map(m=>console.log(m))
     }).catch(e=>{ })  
 
   })
@@ -131,11 +139,19 @@ io.on("connection", (socket) => {
       resolve();
     })
     promise.then(r=>{
-      socket.leave(user.room);
+      // console.log(user.room)
+      socket.leave(user.room,()=>{
+        socket.to(user.room).emit('admin_message',{name: 'admin', message: `${user.name} has left this room. `})
+        updateUser(socket.id, room);
+        socket.join(room,()=>{
+          socket.to(room).emit('admin_message',{name: 'admin', message: `${user.name} has joined this room. `})
+        })
+      });
 
-      updateUser(socket.id, room);
-      socket.join(room)
-      io.in(room).emit('admin_message',{name: 'admin', message: `${user.name} has joined this room. `})
+      
+      console.log('user is in '+room)
+      // io.in(room).emit('admin_message',{name: 'admin', message: `${user.name} has joined this room. `})
+      
     }).catch(e=>{ })  
   })
 
@@ -153,8 +169,8 @@ io.on("connection", (socket) => {
       const deleteu=new Promise(res=>{
       deleteUser(socket.id)
       })
-      deleteu.then(r=>{ }).catch(e=>{ })
-      console.log("user disconnected.")
+      deleteu.then(r=>{ console.log("user disconnected.") }).catch(e=>{ })
+      
     }).catch(e=>{ })  
   });
 });
