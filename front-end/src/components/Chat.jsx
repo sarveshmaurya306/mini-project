@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 import Loading from "./Loading";
 import axios from "axios";
@@ -10,7 +10,7 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputBase from "@material-ui/core/InputBase";
 import moment from "moment";
-import {TextField, Button} from '@material-ui/core'
+import { TextField, Button } from "@material-ui/core";
 const socket = io.connect("http://localhost:4000");
 
 const BootstrapInput = withStyles((theme) => ({
@@ -18,9 +18,7 @@ const BootstrapInput = withStyles((theme) => ({
     "label + &": {
       marginTop: theme.spacing(3),
     },
-    message:{
-      
-    }
+    message: {},
   },
   input: {
     borderRadius: 4,
@@ -55,31 +53,31 @@ const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
   },
-  messageReceiver:{
-    marginLeft: '20px',
-    marginBottom:' 10px',
-    padding:' 10px',
-    backgroundColor:' #A8DDFD',
-    width:' 200px',
+  messageReceiver: {
+    marginLeft: "20px",
+    marginBottom: " 10px",
+    padding: " 10px",
+    backgroundColor: " #A8DDFD",
+    width: " 200px",
     // height: '50px',
-    textAlign:' left',
-    font: '400 .9em ,sans-serif',
-    border: '1px solid #97C6E3',
-    borderRadius:' 10px',
-    position: 'relative',
-    '&::after':{
-      content:`''`,
-      color:'red',
-      position:' absolute',
-      width:' 0',
-      height:' 0',
-      borderTop: '15px solid #A8DDFD',
-      borderLeft:' 15px solid transparent',
-      borderRight: '15px solid transparent',
-      top:' 0',
-      left: '-15px',
+    textAlign: " left",
+    font: "400 .9em ,sans-serif",
+    border: "1px solid #97C6E3",
+    borderRadius: " 10px",
+    position: "relative",
+    "&::after": {
+      content: `''`,
+      color: "red",
+      position: " absolute",
+      width: " 0",
+      height: " 0",
+      borderTop: "15px solid #A8DDFD",
+      borderLeft: " 15px solid transparent",
+      borderRight: "15px solid transparent",
+      top: " 0",
+      left: "-15px",
     },
-    '&::before':{
+    "&::before": {
       content: `''`,
       position: "absolute",
       width: 0,
@@ -89,43 +87,43 @@ const useStyles = makeStyles((theme) => ({
       borderRight: "16px solid transparent",
       top: "-1px",
       left: "-17px",
-    }
+    },
   },
-  messageSender:{
-    position:` relative`,
-    marginBottom:` 10px`,
+  messageSender: {
+    position: ` relative`,
+    marginBottom: ` 10px`,
     marginLeft: `calc(100% - 240px)`,
-    padding:` 10px`,
-    backgroundColor:` #f8e896`,
-    width:` 200px`,
+    padding: ` 10px`,
+    backgroundColor: ` #f8e896`,
+    width: ` 200px`,
     // height:` 50px`,
     textAlign: `left`,
-    font:` 400 .9em 'Open Sans', sans-serif`,
-    border:` 1px solid #dfd087`,
-    borderRadius:` 10px`,
-    '&::after':{
+    font: ` 400 .9em 'Open Sans', sans-serif`,
+    border: ` 1px solid #dfd087`,
+    borderRadius: ` 10px`,
+    "&::after": {
       content: `''`,
       position: `absolute`,
       width: `0`,
-      height:` 0`,
-      borderBottom:` 15px solid #f8e896`,
-      borderLeft:` 15px solid transparent`,
-      borderRight:` 15px solid transparent`,
-      bottom:` 0`,
+      height: ` 0`,
+      borderBottom: ` 15px solid #f8e896`,
+      borderLeft: ` 15px solid transparent`,
+      borderRight: ` 15px solid transparent`,
+      bottom: ` 0`,
       right: `-15px`,
     },
-    '&::before':{
+    "&::before": {
       content: `''`,
       position: `absolute`,
       width: `0`,
-      height:` 0`,
-      borderBottom:` 17px solid #f8e896`,
-      borderLeft:` 16px solid transparent`,
-      borderRight:` 16px solid transparent`,
-      bottom:` -1px`,
+      height: ` 0`,
+      borderBottom: ` 17px solid #f8e896`,
+      borderLeft: ` 16px solid transparent`,
+      borderRight: ` 16px solid transparent`,
+      bottom: ` -1px`,
       right: `-17px`,
-    }
-  }
+    },
+  },
 }));
 
 export default function Chat() {
@@ -215,30 +213,67 @@ export default function Chat() {
   const changeUserRoom = (room) => {
     socket.emit("change_user_room", room);
   };
-  const displayChat = () => {
-    return chat.map((chat, index) => {
-      return (
-        <div style={ chat.name===sessionStorage.getItem('name')? {display:'flex',justifyContent:'flex-end' }: { display:'flex' }} key={index}>
-          <p
-            className={chat.name===sessionStorage.getItem('name')?classes.messageSender:classes.messageReceiver}
-          >
-            <span style={{ color: "blue", fontWeight: "bold" }}>
-              {chat.name} : 
-            </span>
-            <br />
 
-            {chat.message}
-            <br/>
-          <small style={{ color: "grey" }}>
-              <span className="px-1" style={{
-                fontFamily: "monospace",
-              }}> {moment(chat.time).fromNow()}</span>
-            </small>
-          </p>
-          
-        </div>
-      );
+  const bottomRef = useRef();
+
+  const scrollToBottom = () => {
+    bottomRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
     });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  });
+
+  const displayChat = () => {
+    return (
+      <div className="autoscroll-container">
+        <div className="scroll-list">
+          {chat.map((chat, index) => {
+            return (
+              <div
+                style={
+                  chat.name === sessionStorage.getItem("name")
+                    ? { display: "flex", justifyContent: "flex-end" }
+                    : { display: "flex" }
+                }
+                key={index}
+              >
+                <p
+                  className={
+                    chat.name === sessionStorage.getItem("name")
+                      ? classes.messageSender
+                      : classes.messageReceiver
+                  }
+                >
+                  <span style={{ color: "blue", fontWeight: "bold" }}>
+                    {chat.name} :
+                  </span>
+                  <br />
+
+                  {chat.message}
+                  <br />
+                  <small style={{ color: "grey" }}>
+                    <span
+                      className="px-1"
+                      style={{
+                        fontFamily: "monospace",
+                      }}
+                    >
+                      {" "}
+                      {moment(chat.time).fromNow()}
+                    </span>
+                  </small>
+                </p>
+              </div>
+            );
+          })}
+          <div ref={bottomRef} className="list-bottom"></div>
+        </div>
+      </div>
+    );
   };
 
   return (
@@ -247,26 +282,21 @@ export default function Chat() {
         <Loading />
       ) : (
         <div>
+          <h3><center>Chatting</center></h3>
           <div className="container-fluid">
             <div className="row">
-              {/* <div className="col-3 col-md-2"  style={{
-                  top: 40,
-                  position: "fixed",
-                  left: 0,
-                  width:'max-content'
-                }}>
-                
-              </div> */}
-              <div className="col-9 col-md-10">{displayChat()}</div>
+              <div className="col-9 col-md-10" style={{borderRight:'1px solid black'}}>{displayChat()}</div>
               <div
                 className="col-3 col-md-2"
                 style={{
-                  height:'50vh',
+                  float:'right',
+                  height: "50vh",
                   bottom: 20,
                   position: "fixed",
                   right: 20,
                 }}
               >
+                <center>
                 <FormControl className={classes.margin}>
                   <InputLabel id="demo-customized-select-label">
                     Groups
@@ -286,20 +316,26 @@ export default function Chat() {
                     {/* <MenuItem value='both'>both</MenuItem> */}
                   </Select>
                 </FormControl>
+                </center>
                 <div
                   style={{
-                    height: '86vh',
-                    bottom: '20px',
-                    position:' fixed',
-                    right:' 20px',
-                    display:' flex',
-                    flexDirection:'column-reverse',
-                    alignContent: 'space-between',
+                    height: "86vh",
+                    bottom: "20px",
+                    position: " fixed",
+                    right: " 20px",
+                    display: " flex",
+                    flexDirection: "column-reverse",
+                    alignContent: "space-between",
                   }}
                 >
                   <form onSubmit={sendMessage}>
                     <div className="d-flex" style={{}}>
-                      <TextField label="Message" variant="outlined"  value={message} onChange={userMessage}  />
+                      <TextField
+                        label="Message"
+                        variant="outlined"
+                        value={message}
+                        onChange={userMessage}
+                      />
                       {/* <Button variant="outlined" color="primary">Send</Button> */}
                     </div>
                   </form>
