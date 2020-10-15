@@ -313,7 +313,7 @@ export default function Chat() {
                     input={<BootstrapInput />}
                   >
                     <MenuItem value="both">
-                      <em value="both">both</em>
+                      <em>both</em>
                     </MenuItem>
                     <MenuItem value="official">official</MenuItem>
                     <MenuItem value="unofficial">unofficial</MenuItem>
