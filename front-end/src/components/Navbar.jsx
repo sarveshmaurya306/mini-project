@@ -486,7 +486,7 @@ export default function Navbar() {
                               height="50"
                             />
                             <span className="p-4">
-                              {item.name} is a {item.currentStatus}.
+                              {item.name}, {item.currentStatus}.
                             </span>
                           </Paper>
                         </div>

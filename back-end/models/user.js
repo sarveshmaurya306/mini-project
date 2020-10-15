@@ -68,7 +68,7 @@ userSchema.virtual('userlikes', {
 */
 userSchema.methods.generateAuthToken = async function () {
     const user = this;
-    const token = jwt.sign({ _id: user._id.toString() }, 'miniproject', { expiresIn: '1 hour' })
+    const token = jwt.sign({ _id: user._id.toString() }, 'miniproject', { expiresIn: '3 hour' })
 
     user.token = token;
 

@@ -1,6 +1,6 @@
 const express = require("express");
 const socketio = require("socket.io");
-
+const moment =require('moment')
 const http = require("http");
 
 const port = process.env.PORT || 4000;
@@ -126,7 +126,7 @@ io.on("connection", (socket) => {
     })
     promise.then(r=>{
       // console.log(user.name, message, user.room)
-      io.in(user.room).emit('server_user_message',{name: user.name, message });
+      io.in(user.room).emit('server_user_message',{name: user.name, message,time:new Date().getTime() });
       // users.map(m=>console.log(m))
     }).catch(e=>{ })  
 
