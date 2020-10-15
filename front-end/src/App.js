@@ -8,7 +8,6 @@ import Home from "./components/Home";
 import Myprofile from "./components/Myprofile";
 import CreatePost from "./components/CreatePost";
 import Chat from "./components/Chat.jsx";
-import { useHistory } from "react-router-dom";
 import OtherProfile from "./components/OthersProfile.jsx";
 
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
@@ -16,7 +15,6 @@ import { IconButton } from "@material-ui/core";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 export default function App() {
-  const history = useHistory();
   return (
     <Router>
       <Switch>
@@ -53,11 +51,11 @@ export default function App() {
 
         <Route exact path="/other/profile">
           <div className="mt-4">
-            <Link to="/home" style={{ position: "fixed" }}>
-              <IconButton color="secondary" >
+            {/* <Link to="/home" style={{ position: "fixed" }} > */}
+              <IconButton color="secondary" onClick={()=>window.history.back() }>
                 <ArrowBackIcon />
               </IconButton>
-            </Link>
+            {/* </Link> */}
             <center>
               <h2>Searched Result</h2>
             </center>
