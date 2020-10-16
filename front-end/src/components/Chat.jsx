@@ -10,41 +10,41 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputBase from "@material-ui/core/InputBase";
 import moment from "moment";
-import {Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 import { TextField, Button } from "@material-ui/core";
 const socket = io.connect("http://localhost:4000");
 
 const BootstrapInput = withStyles((theme) => ({
   root: {
-    'label + &': {
+    "label + &": {
       marginTop: theme.spacing(3),
     },
   },
   input: {
     borderRadius: 4,
-    position: 'relative',
+    position: "relative",
     backgroundColor: theme.palette.background.paper,
-    border: '1px solid #ced4da',
+    border: "1px solid #ced4da",
     fontSize: 16,
-    padding: '10px 26px 10px 12px',
-    transition: theme.transitions.create(['border-color', 'box-shadow']),
+    padding: "10px 26px 10px 12px",
+    transition: theme.transitions.create(["border-color", "box-shadow"]),
     // Use the system font instead of the default Roboto font.
     fontFamily: [
-      '-apple-system',
-      'BlinkMacSystemFont',
+      "-apple-system",
+      "BlinkMacSystemFont",
       '"Segoe UI"',
-      'Roboto',
+      "Roboto",
       '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
+      "Arial",
+      "sans-serif",
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
-    ].join(','),
-    '&:focus': {
+    ].join(","),
+    "&:focus": {
       borderRadius: 4,
-      borderColor: '#80bdff',
-      boxShadow: '0 0 0 0.2rem rgba(0,123,255,.25)',
+      borderColor: "#80bdff",
+      boxShadow: "0 0 0 0.2rem rgba(0,123,255,.25)",
     },
   },
 }))(InputBase);
@@ -129,6 +129,7 @@ export default function Chat() {
   const history = useHistory();
   const classes = useStyles();
   const [group, setGroup] = React.useState("both");
+
   const handleChange = (event) => {
     setGroup(event.target.value);
     changeUserRoom(event.target.value);
@@ -231,7 +232,7 @@ export default function Chat() {
       <div className="autoscroll-container">
         <div className="scroll-list">
           {chat.map((chat, index) => {
-            let current_name= sessionStorage.getItem('name');
+            let current_name = sessionStorage.getItem("name");
             return (
               <div
                 style={
@@ -248,9 +249,9 @@ export default function Chat() {
                       : classes.messageReceiver
                   }
                 >
-                  <Link to="/tobeimplemented" >
+                  <Link to="/tobeimplemented">
                     <span style={{ color: "blue", fontWeight: "bold" }}>
-                      {current_name===chat.name?'You':chat.name} :
+                      {current_name === chat.name ? "You" : chat.name} :
                     </span>
                   </Link>
                   <br />
@@ -284,41 +285,27 @@ export default function Chat() {
         <Loading />
       ) : (
         <div>
-          <h3 style={{color: 'skyblue', fontWeight:'bolder'}}><center>Chatting</center></h3>
+          <h3 style={{ color: "skyblue", fontWeight: "bolder" }}>
+            <center>Chatting</center>
+          </h3>
           <div className="container-fluid">
             <div className="row">
-              <div className="col-9 col-md-10" style={{borderRight:'1px solid black'}}>{displayChat()}</div>
+              <div
+                className="col-9 col-md-10"
+                style={{ borderRight: "1px solid black" }}
+              >
+                {displayChat()}
+              </div>
               <div
                 className="col-3 col-md-2"
                 style={{
-                  float:'right',
+                  float: "right",
                   height: "50vh",
                   bottom: 20,
                   position: "fixed",
                   right: 20,
                 }}
               >
-                <center>
-                <FormControl className={classes.margin}>
-                  <InputLabel id="demo-customized-select-label">
-                    Groups
-                  </InputLabel>
-                  <Select
-                    labelId="demo-customized-select-label"
-                    id="demo-customized-select"
-                    value={group}
-                    onChange={handleChange}
-                    input={<BootstrapInput />}
-                  >
-                    <MenuItem value="both">
-                      <em>both</em>
-                    </MenuItem>
-                    <MenuItem value="official">official</MenuItem>
-                    <MenuItem value="unofficial">unofficial</MenuItem>
-                    {/* <MenuItem value='both'>both</MenuItem> */}
-                  </Select>
-                </FormControl>
-                </center>
                 <div
                   style={{
                     height: "86vh",
@@ -341,6 +328,26 @@ export default function Chat() {
                       {/* <Button variant="outlined" color="primary">Send</Button> */}
                     </div>
                   </form>
+                  <center>
+                    <FormControl className={classes.margin}>
+                      <InputLabel id="demo-customized-select-label">
+                        Groups
+                      </InputLabel>
+                      <Select
+                        labelId="demo-customized-select-label"
+                        id="demo-customized-select"
+                        value={group}
+                        onChange={handleChange}
+                        input={<BootstrapInput />}
+                      >
+                        <MenuItem value="both">
+                          <em>both</em>
+                        </MenuItem>
+                        <MenuItem value="official">official</MenuItem>
+                        <MenuItem value="unofficial">unofficial</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </center>
                 </div>
               </div>
             </div>
