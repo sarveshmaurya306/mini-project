@@ -211,6 +211,7 @@ export default function Chat() {
   };
 
   const changeUserRoom = (room) => {
+    setChat([])
     socket.emit("change_user_room", room);
   };
 
