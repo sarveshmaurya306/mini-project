@@ -12,6 +12,8 @@ import InputBase from "@material-ui/core/InputBase";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import { TextField, Button } from "@material-ui/core";
+import Footer from "./Footer.jsx";
+
 const socket = io.connect("http://localhost:4000");
 
 const BootstrapInput = withStyles((theme) => ({
@@ -97,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
     // height: '50px',
     textAlign: " left",
     font: "400 .9em ,sans-serif",
-    border: "1px solid #97C6E3",
+    border: "1px solid #d5d80b",
     borderRadius: " 10px",
     position: "relative",
     "&::after": {
@@ -116,7 +118,7 @@ const useStyles = makeStyles((theme) => ({
       position: `absolute`,
       width: `0`,
       height: ` 0`,
-      borderBottom: ` 17px solid #f8e896`,
+      borderBottom: ` 17px solid #d5d80b`,
       borderLeft: ` 16px solid transparent`,
       borderRight: ` 16px solid transparent`,
       bottom: ` -1px`,
@@ -125,7 +127,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Chat() {
+function Chat() {
   const history = useHistory();
   const classes = useStyles();
   const [group, setGroup] = React.useState("both");
@@ -183,8 +185,8 @@ export default function Chat() {
   // },[sendit])
 
   socket.once("admin_message", ({ name, message, time }) => {
-    console.log(name, message);
-    setChat([...chat, { name, message }]);
+    console.log(name, message, moment(time).fromNow());
+    setChat([...chat, { name, message, time }]);
     // chat.push({name, message})
     console.log(chat);
     // chat.push({name, message})
@@ -211,7 +213,7 @@ export default function Chat() {
   };
 
   const changeUserRoom = (room) => {
-    setChat([])
+    setChat([]);
     socket.emit("change_user_room", room);
   };
 
@@ -238,8 +240,8 @@ export default function Chat() {
               <div
                 style={
                   chat.name === current_name
-                    ? { display: "flex", justifyContent: "flex-end" }
-                    : { display: "flex" }
+                    ? { display: "flex", justifyContent: "flex-end",marginBottom:'20px' }
+                    : { display: "flex",marginBottom:'20px' }
                 }
                 key={index}
               >
@@ -266,12 +268,13 @@ export default function Chat() {
                         fontFamily: "monospace",
                       }}
                     >
-                      {" "}
                       {moment(chat.time).fromNow()}
                     </span>
                   </small>
+                {/* <br/> */}
                 </p>
               </div>
+
             );
           })}
           <div ref={bottomRef} className="list-bottom"></div>
@@ -353,8 +356,11 @@ export default function Chat() {
               </div>
             </div>
           </div>
+          {/* <Footer /> */}
         </div>
       )}
     </>
   );
 }
+
+export default React.memo(Chat)

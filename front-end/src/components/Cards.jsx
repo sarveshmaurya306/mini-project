@@ -66,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Cards(props) {
+function Cards(props) {
   // console.log(props.cuser)
   // console.log(props.value.likes)
 
@@ -227,6 +227,7 @@ export default function Cards(props) {
         <a
           href={`http://127.0.0.1:4000/user/64fe0f${props.value._id}5erx90/getpost`}
           target="_blank"
+          rel="noopener noreferrer"
         >
           <CardMedia
             className={classes.media}
@@ -344,3 +345,6 @@ export default function Cards(props) {
     </div>
   );
 }
+
+// export default Cards
+export default React.memo(Cards)
