@@ -3,7 +3,7 @@ import axios from "axios";
 // import PersonIcon from "@material-ui/icons/Person";
 import moment from "moment";
 import { useHistory } from "react-router-dom";
-
+import fakeDp from '../images/contant-image.png'
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
@@ -72,7 +72,7 @@ export default function Myprofile() {
                     alt="profile pic"
                     src={
                       !userData.user.avatar
-                        ? "https://f.v1.n0.cdn.getcloudapp.com/items/0L2l2K3f3e1H2o1O3p0f/robot.png"
+                        ? fakeDp
                         : `http://127.0.0.1:4000/user/${userData.user._id}/getavatar`
                     }
                     width="180"

@@ -14,6 +14,9 @@ import { Link } from "react-router-dom";
 import { TextField, Button } from "@material-ui/core";
 import Footer from "./Footer.jsx";
 
+// import { toast } from "react-toastify";
+// toast.configure();
+
 const socket = io.connect("http://localhost:4000");
 
 const BootstrapInput = withStyles((theme) => ({
@@ -141,8 +144,6 @@ function Chat() {
   const [message, setMessage] = useState("");
   const [sendit, setsendit] = useState(false);
 
-  const [chat, setChat] = useState([]);
-  // const chat=[];
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -173,31 +174,18 @@ function Chat() {
       .catch((e) => history.push("/"));
   }, []);
 
-  // useEffect(()=>{
+  const [chat, setChat] = useState([]);
 
-  // //  socket.once('admin_message', ({name, message})=>{
-  // //     console.log(name, message)
-  // //     setChat([...chat, {name, message}])
-  // //     // chat.push({name, message})
-  // //     console.log(chat)
-  // //     // chat.push({name, message})
-  // //   })
-  // },[sendit])
-
-  socket.once("admin_message", ({ name, message, time }) => {
-    console.log(name, message, moment(time).fromNow());
-    setChat([...chat, { name, message, time }]);
-    // chat.push({name, message})
-    console.log(chat);
-    // chat.push({name, message})
-  });
-  socket.once("server_user_message", ({ name, message, time }) => {
-    // console.log(name, message)
-    setChat([...chat, { name, message, time }]);
-    // chat.push({name, message})
-    // console.log(chat);
-    // chat=([ ...chat,{name, message}])
-  });
+  useEffect(() => {
+    socket.once("admin_message", ({ name, message, time }) => {
+      console.log(name);
+      setChat([...chat, { name, message, time }]);
+    });
+    socket.once("server_user_message", ({ name, message, time }) => {
+      console.log(name);
+      setChat([...chat, { name, message, time }]);
+    });
+  }, [chat]);
 
   const userMessage = (e) => {
     setMessage(e.target.value);
@@ -214,6 +202,10 @@ function Chat() {
 
   const changeUserRoom = (room) => {
     setChat([]);
+   /*  toast.warn(`Room has been change to ${room}`, {
+      position: "bottom-left",
+      autoClose: 3000,
+    }) */
     socket.emit("change_user_room", room);
   };
 
@@ -240,12 +232,20 @@ function Chat() {
               <div
                 style={
                   chat.name === current_name
-                    ? { display: "flex", justifyContent: "flex-end",marginBottom:'20px' }
-                    : { display: "flex",marginBottom:'20px' }
+                    ? {
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        marginBottom: "20px",
+                        
+                      }
+                    : { display: "flex", marginBottom: "20px", }
                 }
                 key={index}
               >
                 <p
+                  style={{
+                    maxWidth:'50%'
+                  }}
                   className={
                     chat.name === current_name
                       ? classes.messageSender
@@ -271,10 +271,9 @@ function Chat() {
                       {moment(chat.time).fromNow()}
                     </span>
                   </small>
-                {/* <br/> */}
+                  {/* <br/> */}
                 </p>
               </div>
-
             );
           })}
           <div ref={bottomRef} className="list-bottom"></div>
@@ -292,11 +291,11 @@ function Chat() {
           <h3 style={{ color: "skyblue", fontWeight: "bolder" }}>
             <center>Chatting</center>
           </h3>
-          <div className="container-fluid">
+          <div className="px-0 px-md-5">
             <div className="row">
               <div
                 className="col-9 col-md-10"
-                style={{ borderRight: "1px solid black" }}
+                
               >
                 {displayChat()}
               </div>
@@ -322,7 +321,9 @@ function Chat() {
                   }}
                 >
                   <form onSubmit={sendMessage}>
-                    <div className="d-flex" style={{}}>
+                    <div className="d-flex" style={{
+                    
+                    }}>
                       <TextField
                         label="Message"
                         variant="outlined"
@@ -363,4 +364,4 @@ function Chat() {
   );
 }
 
-export default React.memo(Chat)
+export default React.memo(Chat);

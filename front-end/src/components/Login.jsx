@@ -50,7 +50,7 @@ export default function Login() {
           window.sessionStorage.setItem("token", res.data.token);
           window.sessionStorage.setItem("name", res.data.name);
           window.sessionStorage.setItem("email", res.data.email);
-          window.sessionStorage.setItem("currentRoom", "Both");
+          window.sessionStorage.setItem("currentRoom", "both");
           history.push("/home");
         })
         .catch((err) =>

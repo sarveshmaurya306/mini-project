@@ -12,7 +12,11 @@ import { Button } from "@material-ui/core";
 // import {Skeleton} from '@material-ui/lab'
 import Loading from "./Loading.jsx";
 
+
+
 function Home() {
+
+
   // const [status, setStatus] = useState(false);
   // const [userData, setUserData] = useState();
   const history = useHistory();

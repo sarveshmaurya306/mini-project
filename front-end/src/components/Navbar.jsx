@@ -15,6 +15,7 @@ import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 // import MailIcon from "@material-ui/icons/Mail";
 // import NotificationsIcon from "@material-ui/icons/Notifications";
+import fakeDp from '../images/contant-image.png'
 import MoreIcon from "@material-ui/icons/MoreVert";
 import mainLogo from "../images/Logo.png";
 import HomeIcon from "@material-ui/icons/Home";
@@ -479,7 +480,7 @@ export default function Navbar() {
                               alt="profile pic"
                               src={
                                 !item.avatar
-                                  ? "https://f.v1.n0.cdn.getcloudapp.com/items/0L2l2K3f3e1H2o1O3p0f/robot.png"
+                                  ? fakeDp
                                   : `http://127.0.0.1:4000/user/${item._id}/getavatar`
                               }
                               width="50"
