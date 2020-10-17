@@ -14,8 +14,8 @@ import { Link } from "react-router-dom";
 import { TextField, Button } from "@material-ui/core";
 import Footer from "./Footer.jsx";
 
-// import { toast } from "react-toastify";
-// toast.configure();
+import { toast } from "react-toastify";
+toast.configure();
 
 const socket = io.connect("http://localhost:4000");
 
@@ -130,33 +130,38 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+// window.sessionStorage.getItem('chat','[]')
+
 function Chat() {
   const history = useHistory();
   const classes = useStyles();
-  const [group, setGroup] = React.useState("both");
+  const [group, setGroup] = React.useState(sessionStorage.getItem('currentRoom'));
 
   const handleChange = (event) => {
+    sessionStorage.setItem('currentRoom', event.target.value);
     setGroup(event.target.value);
     changeUserRoom(event.target.value);
   };
 
   //messanging
   const [message, setMessage] = useState("");
-  const [sendit, setsendit] = useState(false);
-
+  const [chat, setChat] = useState(JSON.parse(sessionStorage.getItem('chat')));
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     socket.emit("connection");
-    // console.log('first render')
+    console.log('first render')
     socket.emit("new_user", {
       name: sessionStorage.getItem("name"),
       email: sessionStorage.getItem("email"),
       room: sessionStorage.getItem("currentRoom"),
     });
 
+    setChat(JSON.parse(sessionStorage.getItem('chat')))
+
     return () => {
       socket.emit("disconnect");
+      // sessionStorage.setItem('chat','[]');
     };
   }, []);
 
@@ -170,42 +175,43 @@ function Chat() {
     })
       .then((res) => {
         setLoading(false);
+        // sessionStorage.setItem('chat','[]');
       })
       .catch((e) => history.push("/"));
   }, []);
 
-  const [chat, setChat] = useState([]);
 
   useEffect(() => {
     socket.once("admin_message", ({ name, message, time }) => {
       console.log(name);
       setChat([...chat, { name, message, time }]);
+      // sessionStorage.setItem('chat', JSON.stringify(chat))
     });
     socket.once("server_user_message", ({ name, message, time }) => {
       console.log(name);
       setChat([...chat, { name, message, time }]);
     });
   }, [chat]);
-
+  
+  sessionStorage.setItem('chat', JSON.stringify(chat))
   const userMessage = (e) => {
     setMessage(e.target.value);
   };
 
   const sendMessage = (e) => {
     e.preventDefault();
-
+    !message ? 
+    toast.warn(`Please enter something.`, {
+      position: "bottom-left",
+      autoClose: 3000,
+    }) :
     socket.emit("user_message", message);
     setMessage("");
-
-    setsendit((e) => !e);
   };
 
   const changeUserRoom = (room) => {
     setChat([]);
-   /*  toast.warn(`Room has been change to ${room}`, {
-      position: "bottom-left",
-      autoClose: 3000,
-    }) */
+    sessionStorage.setItem('currentRoom', room);
     socket.emit("change_user_room", room);
   };
 
@@ -291,36 +297,49 @@ function Chat() {
           <h3 style={{ color: "skyblue", fontWeight: "bolder" }}>
             <center>Chatting</center>
           </h3>
-          <div className="px-0 px-md-5">
-            <div className="row">
+          <div className="px-0 px-md-5" style={{marginBottom:'90px'}}>
+            {/* <div className="row"> */}
+              
               <div
-                className="col-9 col-md-10"
-                
+                // className="col-9 col-md-10"
               >
                 {displayChat()}
               </div>
               <div
-                className="col-3 col-md-2"
+                // className="col-3 col-md-2"
                 style={{
                   float: "right",
-                  height: "50vh",
+                  // height: "50vh",
+                  height:'10%',
                   bottom: 20,
                   position: "fixed",
                   right: 20,
                 }}
               >
+                {/* <br/><hr/> */}
+                {/* <hr/> */}
                 <div
                   style={{
-                    height: "86vh",
+                    // marginTop:'10px',
+                    // display:'flex',
+                    // alignItems:'center',
+                    // width:'100vh',
+                    // position:'relative',
+                    // left:'60',
+                   
+
+                  //  height: "86vh",
                     bottom: "20px",
                     position: " fixed",
                     right: " 20px",
                     display: " flex",
-                    flexDirection: "column-reverse",
-                    alignContent: "space-between",
+                    // flexDirection: "column-reverse",
+                    // alignContent: "space-between", 
+                    alignItems:'center',
+                    marginTop:'20px',
                   }}
                 >
-                  <form onSubmit={sendMessage}>
+                  <form onSubmit={sendMessage} style={{marginTop:'20px'}}>
                     <div className="d-flex" style={{
                     
                     }}>
@@ -345,16 +364,14 @@ function Chat() {
                         onChange={handleChange}
                         input={<BootstrapInput />}
                       >
-                        <MenuItem value="both">
-                          <em>both</em>
-                        </MenuItem>
+                        <MenuItem value="both">both</MenuItem>
                         <MenuItem value="official">official</MenuItem>
                         <MenuItem value="unofficial">unofficial</MenuItem>
                       </Select>
                     </FormControl>
                   </center>
                 </div>
-              </div>
+              {/* </div> */}
             </div>
           </div>
           {/* <Footer /> */}

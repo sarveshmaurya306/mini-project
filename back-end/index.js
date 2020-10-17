@@ -147,7 +147,7 @@ io.on("connection", (socket) => {
 
         socket.join(room,()=>{
           socket.to(room).emit('admin_message',{name: 'admin', message: `"${user.name}" has joined say hi.`,time: new Date().getTime})
-          io.to(socket.id).emit('admin_message', {name: 'admin', message: `Welcome "${user.name}" in "${room}" room`,time: new Date().getTime});
+          io.to(socket.id).emit('admin_message', {name: 'admin', message: `Welcome "${user.name}" in "${room}" room`,time: new Date().getTime}); //sending private message
         })
       });
 

@@ -11,7 +11,9 @@
     "**/.classpath": true,
     "**/.project": true,
     "**/.settings": true,
-    "**/.factorypath": true
+    "**/.factorypath": true,
+    "**/.vscode": true
+    
   },
   "files.watcherExclude": {
     "**/.git/objects/**": true,

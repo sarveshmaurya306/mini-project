@@ -211,7 +211,8 @@ export default function Navbar() {
           style={{ color: "black", textDecoration: "none" }}
           onClick={() => {
             handleMenuClose();
-            window.sessionStorage.removeItem("token");
+            // window.sessionStorage.removeItem("token");
+            window.sessionStorage.clear()
           }}
         >
           Log Out
