@@ -1,5 +1,5 @@
 # KietTalks web app
-## mini project for college 3rd sem
+* mini project for college 3rd sem
 
 
 ## Overview -
@@ -30,7 +30,7 @@ react on it publically.
 * unofficial - for unofficial users only.
 * both - for unofficials and officials.
 ### Create Post Page - Registered user can create a post by giving title, description and a picture.
-#### Profile - 
+### Profile - 
 * Profile Page - Registered user can see thier post and can delete it.
 * Logout - For session out.
 
