@@ -167,7 +167,7 @@ io.on("connection", (socket) => {
       resolve();
     })
     promise.then(r=>{
-      io.in(user.room).emit('admin_message',{name: 'admin',message:`"${user.name}" has left this room`})
+      io.in(user.room).emit('admin_message',{name: 'admin',message:`"${user.name}" has left this room`,time: new Date().getTime() })
 
       socket.leave(user.room);
       const deleteu=new Promise(res=>{
@@ -183,6 +183,9 @@ io.on("connection", (socket) => {
 server.listen(port, () => {
   console.log(`running on ${port}`);
 });
+
+// const key = require('./utils/utils.js')
+// console.log(key)
 
 
 

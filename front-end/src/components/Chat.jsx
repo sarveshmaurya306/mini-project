@@ -133,6 +133,8 @@ const useStyles = makeStyles((theme) => ({
 // window.sessionStorage.getItem('chat','[]')
 
 function Chat() {
+
+  console.log('in chat agian render')
   const history = useHistory();
   const classes = useStyles();
   const [group, setGroup] = React.useState(sessionStorage.getItem('currentRoom'));
@@ -140,7 +142,8 @@ function Chat() {
   const handleChange = (event) => {
     sessionStorage.setItem('currentRoom', event.target.value);
     setGroup(event.target.value);
-    changeUserRoom(event.target.value);
+    // window.location.reload()
+    // changeUserRoom(event.target.value);
   };
 
   //messanging
@@ -191,7 +194,7 @@ function Chat() {
       console.log(name);
       setChat([...chat, { name, message, time }]);
     });
-  }, [chat]);
+  },[chat]);
   
   sessionStorage.setItem('chat', JSON.stringify(chat))
   const userMessage = (e) => {
@@ -208,12 +211,18 @@ function Chat() {
     socket.emit("user_message", message);
     setMessage("");
   };
-
-  const changeUserRoom = (room) => {
-    setChat([]);
-    sessionStorage.setItem('currentRoom', room);
-    socket.emit("change_user_room", room);
-  };
+ 
+  useEffect(()=>{
+    
+    const changeUserRoom = (room) => {
+      console.log('change user room called.')
+      setChat([]);
+      sessionStorage.setItem('currentRoom', room);
+      socket.emit("change_user_room", room);
+    };
+    changeUserRoom(group);
+    
+  }, [group])
 
   const bottomRef = useRef();
 
@@ -297,11 +306,12 @@ function Chat() {
           <h3 style={{ color: "skyblue", fontWeight: "bolder" }}>
             <center>Chatting</center>
           </h3>
-          <div className="px-0 px-md-5" style={{marginBottom:'90px'}}>
+          <div className=" container-fluid
+          " style={{marginBottom:'90px'}}>
             {/* <div className="row"> */}
               
               <div
-                // className="col-9 col-md-10"
+                className=""
               >
                 {displayChat()}
               </div>
@@ -381,4 +391,4 @@ function Chat() {
   );
 }
 
-export default React.memo(Chat);
+export default Chat;

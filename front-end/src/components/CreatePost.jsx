@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Paper from "@material-ui/core/Paper";
-import CreatePostImg from "../images/createpost.svg";
+
 import { Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Footer from "./Footer.jsx";
