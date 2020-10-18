@@ -111,7 +111,11 @@ io.on("connection", (socket) => {
     })
     promise.then(r=>{
       // console.log(count++)
-      socket.join(room);
+      socket.join(room,()=>console.log('conn'));
+      socket.on('disconnect',()=>{
+        socket.disconnect()
+        console.log('dis')
+      })
       // console.log(room);
       // console.log(getUserInRoom('both'))
       io.to(socket.id).emit('admin_message', {name: 'admin', message: `Welcome "${name}" in "${room}" room`,time: new Date().getTime});
@@ -120,6 +124,7 @@ io.on("connection", (socket) => {
   })
 
   socket.on('user_message',(message)=>{
+    console.log('usermessage')
     var user;
     const promise= new Promise(resolve=>{
       user= getUser(socket.id)
@@ -167,7 +172,7 @@ io.on("connection", (socket) => {
       resolve();
     })
     promise.then(r=>{
-      io.in(user.room).emit('admin_message',{name: 'admin',message:`"${user.name}" has left this room`,time: new Date().getTime() })
+      io.in(user.room).emit('admin_message',{name: 'admin',message:`"${user.name}" has left this room`, time: new Date().getTime()})
 
       socket.leave(user.room);
       const deleteu=new Promise(res=>{

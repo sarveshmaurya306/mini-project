@@ -133,8 +133,6 @@ const useStyles = makeStyles((theme) => ({
 // window.sessionStorage.getItem('chat','[]')
 
 function Chat() {
-
-  console.log('in chat agian render')
   const history = useHistory();
   const classes = useStyles();
   const [group, setGroup] = React.useState(sessionStorage.getItem('currentRoom'));
@@ -142,13 +140,12 @@ function Chat() {
   const handleChange = (event) => {
     sessionStorage.setItem('currentRoom', event.target.value);
     setGroup(event.target.value);
-    // window.location.reload()
-    // changeUserRoom(event.target.value);
+    changeUserRoom(event.target.value);
   };
 
   //messanging
   const [message, setMessage] = useState("");
-  const [chat, setChat] = useState(JSON.parse(sessionStorage.getItem('chat')));
+  const [chat, setChat] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -160,7 +157,7 @@ function Chat() {
       room: sessionStorage.getItem("currentRoom"),
     });
 
-    setChat(JSON.parse(sessionStorage.getItem('chat')))
+    // setChat(JSON.parse(sessionStorage.getItem('chat')))
 
     return () => {
       socket.emit("disconnect");
@@ -184,18 +181,34 @@ function Chat() {
   }, []);
 
 
-  useEffect(() => {
-    socket.once("admin_message", ({ name, message, time }) => {
-      console.log(name);
-      setChat([...chat, { name, message, time }]);
-      // sessionStorage.setItem('chat', JSON.stringify(chat))
-    });
-    socket.once("server_user_message", ({ name, message, time }) => {
-      console.log(name);
-      setChat([...chat, { name, message, time }]);
-    });
-  },[chat]);
+  const [x, setx]= useState({name:'admin', message:'Welcome in chatting',time: new Date().getTime()})
+
+  const [y, sety]=useState()
   
+  useEffect(() => {
+    socket.on("admin_message", ({ name, message, time }) => {
+      // console.log(name, message);
+      setx({name, message, time})
+      // chat.push({name , message, time})
+      // setChat([...chat, { name, message, time }]);
+    });
+    socket.on("server_user_message", ({ name, message, time }) => {
+      // console.log(name, message);
+      setx({name, message, time})
+      // chat.push({name , message, time})
+      // setChat([...chat, { name, message, time }]);
+    });
+  },[y]);
+
+
+  useEffect(()=>{
+    setChat([...chat, x])
+    // sety(e=>!e)
+    console.log(chat)
+  }, [x])
+  
+
+
   sessionStorage.setItem('chat', JSON.stringify(chat))
   const userMessage = (e) => {
     setMessage(e.target.value);
@@ -211,18 +224,12 @@ function Chat() {
     socket.emit("user_message", message);
     setMessage("");
   };
- 
-  useEffect(()=>{
-    
-    const changeUserRoom = (room) => {
-      console.log('change user room called.')
-      setChat([]);
-      sessionStorage.setItem('currentRoom', room);
-      socket.emit("change_user_room", room);
-    };
-    changeUserRoom(group);
-    
-  }, [group])
+
+  const changeUserRoom = (room) => {
+    sessionStorage.setItem('currentRoom', room);
+    socket.emit("change_user_room", room);
+    setChat([]);
+  };
 
   const bottomRef = useRef();
 
@@ -306,12 +313,11 @@ function Chat() {
           <h3 style={{ color: "skyblue", fontWeight: "bolder" }}>
             <center>Chatting</center>
           </h3>
-          <div className=" container-fluid
-          " style={{marginBottom:'90px'}}>
+          <div className="px-0 px-md-5" style={{marginBottom:'90px'}}>
             {/* <div className="row"> */}
               
               <div
-                className=""
+                className="container-fluid"
               >
                 {displayChat()}
               </div>
@@ -391,4 +397,4 @@ function Chat() {
   );
 }
 
-export default Chat;
+export default React.memo(Chat);
