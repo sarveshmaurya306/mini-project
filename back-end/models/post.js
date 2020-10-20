@@ -12,7 +12,8 @@ const postSchema = mongoose.Schema({
 	},
 
 	image: {
-		type: Buffer,
+		type: String,
+		require:true,
 	},
 	ownername: {
 		type: String,
@@ -25,7 +26,6 @@ const postSchema = mongoose.Schema({
 	},
 	timestamp: {
 		type: String,
-		default:new Date().getTime(),
 	},
 	likes: [
 		{
