@@ -25,6 +25,8 @@ react on it publically.
 ### Login Page - A existing user will login here.
 ### Signup Page - A new user can register here.
 ### Home Page - Registered user can see post posted by other person.
+* sorting by date
+* sorting by publicity (publicity of post {likes})
 ### Chat Page - Registered user will talks to each other in real time, only three groups are made -
 * official - for official users only. 
 * unofficial - for unofficial users only.
