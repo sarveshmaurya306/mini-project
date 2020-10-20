@@ -191,7 +191,7 @@ function Cards(props) {
       },
     })
       .then((r) => {
-        setCommentValue("");
+        // setCommentValue("");
         setNumberComment((e) => e + 1);
         setShowComment(false);
       })

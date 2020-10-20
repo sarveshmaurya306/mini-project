@@ -203,7 +203,7 @@ export default function Myprofile() {
                     {userData.user.name}
                   </h2>
                   <h3 className="text-center">
-                    <small>Current Position:</small>{" "}
+                    <small>Position in college:</small>{" "}
                     {userData.user.currentStatus}
                   </h3>
                 </div>
