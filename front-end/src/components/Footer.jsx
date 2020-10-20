@@ -9,7 +9,7 @@ export default function Footer() {
           backgroundColor: "#00000094",
           color: "white",
           padding: 12,
-          position:'fixed',
+          // position:'fixed',
           bottom:" 0",
           width:" 100%",
         }}

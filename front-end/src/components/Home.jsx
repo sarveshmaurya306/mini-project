@@ -46,10 +46,10 @@ function Home() {
       });
   }, []);
 
-  const [value, setValue]=useState('1')
+  const [value, setValue]=useState(1)
 
   const nextPage = (e, xvalue) => {
-    // setValue(xvalue)
+    // console.log(xvalue)
     
     const url=`http://127.0.0.1:4000`
     axios({
@@ -68,7 +68,7 @@ function Home() {
     
   };
 
-  const [sortBy, setSortBy]=useState('date')
+  const [sortBy, setSortBy]=useState(sessionStorage.getItem('sortBy'))
 
   useEffect(()=>{
     // console.log(sortBy)
@@ -89,6 +89,7 @@ function Home() {
 
   const handleSorting=(e)=>{
     setSortBy(e.target.value)
+    sessionStorage.setItem('sortBy',e.target.value)
     // console.log(e.target.value)
   }
 
@@ -102,7 +103,7 @@ function Home() {
           <div className="container">
             {
               
-              value==='1'?<select name="sort" onChange={handleSorting} id="" className="mt-5">
+              value===1?<select name="sort" value={sortBy} onChange={handleSorting} id="" className="mt-5">
               <option value="date">date</option>
               <option value="publicity">publicity</option>
               {/* <option value="date&publicity">date&publicity</option> */}

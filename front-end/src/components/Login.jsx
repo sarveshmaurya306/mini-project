@@ -51,7 +51,8 @@ export default function Login() {
           window.sessionStorage.setItem("name", res.data.name);
           window.sessionStorage.setItem("email", res.data.email);
           window.sessionStorage.setItem("currentRoom", "both");
-          window.sessionStorage.setItem('chat', JSON.stringify([]))
+          window.sessionStorage.setItem('sortBy','date');
+
           history.push("/home");
         })
         .catch((err) =>

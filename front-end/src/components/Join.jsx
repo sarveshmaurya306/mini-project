@@ -116,13 +116,17 @@ function Join() {
           window.sessionStorage.setItem("token", res.data);
           window.sessionStorage.setItem("name", res.data.name);
           window.sessionStorage.setItem("email", res.data.email);
-          window.sessionStorage.setItem("currentRoom", "Both");
+          window.sessionStorage.setItem("currentRoom", "both");
+          toast.success('Registered...',{
+            position: "bottom-left",
+            autoClose: 4000,
+          })
           setLoading(false);
-          history.push("/home");
+          history.push('/')
         })
         .catch((e) => {
           // console.log(e);
-          toast.error("Please provide currect details", {
+          toast.error("Either you miss some fields or the user is already registerd.", {
             position: "bottom-left",
             autoClose: 4000,
           });

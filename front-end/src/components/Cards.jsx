@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
-
+import Publicity from './Publicity.jsx'
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
@@ -69,13 +69,18 @@ const useStyles = makeStyles((theme) => ({
 function Cards(props) {
   // console.log(props)
   // console.log(props.value.likes)
-  console.log(props.value, props.cuser)
-
+  // console.log(props.value, props.cuser)
+  const user = props.cuser;
   var x = false;
 
+  useEffect(()=>{
+    const likedornot= props.value.likes.find(like=>like.like==user)
+    x= likedornot
+    setIsLiked(x)
+  },[props])
+
   const length = props.value.likes.length;
-  const user = props.cuser;
-  console.log(props.value.likes.find(like=>like.like==user));
+  // console.log(props.value.likes.find(like=>like.like==user));
 
 
   props.value.likes.find((like) => {
@@ -130,7 +135,7 @@ function Cards(props) {
       once: true,
     });
     AOS.refresh();
-  }, []);
+  }, [props]);
 
   // console.log(props.value);
 
@@ -209,13 +214,13 @@ function Cards(props) {
   const avatarDp = props.value.ownername.split("");
   const avatarChar = (avatarDp[0]).toUpperCase();
   const time = parseInt(props.value.timestamp);
-console.log(props.value.image)
+// console.log(props.value.image)
  /*  const buffer = props.value.image.data; // e.g., <Buffer 89 50 4e ... >
   const b64 = new Buffer(buffer).toString("base64");
   const mimeType = "image/jpg"; // e.g., image/png */
 
   return (
-    <div className="my-4 container" data-aos="zoom-in">
+    <div className="my-4 container" data-aos="zoom-in" >
       <Card className={`${classes.cardHover} `}>
         <CardHeader
           avatar={
@@ -252,9 +257,11 @@ console.log(props.value.image)
             onClick={postLiked}
             title="like"
           >
-            <Badge color="secondary" badgeContent={props.value.likes.length}>
-              <FavoriteIcon style={isLiked ? liked : {}} />
-            </Badge>
+            <div >
+              <Badge color="secondary" badgeContent={props.value.likes.length} >
+                <FavoriteIcon style={isLiked ? liked : {}} />
+              </Badge>
+            </div>
           </IconButton>
 
           <IconButton
@@ -283,6 +290,8 @@ console.log(props.value.image)
             </Badge>
           </IconButton>
         </CardActions>
+
+        
 
         {!commentValue ? (
           ""

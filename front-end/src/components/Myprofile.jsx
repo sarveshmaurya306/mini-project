@@ -88,7 +88,7 @@ export default function Myprofile() {
         })
       )
       .catch((e) =>
-        toast.error("Profile photo must be less than 3MB.", {
+        toast.error("Profile photo must be less than 1MB.", {
           position: "bottom-left",
           autoClose: 4000,
         })

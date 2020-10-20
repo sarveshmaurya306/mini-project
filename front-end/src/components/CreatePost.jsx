@@ -53,6 +53,10 @@ export default function CreatePost() {
 
   const sendPost = (e) => {
     e.preventDefault();
+    toast.info("Please wait for a moment", {
+      position: "bottom-left",
+      autoClose: 4000,
+    });
     const url = `http://127.0.0.1:4000`;
     const formData = new FormData();
     // const title= detail.title;
@@ -61,49 +65,51 @@ export default function CreatePost() {
     formData.append("upload_preset", "mini-project");
     formData.append("cloud_name", "dnwcamylp");
 
-    
-        !detail.title || !detail.description
-          ? toast.warn("please provide some value", {
-              position: "bottom-left",
-              autoClose: 4000,
-            })
-          :
-          fetch("https://api.cloudinary.com/v1_1/dnwcamylp/image/upload", {
+    !detail.title || !detail.description
+      ? toast.warn("please provide some value", {
+          position: "bottom-left",
+          autoClose: 4000,
+        })
+      : fetch("https://api.cloudinary.com/v1_1/dnwcamylp/image/upload", {
           method: "post",
           body: formData,
-          })
-            .then((res) => res.json())
-            .then((data) => {
-                
-          axios({
-            method: "post",
-            data: {imageUrl: data.url, title:detail.title, description: detail.description},
-                  url: `${url}/user/createpost`,
-                  headers: {
-                    Authorization: "Bearer " + sessionStorage.getItem("token")
-                  },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            axios({
+              method: "post",
+              data: {
+                imageUrl: data.url,
+                title: detail.title,
+                description: detail.description,
+              },
+              url: `${url}/user/createpost`,
+              headers: {
+                Authorization: "Bearer " + sessionStorage.getItem("token"),
+              },
+            })
+              .then((res) => {
+                toast.success("Post created", {
+                  position: "bottom-left",
+                  autoClose: 4000,
+                });
+                setDetail({ title: "", description: "", comment: "" });
+                setPhoto(null);
+              })
+              .catch((e) =>
+                toast.error("Post photo must be less than 1MB.", {
+                  position: "bottom-left",
+                  autoClose: 4000,
                 })
-                  .then((res) => {
-                    toast.success("Post created", {
-                      position: "bottom-left",
-                      autoClose: 4000,
-                    });
-                    setDetail({ title: "", description: "", comment: "" });
-                    setPhoto(null);
-                  })
-                  .catch((e) =>
-                    toast.error("Post photo must be less than 3MB.", {
-                      position: "bottom-left",
-                      autoClose: 4000,
-                    })
-                  );
-          }).catch(e=>{
-            toast.warn("Something went wrong", {
+              );
+          })
+          .catch((e) => {
+            console.log(e)
+            toast.warn("Pardon, server is not responding.", {
               position: "bottom-left",
               autoClose: 4000,
             });
-          })
-
+          });
 
     /*!detail.title || !detail.description
 			? toast.warn("please provide some value", {
