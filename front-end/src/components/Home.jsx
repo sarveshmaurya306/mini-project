@@ -46,22 +46,53 @@ function Home() {
       });
   }, []);
 
-  const nextPage = (e, value) => {
+  const [value, setValue]=useState('1')
+
+  const nextPage = (e, xvalue) => {
+    // setValue(xvalue)
+    
+    const url=`http://127.0.0.1:4000`
     axios({
-      method: "get",
-      url: `/user/getallpost/${value}/5`,
+      method:'get',
+      url:`${url}/user/getpostbysorting/${value}/5/${sortBy}`,
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
-    })
-      .then((res) => {
+    }).then(res=>{
         window.scrollTo(0, 0);
         setPosts(res.data.posts);
-      })
-      .catch((e) => {});
+        setValue(xvalue)
+    }).catch(e=>{
+      console.log(e)
+    })
+    
   };
 
-  // console.log(user);
+  const [sortBy, setSortBy]=useState('date')
+
+  useEffect(()=>{
+    // console.log(sortBy)
+    const url=`http://127.0.0.1:4000`
+    axios({
+      method:'get',
+      url:`${url}/user/getpostbysorting/${value}/5/${sortBy}`,
+      headers: {
+        Authorization: "Bearer " + sessionStorage.getItem("token"),
+      },
+    }).then(res=>{
+        window.scrollTo(0, 0);
+        setPosts(res.data.posts);
+    }).catch(e=>{
+      console.log(e)
+    })
+  },[sortBy, value])
+
+  const handleSorting=(e)=>{
+    setSortBy(e.target.value)
+    // console.log(e.target.value)
+  }
+
+
   return (
     <>
       {!posts ? (
@@ -69,6 +100,15 @@ function Home() {
       ) : (
         <div>
           <div className="container">
+            {
+              
+              value==='1'?<select name="sort" onChange={handleSorting} id="" className="mt-5">
+              <option value="date">date</option>
+              <option value="publicity">publicity</option>
+              {/* <option value="date&publicity">date&publicity</option> */}
+            </select>:''
+          
+            }
             <div className=" col-md-8 col-auto">
               {!posts
                 ? ""
@@ -118,5 +158,5 @@ function Home() {
   );
 }
 
-export default React.memo(Home)
+export default Home
 // React.memo

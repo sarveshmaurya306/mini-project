@@ -67,16 +67,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Cards(props) {
-  // console.log(props.cuser)
+  // console.log(props)
   // console.log(props.value.likes)
 
   var x = false;
 
   const length = props.value.likes.length;
   const user = props.cuser;
-  console.log(user, length);
+  console.log(props.value.likes.find(like=>like.like==user));
 
-  props.value.likes.forEach((like) => {
+
+  props.value.likes.find((like) => {
     if (like.like == user) {
       return (x = true);
     }
@@ -130,7 +131,7 @@ function Cards(props) {
     AOS.refresh();
   }, []);
 
-  console.log(props.value);
+  // console.log(props.value);
 
   const postLiked = () => {
     const url = `http://127.0.0.1:4000`;
@@ -205,7 +206,7 @@ function Cards(props) {
   };
 
   const avatarDp = props.value.ownername.split("");
-  const avatarChar = avatarDp[0];
+  const avatarChar = (avatarDp[0]).toUpperCase();
   const time = parseInt(props.value.timestamp);
   const buffer = props.value.image.data; // e.g., <Buffer 89 50 4e ... >
   const b64 = new Buffer(buffer).toString("base64");
@@ -347,4 +348,4 @@ function Cards(props) {
 }
 
 // export default Cards
-export default React.memo(Cards)
+export default Cards

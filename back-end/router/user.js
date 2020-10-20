@@ -234,6 +234,34 @@ router.get("/user/getallpost/:page/:limit", auth, async (req, res) => {
     }
 });
 
+router.get('/user/getpostbysorting/:page/:limit/:sortBy', auth, async (req, res)=>{
+    // const {sortBy= {timestamp:-1}} = req.params;
+    const { page = 1, limit = 5,sortBy='date' } = req.params;
+    console.log(sortBy)
+    var toSort;
+    if(sortBy==='date'){   
+        toSort={timestamp:-1};
+    } else if(sortBy==='publicity'){
+        toSort={likes: -1};
+    } else {
+        throw new Error();
+    }
+    try{
+        const posts = await Post.find()
+            .limit(limit * 1)
+            .sort(toSort)
+            .skip((page - 1) * limit)
+            .exec();
+        const count = await Post.countDocuments();
+        // console.log(req.user._id)
+        // console.log({ posts, count, Id: req.user._id });
+        res.send({ posts, count, Id: req.user._id });
+    } catch(e){
+        console.log(e)
+        res.status(500).send();
+    }
+})
+
 router.delete("/user/:postId/deletepost", auth, async (req, res) => {
     try {
         let post = await Post.findById(req.params.postId);
