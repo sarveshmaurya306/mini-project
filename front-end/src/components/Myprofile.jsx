@@ -219,9 +219,9 @@ export default function Myprofile() {
               <hr />
               <br />
               {userData.userData.map((item) => {
-                const buffer = item.image.data; // e.g., <Buffer 89 50 4e ... >
+               /*  const buffer = item.image.data; // e.g., <Buffer 89 50 4e ... >
                 const b64 = new Buffer(buffer).toString("base64");
-                const mimeType = "image/jpg"; // e.g., image/png
+                const mimeType = "image/jpg"; // e.g., image/png */
                 // console.log(item);
                 // var isDelete=false;
                 // console.log(isDelete)
@@ -237,15 +237,13 @@ export default function Myprofile() {
                     >
                       <div className="col">
                         {" "}
-                        <a href={`http://127.0.0.1:4000/user/64fe0f${item._id}5erx90/getpost`} target="_blank">
+                        <a href={item.image} target="_blank">
                           <img
                             style={{ maxWidth: 300 }}
                             className=" img-fluid rounded bg-secondary"
                             alt="post image"
                             src={
-                              !item.image.data
-                                ? ""
-                                : `data:${mimeType};base64,${b64}`
+                              item.image
                             }
                           />
                         </a>

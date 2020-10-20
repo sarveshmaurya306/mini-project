@@ -69,6 +69,7 @@ const useStyles = makeStyles((theme) => ({
 function Cards(props) {
   // console.log(props)
   // console.log(props.value.likes)
+  console.log(props.value, props.cuser)
 
   var x = false;
 
@@ -208,9 +209,10 @@ function Cards(props) {
   const avatarDp = props.value.ownername.split("");
   const avatarChar = (avatarDp[0]).toUpperCase();
   const time = parseInt(props.value.timestamp);
-  const buffer = props.value.image.data; // e.g., <Buffer 89 50 4e ... >
+console.log(props.value.image)
+ /*  const buffer = props.value.image.data; // e.g., <Buffer 89 50 4e ... >
   const b64 = new Buffer(buffer).toString("base64");
-  const mimeType = "image/jpg"; // e.g., image/png
+  const mimeType = "image/jpg"; // e.g., image/png */
 
   return (
     <div className="my-4 container" data-aos="zoom-in">
@@ -226,13 +228,13 @@ function Cards(props) {
         />
 
         <a
-          href={`http://127.0.0.1:4000/user/64fe0f${props.value._id}5erx90/getpost`}
+          href={props.value.image}
           target="_blank"
           rel="noopener noreferrer"
         >
           <CardMedia
             className={classes.media}
-            image={`data:${mimeType};base64,${b64}`}
+            image={props.value.image}
             title="post image"
           />
         </a>

@@ -3,7 +3,7 @@ const router = new express.Router();
 const bcrypt = require("bcryptjs");
 const auth = require("../middleware/auth.js");
 const multer = require("multer");
-
+const cloudinary = require('cloudinary').v2;
 const User = require("../models/user.js");
 const Post = require("../models/post.js");
 
@@ -51,18 +51,18 @@ router.post("/join", async (req, res) => {
 
 router.post(
     "/user/createpost",
-    upload.single("photo"),
     auth,
     async (req, res) => {
-        const { title, description } = req.body;
+        const { title, description, imageUrl } = req.body;
         // console.log(req.body);
         try {
             const post = new Post({
                 title,
                 description,
                 owner: req.user._id,
-                image: req.file.buffer,
+                image: imageUrl,
                 ownername: req.user.name,
+                timestamp: new Date().getTime()
             });
 
             // const comment= req.body.comment.toString();
@@ -267,8 +267,6 @@ router.delete("/user/:postId/deletepost", auth, async (req, res) => {
         let post = await Post.findById(req.params.postId);
 
         const isVerified = post.owner.toString() === req.user._id.toString();
-        // console.log(isVerified);
-
         if (!isVerified) throw new Error("not verified user");
 
         post = await Post.findByIdAndDelete(req.params.postId);
