@@ -32,7 +32,8 @@ react on it publically.
 * unofficial - for unofficial users only.
 * both - for unofficials and officials.
 ### Create Post Page - Registered user can create a post by giving title, description and a picture.
-### Profile - 
+### Profile - Profile of logged in user
 * Profile Page - Registered user can see thier post and can delete it.
 * Logout - For session out.
-
+### Other user Profile -
+* search user by name in our search bar and get informations and created post by that user.
