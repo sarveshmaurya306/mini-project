@@ -12,11 +12,7 @@ import { Button } from "@material-ui/core";
 // import {Skeleton} from '@material-ui/lab'
 import Loading from "./Loading.jsx";
 
-
-
 function Home() {
-
-
   // const [status, setStatus] = useState(false);
   // const [userData, setUserData] = useState();
   const history = useHistory();
@@ -46,53 +42,55 @@ function Home() {
       });
   }, []);
 
-  const [value, setValue]=useState(1)
+  const [value, setValue] = useState(1);
 
   const nextPage = (e, xvalue) => {
     // console.log(xvalue)
-    
-    const url=`http://127.0.0.1:4000`
+
+    const url = `http://127.0.0.1:4000`;
     axios({
-      method:'get',
-      url:`${url}/user/getpostbysorting/${value}/5/${sortBy}`,
+      method: "get",
+      url: `${url}/user/getpostbysorting/${value}/5/${sortBy}`,
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
-    }).then(res=>{
+    })
+      .then((res) => {
         window.scrollTo(0, 0);
         setPosts(res.data.posts);
-        setValue(xvalue)
-    }).catch(e=>{
-      console.log(e)
-    })
-    
+        setValue(xvalue);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
   };
 
-  const [sortBy, setSortBy]=useState(sessionStorage.getItem('sortBy'))
+  const [sortBy, setSortBy] = useState(sessionStorage.getItem("sortBy"));
 
-  useEffect(()=>{
+  useEffect(() => {
     // console.log(sortBy)
-    const url=`http://127.0.0.1:4000`
+    const url = `http://127.0.0.1:4000`;
     axios({
-      method:'get',
-      url:`${url}/user/getpostbysorting/${value}/5/${sortBy}`,
+      method: "get",
+      url: `${url}/user/getpostbysorting/${value}/5/${sortBy}`,
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
-    }).then(res=>{
+    })
+      .then((res) => {
         window.scrollTo(0, 0);
         setPosts(res.data.posts);
-    }).catch(e=>{
-      console.log(e)
-    })
-  },[sortBy, value])
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, [sortBy, value]);
 
-  const handleSorting=(e)=>{
-    setSortBy(e.target.value)
-    sessionStorage.setItem('sortBy',e.target.value)
+  const handleSorting = (e) => {
+    setSortBy(e.target.value);
+    sessionStorage.setItem("sortBy", e.target.value);
     // console.log(e.target.value)
-  }
-
+  };
 
   return (
     <>
@@ -102,13 +100,17 @@ function Home() {
         <div>
           <div className="container">
             {
-              
-              value===1?<select name="sort" value={sortBy} onChange={handleSorting} id="" className="mt-5">
-              <option value="date">date</option>
-              <option value="publicity">publicity</option>
-              {/* <option value="date&publicity">date&publicity</option> */}
-            </select>:''
-          
+              <select
+                name="sort"
+                value={sortBy}
+                onChange={handleSorting}
+                id=""
+                className="mt-5"
+              >
+                <option value="date">date</option>
+                <option value="publicity">publicity</option>
+                {/* <option value="date&publicity">date&publicity</option> */}
+              </select>
             }
             <div className=" col-md-8 col-auto">
               {!posts
@@ -159,5 +161,5 @@ function Home() {
   );
 }
 
-export default Home
+export default Home;
 // React.memo

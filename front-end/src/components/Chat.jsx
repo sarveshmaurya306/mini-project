@@ -209,7 +209,7 @@ function Chat() {
   
 
 
-  sessionStorage.setItem('chat', JSON.stringify(chat))
+  // sessionStorage.setItem('chat', JSON.stringify(chat))
   const userMessage = (e) => {
     setMessage(e.target.value);
   };

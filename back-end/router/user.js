@@ -244,7 +244,7 @@ router.get('/user/getpostbysorting/:page/:limit/:sortBy', auth, async (req, res)
     } else if(sortBy==='publicity'){
         toSort={likes: -1};
     } else {
-        throw new Error();
+        throw new Error("cannot be done");
     }
     try{
         const posts = await Post.find()
