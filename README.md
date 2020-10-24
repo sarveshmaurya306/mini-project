@@ -25,7 +25,7 @@ react on it publically.
 
 
 ### Login Page - 
-#### A existing user will login here.
+#### An existing user will login here.
 
 ### Signup Page - 
 #### A new user can register here.
