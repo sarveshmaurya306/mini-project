@@ -27,6 +27,7 @@ import "aos/dist/aos.css";
 import CommentIcon from "@material-ui/icons/Comment";
 import AddCommentIcon from "@material-ui/icons/AddComment";
 import SendIcon from "@material-ui/icons/Send";
+import BarChartIcon from '@material-ui/icons/BarChart';
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -221,7 +222,7 @@ function Cards(props) {
 
   const [showChart, setShowChart] = useState(false);
   const showchart = () => {
-    setShowChart(true);
+    setShowChart(e=>!e);
   };
   const hidechart = () => {
     setShowChart(false);
@@ -248,7 +249,7 @@ function Cards(props) {
           >
             <IconButton
               aria-label="add to favorites"
-              title="like"
+              title="close"
               onClick={hidechart}
             >
               <CloseIcon />
@@ -286,7 +287,7 @@ function Cards(props) {
         </CardContent>
 
         <CardActions disableSpacing>
-          <div onMouseEnter={showchart}>
+          <div >
             <IconButton
               aria-label="add to favorites"
               onClick={postLiked}
@@ -307,14 +308,17 @@ function Cards(props) {
               style={showComment || userLikedComment.comment ? comment : {}}
             />
           </IconButton>
+          <IconButton onClick={showchart} title="publicity-chart">      
+            <BarChartIcon />
+          </IconButton>
 
           <IconButton
             className={clsx(classes.expand, {
               [classes.expandOpen]: expanded,
             })}
             onClick={handleExpandClick}
-            aria-expanded={expanded}
-            aria-label="show more"
+            aria-expanded={expanded}   
+            title="show more"
           >
             <Badge
               color="secondary"
