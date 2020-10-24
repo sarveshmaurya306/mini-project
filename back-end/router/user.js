@@ -257,7 +257,9 @@ router.get('/user/getpostbysorting/:page/:limit/:sortBy', auth, async (req, res)
         const count = await Post.countDocuments();
         // console.log(req.user._id)
         // console.log({ posts, count, Id: req.user._id });
-        res.send({ posts, count, Id: req.user._id });
+        const totalUsers=await User.countDocuments();
+        // console.log(totalUsers)
+        res.send({ posts, count, Id: req.user._id , totalUsers});
     } catch(e){
         console.log(e)
         res.status(500).send();

@@ -1,26 +1,61 @@
 import React, { useEffect, useState } from "react";
 
-// import backgroundImg from "../images/back.png";
-
 import Pagination from "@material-ui/lab/Pagination";
-
+import { Select, MenuItem, InputLabel, FormControl } from "@material-ui/core";
 import Cards from "./Cards.jsx";
 import Footer from "./Footer.jsx";
 import axios from "axios";
 import { useHistory } from "react-router-dom";
-import { Button } from "@material-ui/core";
-// import {Skeleton} from '@material-ui/lab'
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import InputBase from "@material-ui/core/InputBase";
 import Loading from "./Loading.jsx";
 
-function Home() {
-  // const [status, setStatus] = useState(false);
-  // const [userData, setUserData] = useState();
-  const history = useHistory();
-  // const [loading, setLoading]= useState(true);
-  const [posts, setPosts] = useState(false);
-  // const [user,setUser]=useState();
-  const [user, setUser] = useState("");
+const BootstrapInput = withStyles((theme) => ({
+  root: {
+    "label + &": {
+      marginTop: theme.spacing(3),
+    },
+  },
+  input: {
+    borderRadius: 4,
+    position: "relative",
+    backgroundColor: theme.palette.background.paper,
+    border: "1px solid #ced4da",
+    fontSize: 16,
+    padding: "10px 26px 10px 12px",
+    transition: theme.transitions.create(["border-color", "box-shadow"]),
+    // Use the system font instead of the default Roboto font.
+    fontFamily: [
+      "-apple-system",
+      "BlinkMacSystemFont",
+      '"Segoe UI"',
+      "Roboto",
+      '"Helvetica Neue"',
+      "Arial",
+      "sans-serif",
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(","),
+    "&:focus": {
+      borderRadius: 4,
+      borderColor: "#80bdff",
+      boxShadow: "0 0 0 0.2rem rgba(0,123,255,.25)",
+    },
+  },
+}))(InputBase);
+const useStyles = makeStyles((theme) => ({
+  margin: {
+    margin: theme.spacing(1),
+  },
+}));
 
+function Home() {
+  const classes = useStyles();
+  const history = useHistory();
+  const [posts, setPosts] = useState(false);
+  const [user, setUser] = useState("");
+  const [tuser, setTuser] = useState(0);
   const [pageCount, setPageCount] = useState(1);
 
   useEffect(() => {
@@ -31,12 +66,13 @@ function Home() {
       headers: {
         Authorization: "Bearer " + sessionStorage.getItem("token"),
       },
-      
     })
       .then((res) => {
         setUser(res.data.Id);
         setPageCount(Math.ceil(res.data.count / 5));
         setPosts(res.data.posts);
+        setTuser(res.data.totalUsers)
+
       })
       .catch((e) => {
         history.push("/");
@@ -85,8 +121,6 @@ function Home() {
       .catch((e) => {
         console.log(e);
       });
-
-     
   }, [sortBy, value]);
 
   const handleSorting = (e) => {
@@ -100,39 +134,60 @@ function Home() {
       {!posts ? (
         <Loading />
       ) : (
-        <div>
-          <div className="container">
+          <div>
             {
-              <select
-                name="sort"
-                value={sortBy}
-                onChange={handleSorting}
-                id=""
-                className="mt-5"
-              >
-                <option value="date">date</option>
-                <option value="publicity">publicity</option>
-                {/* <option value="date&publicity">date&publicity</option> */}
-              </select>
+              // <select
+              //   name="sort"
+              //   value={sortBy}
+              //   onChange={handleSorting}
+              //   id=""
+              //   className="mt-5"
+              //   style={{position:'fixed'}}
+              // >
+              //   <option value="date">date</option>
+              //   <option value="publicity">publicity</option>
+              //   {/* <option value="date&publicity">date&publicity</option> */}
+              // </select>
+              <div className="container-fluid ">
+
+                <FormControl className={`${classes.margin} mt-5`} style={{
+                  position: "fixed", zIndex: 5, fontWeight: "bolder" 
+                }}>
+                  <InputLabel id="demo-customized-select-label">
+                    Sort By
+                  </InputLabel>
+                  <Select
+                    labelId="demo-customized-select-label"
+                    id="demo-customized-select"
+                    value={sortBy}
+                    onChange={handleSorting}
+                    input={<BootstrapInput />}
+                  >
+                    <MenuItem value="date">date</MenuItem>
+                    <MenuItem value="publicity">publicity</MenuItem>
+                  </Select>
+                </FormControl>
+              </div>
             }
-            <div className=" col-md-8 col-auto">
-              {!posts
-                ? ""
-                : posts.map((post) => {
+            <div className="container">
+              <div className=" col-md-8 col-auto">
+                {!posts
+                  ? ""
+                  : posts.map((post) => {
                     // console.log(post)
                     // console.log(post);
                     return (
                       <div className=" d-flex flex-md-nowrap flex-wrap justify-content-between">
                         <div className="text-center w-100">
-                          <Cards value={post} cuser={user} />
+                          <Cards value={post} cuser={user} totalUsers={tuser} />
                         </div>
                       </div>
                     );
                   })}
+              </div>
+              <div className="col-md-offset-4 col-0"> </div>
             </div>
-            <div className="col-md-offset-4 col-0"> </div>
-          </div>
-          {/*
+            {/*
         <div className="d-flex flex-md-nowrap flex-wrap justify-content-between">
           <Cards />
         </div>
@@ -147,19 +202,19 @@ function Home() {
             <SnackbarProvider maxSnack={3} autoHideDuration={2000}>
               <MyApp />
             </SnackbarProvider>*/}
-          <div className="d-flex justify-content-center">
-            <Pagination
-              count={pageCount}
-              className="text-center"
-              onChange={nextPage}
-              variant="outlined"
-              color="primary"
-            />
-          </div>
+            <div className="d-flex justify-content-center">
+              <Pagination
+                count={pageCount}
+                className="text-center"
+                onChange={nextPage}
+                variant="outlined"
+                color="primary"
+              />
+            </div>
 
-          <Footer />
-        </div>
-      )}
+            <Footer />
+          </div>
+        )}
     </>
   );
 }

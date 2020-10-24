@@ -181,32 +181,32 @@ function Chat() {
   }, []);
 
 
-  const [x, setx]= useState({name:'admin', message:'Welcome in chatting',time: new Date().getTime()})
+  const [x, setx] = useState({ name: 'admin', message: 'Welcome in chatting', time: new Date().getTime() })
 
-  const [y, sety]=useState()
-  
+  const [y, sety] = useState()
+
   useEffect(() => {
     socket.on("admin_message", ({ name, message, time }) => {
       // console.log(name, message);
-      setx({name, message, time})
+      setx({ name, message, time })
       // chat.push({name , message, time})
       // setChat([...chat, { name, message, time }]);
     });
     socket.on("server_user_message", ({ name, message, time }) => {
       // console.log(name, message);
-      setx({name, message, time})
+      setx({ name, message, time })
       // chat.push({name , message, time})
       // setChat([...chat, { name, message, time }]);
     });
-  },[y]);
+  }, [y]);
 
 
-  useEffect(()=>{
+  useEffect(() => {
     setChat([...chat, x])
     // sety(e=>!e)
     console.log(chat)
   }, [x])
-  
+
 
 
   // sessionStorage.setItem('chat', JSON.stringify(chat))
@@ -216,12 +216,12 @@ function Chat() {
 
   const sendMessage = (e) => {
     e.preventDefault();
-    !message ? 
-    toast.warn(`Please enter something.`, {
-      position: "bottom-left",
-      autoClose: 3000,
-    }) :
-    socket.emit("user_message", message);
+    !message ?
+      toast.warn(`Please enter something.`, {
+        position: "bottom-left",
+        autoClose: 3000,
+      }) :
+      socket.emit("user_message", message);
     setMessage("");
   };
 
@@ -255,18 +255,18 @@ function Chat() {
                 style={
                   chat.name === current_name
                     ? {
-                        display: "flex",
-                        justifyContent: "flex-end",
-                        marginBottom: "20px",
-                        
-                      }
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      marginBottom: "20px",
+
+                    }
                     : { display: "flex", marginBottom: "20px", }
                 }
                 key={index}
               >
                 <p
                   style={{
-                    maxWidth:'50%'
+                    maxWidth: '50%'
                   }}
                   className={
                     chat.name === current_name
@@ -309,13 +309,13 @@ function Chat() {
       {loading ? (
         <Loading />
       ) : (
-        <div>
-          <h3 style={{ color: "skyblue", fontWeight: "bolder" }}>
-            <center>Chatting</center>
-          </h3>
-          <div className="px-0 px-md-5" style={{marginBottom:'90px'}}>
-            {/* <div className="row"> */}
-              
+          <div>
+            <h3 style={{ color: "skyblue", fontWeight: "bolder" }}>
+              <center>Chatting</center>
+            </h3>
+            <div className="px-0 px-md-5" style={{ marginBottom: '90px' }}>
+              {/* <div className="row"> */}
+
               <div
                 className="container-fluid"
               >
@@ -326,7 +326,7 @@ function Chat() {
                 style={{
                   float: "right",
                   // height: "50vh",
-                  height:'10%',
+                  height: '10%',
                   bottom: 20,
                   position: "fixed",
                   right: 20,
@@ -342,22 +342,22 @@ function Chat() {
                     // width:'100vh',
                     // position:'relative',
                     // left:'60',
-                   
 
-                  //  height: "86vh",
+
+                    //  height: "86vh",
                     bottom: "20px",
                     position: " fixed",
                     right: " 20px",
                     display: " flex",
                     // flexDirection: "column-reverse",
                     // alignContent: "space-between", 
-                    alignItems:'center',
-                    marginTop:'20px',
+                    alignItems: 'center',
+                    marginTop: '20px',
                   }}
                 >
-                  <form onSubmit={sendMessage} style={{marginTop:'20px'}}>
+                  <form onSubmit={sendMessage} style={{ marginTop: '20px' }}>
                     <div className="d-flex" style={{
-                    
+
                     }}>
                       <TextField
                         label="Message"
@@ -387,12 +387,12 @@ function Chat() {
                     </FormControl>
                   </center>
                 </div>
-              {/* </div> */}
+                {/* </div> */}
+              </div>
             </div>
+            {/* <Footer /> */}
           </div>
-          {/* <Footer /> */}
-        </div>
-      )}
+        )}
     </>
   );
 }

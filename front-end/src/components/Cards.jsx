@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import moment from "moment";
-import Publicity from './Publicity.jsx'
+import Publicity from "./Publicity.jsx";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
@@ -18,9 +18,9 @@ import ShareIcon from "@material-ui/icons/Share";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import MoreVertIcon from "@material-ui/icons/MoreVert";
 import TextField from "@material-ui/core/TextField";
-import { Button, Badge } from "@material-ui/core";
+import { Button, Badge, Icon } from "@material-ui/core";
 import axios from "axios";
-
+import CloseIcon from "@material-ui/icons/Close";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -73,19 +73,18 @@ function Cards(props) {
   const user = props.cuser;
   var x = false;
 
-  useEffect(()=>{
-    const likedornot= props.value.likes.find(like=>like.like==user)
-    x= likedornot
-    setIsLiked(x)
-  },[props])
- 
+  useEffect(() => {
+    const likedornot = props.value.likes.find((like) => like.like == user);
+    x = likedornot;
+    setIsLiked(x);
+  }, [props]);
+
   const length = props.value.likes.length;
   // console.log(props.value.likes.find(like=>like.like==user));
 
-
   props.value.likes.find((like) => {
     if (like.like == user) {
-      x=true
+      x = true;
       return;
     }
   });
@@ -153,7 +152,7 @@ function Cards(props) {
       })
         .then((r) => {
           // console.log(r);
-          setIsLiked((true))
+          setIsLiked(true);
           setUserLikedComment({ ...userLikedComment, like: true });
         })
         .catch((e) => {
@@ -173,7 +172,7 @@ function Cards(props) {
       })
         .then((r) => {
           setIsLiked(false);
-          setUserLikedComment({ ...userLikedComment, like:false});
+          setUserLikedComment({ ...userLikedComment, like: false });
           // console.log(r)
         })
         .catch((e) =>
@@ -213,15 +212,53 @@ function Cards(props) {
   };
 
   const avatarDp = props.value.ownername.split("");
-  const avatarChar = (avatarDp[0]).toUpperCase();
+  const avatarChar = avatarDp[0].toUpperCase();
   const time = parseInt(props.value.timestamp);
-// console.log(props.value.image)
- /*  const buffer = props.value.image.data; // e.g., <Buffer 89 50 4e ... >
+  // console.log(props.value.image)
+  /*  const buffer = props.value.image.data; // e.g., <Buffer 89 50 4e ... >
   const b64 = new Buffer(buffer).toString("base64");
   const mimeType = "image/jpg"; // e.g., image/png */
 
+  const [showChart, setShowChart] = useState(false);
+  const showchart = () => {
+    setShowChart(true);
+  };
+  const hidechart = () => {
+    setShowChart(false);
+  };
+  // console.log(props.totalUsers)
   return (
-    <div className="my-4 container" data-aos="zoom-in" >
+    <div className="my-4 container" data-aos="zoom-in">
+      {!showChart ? (
+        ""
+      ) : (
+          <div
+            style={{
+              zIndex: " 1",
+              /* position: relative; */
+              position: "absolute",
+              left: " 50%",
+              top: "80%",
+              transform: "translate(-50%,-50%)",
+              background: "linear-gradient(90deg, #1cd8d2 0%,#93edc7 100% )",
+              borderRadius: 10,
+              boxShadow: " 0px 2px 5px grey",
+            }}
+            onDoubleClick={hidechart}
+          >
+            <IconButton
+              aria-label="add to favorites"
+              title="like"
+              onClick={hidechart}
+            >
+              <CloseIcon />
+            </IconButton>
+            <Publicity
+              likes={props.value.likes.length}
+              totalUsers={props.totalUsers}
+            />
+          </div>
+        )}
       <Card className={`${classes.cardHover} `}>
         <CardHeader
           avatar={
@@ -233,11 +270,7 @@ function Cards(props) {
           subheader={moment(time).format("dddd, Do MMMM YYYY, h:mm:ss a")}
         />
 
-        <a
-          href={props.value.image}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href={props.value.image} target="_blank" rel="noopener noreferrer">
           <CardMedia
             className={classes.media}
             image={props.value.image}
@@ -253,17 +286,17 @@ function Cards(props) {
         </CardContent>
 
         <CardActions disableSpacing>
-          <IconButton
-            aria-label="add to favorites"
-            onClick={postLiked}
-            title="like"
-          >
-            <div >
-              <Badge color="secondary" badgeContent={props.value.likes.length} >
+          <div onMouseEnter={showchart}>
+            <IconButton
+              aria-label="add to favorites"
+              onClick={postLiked}
+              title="like"
+            >
+              <Badge color="secondary" badgeContent={props.value.likes.length}>
                 <FavoriteIcon style={isLiked ? liked : {}} />
               </Badge>
-            </div>
-          </IconButton>
+            </IconButton>
+          </div>
 
           <IconButton
             aria-label="share"
@@ -292,16 +325,14 @@ function Cards(props) {
           </IconButton>
         </CardActions>
 
-        
-
         {!commentValue ? (
           ""
         ) : (
-          <div className="container mb-4">
-            <strong style={{ color: "skyblue" }}>you: </strong>
-            {commentValue}
-          </div>
-        )}
+            <div className="container mb-4">
+              <strong style={{ color: "skyblue" }}>you: </strong>
+              {commentValue}
+            </div>
+          )}
         {showComment ? (
           <div className="d-flex " style={{ backgroundColor: "transparent" }}>
             <TextField
@@ -318,8 +349,8 @@ function Cards(props) {
             </Button>
           </div>
         ) : (
-          ""
-        )}
+            ""
+          )}
 
         {/*
           <IconButton
@@ -360,4 +391,4 @@ function Cards(props) {
 }
 
 // export default Cards
-export default Cards
+export default Cards;
