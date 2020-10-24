@@ -25,20 +25,20 @@ const postSchema = mongoose.Schema({
 		ref: "User", //for tast user relationship
 	},
 	timestamp: {
-		type: String,
+		type: Number,
 	},
 	likes: [
 		{
 			like: {
 				type: mongoose.Schema.Types.ObjectId,
 				ref: "User",
-			},
-			isLiked: {
-				type: Boolean,
-				default: false,
-			},
+			}
 		},
 	],
+	totalLikes: {
+		type : Number,
+		default: 0
+	},
 	comments: [
 		{
 			comment: {

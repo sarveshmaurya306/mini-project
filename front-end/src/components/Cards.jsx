@@ -78,14 +78,15 @@ function Cards(props) {
     x= likedornot
     setIsLiked(x)
   },[props])
-
+ 
   const length = props.value.likes.length;
   // console.log(props.value.likes.find(like=>like.like==user));
 
 
   props.value.likes.find((like) => {
     if (like.like == user) {
-      return (x = true);
+      x=true
+      return;
     }
   });
 
@@ -152,12 +153,12 @@ function Cards(props) {
       })
         .then((r) => {
           // console.log(r);
-          setIsLiked((e) => !e);
-          setUserLikedComment({ ...userLikedComment, like: !isLiked });
+          setIsLiked((true))
+          setUserLikedComment({ ...userLikedComment, like: true });
         })
         .catch((e) => {
-          setIsLiked((e) => !e);
-          setUserLikedComment({ ...userLikedComment, like: !isLiked });
+          setIsLiked(false);
+          setUserLikedComment({ ...userLikedComment, like: false });
           // alert('you have already liked this post.')
         });
     } else {
@@ -171,8 +172,8 @@ function Cards(props) {
         },
       })
         .then((r) => {
-          setIsLiked((e) => !e);
-          setUserLikedComment({ ...userLikedComment, like: !isLiked });
+          setIsLiked(false);
+          setUserLikedComment({ ...userLikedComment, like:false});
           // console.log(r)
         })
         .catch((e) =>

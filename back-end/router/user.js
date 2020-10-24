@@ -164,8 +164,10 @@ router.post("/user/:postId/inclike", auth, async (req, res) => {
 
         post.likes.push({
             like: req.user._id,
-            isLiked: true,
+
         });
+        post.totalLikes=post.totalLikes+1;
+
         await post.save();
         // console.log("liked");
         res.send("post liked");
@@ -185,7 +187,7 @@ router.delete("/user/:postId/declike", auth, async (req, res) => {
             { $pull: { likes: { like: req.user._id } } },
             { new: true, multi: true }
         );
-
+        post.totalLikes=post.totalLikes-1;
         await post.save();
 
         res.send("done");
@@ -215,7 +217,7 @@ router.post("/user/:postId/addcomment/:comment", auth, async (req, res) => {
         res.status(404).send("failed");
     }
 });
-
+/* 
 router.get("/user/getallpost/:page/:limit", auth, async (req, res) => {
     const { page = 1, limit = 5 } = req.params;
     try {
@@ -232,7 +234,7 @@ router.get("/user/getallpost/:page/:limit", auth, async (req, res) => {
         console.log(e);
         res.send();
     }
-});
+}); */
 
 router.get('/user/getpostbysorting/:page/:limit/:sortBy', auth, async (req, res)=>{
     // const {sortBy= {timestamp:-1}} = req.params;
@@ -242,7 +244,7 @@ router.get('/user/getpostbysorting/:page/:limit/:sortBy', auth, async (req, res)
     if(sortBy==='date'){   
         toSort={timestamp:-1};
     } else if(sortBy==='publicity'){
-        toSort={likes: -1};
+        toSort={ totalLikes: -1, timestamp: -1};
     } else {
         throw new Error("cannot be done");
     }
