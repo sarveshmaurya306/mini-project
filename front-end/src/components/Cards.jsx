@@ -255,7 +255,8 @@ function Cards(props) {
               <CloseIcon />
             </IconButton>
             <Publicity
-              likes={props.value.likes.length}
+              totalComments={props.value.comments.length}
+              totalLikes={props.value.likes.length}
               totalUsers={props.totalUsers}
             />
           </div>
@@ -380,7 +381,7 @@ function Cards(props) {
                     style={{ float: "left" }}
                   >
                     <strong style={{ color: "skyblue" }}>
-                      {comment.commentowner} says:{" "}
+                      {comment.commentowner} :
                     </strong>
                     <p> {comment.comment}</p>
                   </Typography>

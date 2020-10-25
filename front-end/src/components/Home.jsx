@@ -163,8 +163,8 @@ function Home() {
                     onChange={handleSorting}
                     input={<BootstrapInput />}
                   >
-                    <MenuItem value="date">date</MenuItem>
-                    <MenuItem value="publicity">publicity</MenuItem>
+                    <MenuItem value="date">Date</MenuItem>
+                    <MenuItem value="publicity">Reach</MenuItem>
                   </Select>
                 </FormControl>
               </div>

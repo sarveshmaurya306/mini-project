@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { Pie } from 'react-chartjs-2';
 
 const state = {
-  labels: ['totoalLikes', 'totalUser'],
+  labels: ['Likes', 'Comments', 'Users'],
   datasets: [
     {
       label: 'likes',
@@ -27,7 +27,9 @@ const state = {
 }
 
 function Publicity(props) {
-  state.datasets[0].data = [props.likes, props.totalUsers];
+
+  state.datasets[0].data = [props.totalLikes, props.totalComments, props.totalUsers];
+
   return (
     <div style={{
       borderRadius: 10
@@ -36,8 +38,8 @@ function Publicity(props) {
         data={state}
         options={{
           title: {
-            display: true,
-            text: 'Total Publicity',
+            display: false,
+            text: 'Reach',
             fontSize: 20
           },
           legend: {
