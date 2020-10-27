@@ -4,7 +4,7 @@ import logo from "../images/Logo.png";
 import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import useStyles from "./Styles";
-
+import LoginBackImage from '../images/login1.jpg'
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
@@ -75,16 +75,20 @@ export default function Login() {
   }, []);
 
   return (
-    <>
+    <div >
       <div
         style={{
-          position: "absolute",
-          background: `url(${backgroundImg}) `,
+          // position: "absolute",
+          // backgroundImage:'',
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.5)), url(${LoginBackImage}) `,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center",
           // height:'',
-          width: "100vw",
+          height: "100vh",
+          width:'100vw',
+          overflow:'hidden',
+            backdropFilter: "blur(10px)"
           // paddingBottom:'40%',
           // overflowX:'hidden'
         }}
@@ -104,7 +108,7 @@ export default function Login() {
               height: "auto",
             }}
           />
-          <Link to="/join">
+          {/* <Link to="/join">
             <Button
               variant="outlined"
               color="primary"
@@ -112,30 +116,30 @@ export default function Login() {
             >
               Join Us
             </Button>
-          </Link>
+          </Link> */}
         </div>
         <hr />
-        <div className="container">
+        <div className="container" style={{height:'100vh'}}>
           <div className="row mb-md-5" style={{ marginTop: "7%" }}>
             <div
-              data-aos="fade-right"
-              className={` col-sm-12 col-md-6 d-none mt-5 mb-3 d-md-block ${classes.home_text} `}
+              // data-aos="fade-right"
+              className={` col-sm-12 col-md-6 d-none mt-5 mb-3 d-md-block ${classes.home_text} text-light `}
+              
             >
               Place where Kietins will talk to each other and get the solution
               of their problems.
             </div>
-            <div data-aos="fade-left" className="col-sm-12 col-md-6">
+            <div className="col-sm-12 col-md-6">  {/* data-aos="fade-left"  */}
               <form
                 className={`${classes.form} `}
                 onSubmit={sendLoginForm}
-                style={{ backdropFilter: "blur(10px)" }}
               >
                 <div className="p-5">
                   <div
                     className={`${classes.form_header}`}
-                    style={{ display: "flex", justifyContent: "center" }}
+                    style={{ display: "flex", justifyContent: "center",color:'white' }}
                   >
-                    Login Here
+                    LOGIN
                   </div>
                   <input
                     autoComplete="off"
@@ -145,9 +149,10 @@ export default function Login() {
                     className="mt-2 mb-4 p-2"
                     style={{
                       backgroundColor: "transparent",
-                      border: "2px solid black",
+                      border: "2px solid white",
                       borderRadius: "8px",
                       fontWeight: "bolder",
+                      color:'white'
                     }}
                     onChange={(e) => {
                       setLoginDetails({
@@ -157,6 +162,7 @@ export default function Login() {
                     }}
                   />
                   <br />
+                  
 
                   <input
                     autoComplete="off"
@@ -166,9 +172,10 @@ export default function Login() {
                     className="mb-2 p-2"
                     style={{
                       backgroundColor: "transparent",
-                      border: "2px solid black",
+                      border: "2px solid white",
                       borderRadius: "8px",
                       fontWeight: "bolder",
+                      color:'white'
                     }}
                     onChange={(e) => {
                       setLoginDetails({
@@ -187,21 +194,27 @@ export default function Login() {
                     color="primary"
                     type="submit"
                     className={classes.main_button}
+                    
                   >
                     Login
-                  </Button>
+                  </Button><br/>
+                    <div style={{paddingTop:'8px', color:'white'}}>
+                    Not a member? <Link to="/join">
+                    <span style={{color:'blue'}}> <strong>Sign Up Now</strong> </span>
+                    </Link>
+                    </div>
                 </div>
               </form>
             </div>
           </div>
         </div>
-        <br />
+        {/* <br />
         <br />
         <br /> <br /> <br />
         <br />
-        <br /> <br /> <br /> <br />
-        <Footer />
+        <br /> <br /> <br /> <br /> */}
+        {/* <Footer /> */}
       </div>
-    </>
+    </div>
   );
 }

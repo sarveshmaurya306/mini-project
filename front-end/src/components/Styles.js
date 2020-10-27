@@ -15,7 +15,7 @@ const useStyles = makeStyles({
         borderRadius: '8px',
         '&:hover':{
             background:'transparent',
-            color:'black',
+            color:'white',
             textDecoration:"none"
         }
     },

@@ -128,15 +128,13 @@ function Cards(props) {
         });
   };*/
 
+  let nochange=false;
   useEffect(() => {
     AOS.init({
-      duration: 2500,
-      refresh: true,
-      dataOffset: 200,
       once: true,
     });
-    AOS.refresh();
-  }, [props]);
+    // AOS.refresh();
+  },[props]);
 
   // console.log(props.value);
 

@@ -176,16 +176,26 @@ export default function CreatePost() {
               className={`${classes.cardHover} col text-center`}
               onSubmit={sendPost}
             >
-              <input
+              <textarea
                 type="text "
                 className="mb-4 p-2"
                 value={detail.title}
+               /*  style={{
+                  backgroundColor: "transparent",
+                  border: "2px solid grey",
+                  borderRadius: "8px",
+                  fontWeight: "bolder",
+                  color:'black'
+                }} */
                 style={{
                   backgroundColor: "transparent",
                   border: "2px solid grey",
                   borderRadius: "8px",
                   fontWeight: "bolder",
+                  maxHeight: "10vh",
                 }}
+                rows="2"
+                cols="23"
                 name="title"
                 placeholder="Title "
                 onChange={(e) =>
@@ -205,7 +215,7 @@ export default function CreatePost() {
                   border: "2px solid grey",
                   borderRadius: "8px",
                   fontWeight: "bolder",
-                  maxHeight: "45vh",
+                  maxHeight: "35vh",
                 }}
                 rows="4"
                 cols="23"
