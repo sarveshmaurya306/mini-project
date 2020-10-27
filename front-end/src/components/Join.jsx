@@ -186,7 +186,7 @@ function Join() {
             }}
           >
             <Paper
-              data-aos="zoom-in"
+              // data-aos="zoom-in"
               elevation={4}
               style={{
                 padding: "5% 15%",
