@@ -22,8 +22,8 @@ export default function Footer() {
             <span>Contact ?</span>
             &nbsp;
           </strong>
-          <a href="https://www.linkedin.com/in/sarvesh-kumar-53986861" target="_blank"><LinkedInIcon /></a>&nbsp;
-            <a href="https://www.instagram.com/seesh_sarvesh_maurya/?hl=en" target="_blank"><InstagramIcon /></a>
+          <a href="https://www.linkedin.com/in/sarvesh-kumar-53986861" target="_blank"><LinkedInIcon style={{color:' orange',}} /></a>&nbsp;
+            <a href="https://www.instagram.com/seesh_sarvesh_maurya/?hl=en" target="_blank"><InstagramIcon style={{color:'orange'}}/></a>
         </center>
       </div>
     </div>

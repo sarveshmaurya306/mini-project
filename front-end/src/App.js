@@ -9,7 +9,7 @@ import Myprofile from "./components/Myprofile";
 import CreatePost from "./components/CreatePost";
 import Chat from "./components/Chat.jsx";
 import OtherProfile from "./components/OthersProfile.jsx";
-
+import Why from './components/Why'
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { IconButton } from "@material-ui/core";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -62,6 +62,9 @@ export default function App() {
 
             <OtherProfile />
           </div>
+        </Route>
+        <Route path="/why" exact>
+          <Why/>
         </Route>
       </Switch>
     </Router>

@@ -173,6 +173,11 @@ function Join() {
             Login
           </Button>
         </Link> */}
+        <Link to="/why?">
+          <h3 style={{color:'white'}}>
+            Why?
+          </h3>
+        </Link>
       </div>
       <hr />
 

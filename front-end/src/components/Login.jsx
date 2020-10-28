@@ -117,6 +117,11 @@ export default function Login() {
               Join Us
             </Button>
           </Link> */}
+          <Link to="/why?">
+          <h3 style={{color:'white'}}>
+            Why?
+          </h3>
+        </Link>
         </div>
         <hr /><br/> <br/>
         <div className="container" style={{height:'100vh'}}>

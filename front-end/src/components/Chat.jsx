@@ -207,8 +207,8 @@ function Chat() {
     // console.log(chat)
     // console.log('in effect')
     socket.emit('getOnlineUserServer', sessionStorage.getItem('currentRoom'))
-    
-    socket.once('getOnlineUserClient',(users)=>{
+
+    socket.once('getOnlineUserClient', (users) => {
       setOnlineUsers(users)
       // console.log(onlineUsers)
     })
@@ -251,20 +251,28 @@ function Chat() {
     scrollToBottom();
   });
 
-  const [onlineUsers, setOnlineUsers]= useState([])
-//TODO implementOnlineUser method in ui
+  const [onlineUsers, setOnlineUsers] = useState([])
 
-  const displayOnlineUser= () =>{
-    return(<div>
-      {onlineUsers.map((user,index )=>{
-        return <div>
-          {user.name}
-          {console.log(user.name)}
+
+  const displayOnlineUser = () => {
+    return (<div style={{ position: 'fixed' }}>
+      <center><h2 style={{ textDecoration: 'underline' }}>online: <br /></h2></center>
+      {onlineUsers.map((user, index) => {
+        return <div >
+
+          <span style={{ display: 'flex', alignItems: 'baseline' }}>
+            <div style={{ width: '10px', height: '10px', background: 'green', borderRadius: '5px', margin: '10px' }}></div>
+            <span style={{ margin: '10px' }}>
+              {user.name}
+              {console.log(user.name)}
+            </span>
+
+          </span>
         </div>
       })}
     </div>)
   }
-  
+
   const displayChat = () => {
     return (
       <div className="autoscroll-container">
@@ -330,17 +338,24 @@ function Chat() {
       {loading ? (
         <Loading />
       ) : (
-          <div>
+          <div className="mt-md-5 mt-5">
             <h3 style={{ color: "skyblue", fontWeight: "bolder" }}>
               <center>Chatting</center>
             </h3>
+           
             <div className="px-0 px-md-5" style={{ marginBottom: '120px' }}>
               {/* <div className="row"> */}
 
-              <div
-                className="container-fluid"
-              >
-                {displayChat()}
+              <div className="container-fluid">
+                <div className="row">
+                  <div className="col-md-3 d-md-block d-none">
+                    {displayOnlineUser()}
+                  </div>
+
+                  <div className="col-md-9" style={{}}>
+                    {displayChat()}
+                  </div>
+                </div>
               </div>
               <div
                 // className="col-3 col-md-2"
@@ -376,7 +391,7 @@ function Chat() {
                     marginTop: '20px',
                   }}
                 >
-                  
+
                   <form onSubmit={sendMessage} style={{ marginTop: '20px' }}>
                     <div className="d-flex" style={{
 
