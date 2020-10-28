@@ -128,21 +128,13 @@ export default function Login() {
           <div className="row mb-md-5" style={{ marginTop: "7%" }}>
             <div
               // data-aos="fade-right"
-<<<<<<< HEAD
-              className={` col-sm-12 col-md-6 d-none mt-5 mb-3 d-md-block ${classes.home_text} `}
-=======
               className={` col-sm-12 col-md-6 d-none mt-5 mb-3 d-md-block ${classes.home_text} text-light `}
               
->>>>>>> ui
             >
               Place where Kietins will talk to each other and get the solution
               of their problems.
             </div>
-<<<<<<< HEAD
-            <div className="col-sm-12 col-md-6"> {/*  data-aos="fade-left" */}
-=======
             <div className="col-sm-12 col-md-6" >  {/* data-aos="fade-left"  */}
->>>>>>> ui
               <form
                 className={`${classes.form} `}
                 onSubmit={sendLoginForm}
