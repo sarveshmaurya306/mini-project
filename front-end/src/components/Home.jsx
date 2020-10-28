@@ -9,7 +9,7 @@ import { useHistory } from "react-router-dom";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import InputBase from "@material-ui/core/InputBase";
 import Loading from "./Loading.jsx";
-
+import HomeImage from '../images/home.jpg'
 const BootstrapInput = withStyles((theme) => ({
   root: {
     "label + &": {
@@ -130,7 +130,9 @@ function Home() {
   };
 
   return (
-    <>
+    <div style={{
+      
+    }}>
       {!posts ? (
         <Loading />
       ) : (
@@ -215,7 +217,7 @@ function Home() {
             <Footer />
           </div>
         )}
-    </>
+    </div>
   );
 }
 

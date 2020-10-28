@@ -3,7 +3,7 @@ import {makeStyles} from '@material-ui/core/styles'
 const useStyles = makeStyles({
     main_button:{
         // background: '#00d3ff8c',
-        background:'black',
+        background:'#346bac',
         color:'white',
         fontFamily: 'Roboto',
         fontStyle: 'normal',
@@ -13,9 +13,10 @@ const useStyles = makeStyles({
         textShadow: '0px 4px 4px rgba(0, 0, 0, 0.25)',
         // border:'0px 0px 0px transparent',
         borderRadius: '8px',
+        textShadow:' 3px 4px 5px black',
         '&:hover':{
             background:'transparent',
-            color:'black',
+            color:'white',
             textDecoration:"none"
         }
     },
@@ -29,7 +30,7 @@ const useStyles = makeStyles({
         textAlign: 'center',
         letterSpacing:' 0.02em',
         color: '#000000',
-        textShadow:' 7px 7px 7px rgba(0, 0, 0, 0.35)',
+        textShadow:' 7px 7px 7px whitesmoke',/*   rgba(0, 0, 0, 0.35) */
     },
     form:{
         border: '3px solid #000000',

@@ -32,7 +32,8 @@ function Publicity(props) {
 
   return (
     <div style={{
-      borderRadius: 10
+      borderRadius: 10,
+      zIndex:1000
     }}>
       <Pie
         data={state}

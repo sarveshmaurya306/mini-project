@@ -37,6 +37,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
   },
+ 
   media: {
     height: 0,
     paddingTop: "56.25%", // 16:9
@@ -103,9 +104,9 @@ function Cards(props) {
   const likes = props.value.likes;
 
   const liked = { color: "red" };
-
+/* 
   const [showComment, setShowComment] = useState(false);
-
+ */
   const comment = { color: "green" };
 
   const [userLikedComment, setUserLikedComment] = useState({
@@ -128,15 +129,13 @@ function Cards(props) {
         });
   };*/
 
+  let nochange=false;
   useEffect(() => {
     AOS.init({
-      duration: 2500,
-      refresh: true,
-      dataOffset: 200,
       once: true,
     });
-    AOS.refresh();
-  }, [props]);
+    // AOS.refresh();
+  },[props]);
 
   // console.log(props.value);
 
@@ -188,7 +187,8 @@ function Cards(props) {
 
   const [numberComment, setNumberComment] = useState(0);
 
-  const sendComment = () => {
+  const sendComment = (e) => {
+    e.preventDefault();
     const url = `http://127.0.0.1:4000`;
     axios({
       method: "post",
@@ -199,9 +199,13 @@ function Cards(props) {
       },
     })
       .then((r) => {
-        // setCommentValue("");
+        setCommentValue("");
         setNumberComment((e) => e + 1);
-        setShowComment(false);
+        toast.success('comment has been added please refresh',{
+          position: "bottom-left",
+          autoClose: 4000,
+        })
+
       })
       .catch((e) => {
         // console.log(e);
@@ -280,8 +284,8 @@ function Cards(props) {
           />
         </a>
 
-        <CardContent>
-          <Typography variant="body2" color="textSecondary" component="p">
+        <CardContent >
+          <Typography variant="body2" color="textPrimary" component="p" >
             <h2>{props.value.title}</h2>
             <p> {props.value.description} </p>
           </Typography>
@@ -294,13 +298,15 @@ function Cards(props) {
               onClick={postLiked}
               title="like"
             >
-              <Badge color="secondary" badgeContent={props.value.likes.length}>
+              <Badge
+                style={{zIndex:0}}
+                 color="secondary" badgeContent={props.value.likes.length}>
                 <FavoriteIcon style={isLiked ? liked : {}} />
               </Badge>
             </IconButton>
           </div>
 
-          <IconButton
+          {/* <IconButton
             aria-label="share"
             onClick={() => setShowComment((e) => !e)}
             title="comment"
@@ -308,7 +314,7 @@ function Cards(props) {
             <AddCommentIcon
               style={showComment || userLikedComment.comment ? comment : {}}
             />
-          </IconButton>
+          </IconButton> */}
           <IconButton onClick={showchart} title="publicity-chart">      
             <BarChartIcon />
           </IconButton>
@@ -322,6 +328,7 @@ function Cards(props) {
             title="show more"
           >
             <Badge
+              style={{zIndex:0}}
               color="secondary"
               badgeContent={props.value.comments.length + numberComment}
             >
@@ -330,32 +337,26 @@ function Cards(props) {
           </IconButton>
         </CardActions>
 
-        {!commentValue ? (
+        {/* {!commentValue ? (
           ""
         ) : (
             <div className="container mb-4">
               <strong style={{ color: "skyblue" }}>you: </strong>
               {commentValue}
             </div>
-          )}
-        {showComment ? (
-          <div className="d-flex " style={{ backgroundColor: "transparent" }}>
+          )} */}
+          <form className="d-flex " style={{ backgroundColor: "transparent", }} onSubmit={sendComment} >
             <TextField
               id="outlined-textarea"
               placeholder="Comment..."
-              multiline
-              variant="filled"
-              style={{ width: "100%", backgroundColor: "transparent" }}
+              style={{ width: "100%", backgroundColor: "transparent",padding:'20px 20px' }}
               value={commentValue}
               onChange={(e) => setCommentValue(e.target.value)}
             />
-            <Button variant="contained" onClick={sendComment}>
+            <Button variant="filled" type="submit" onClick={sendComment} style={{background:'white'}}>
               <SendIcon />
             </Button>
-          </div>
-        ) : (
-            ""
-          )}
+          </form>
 
         {/*
           <IconButton

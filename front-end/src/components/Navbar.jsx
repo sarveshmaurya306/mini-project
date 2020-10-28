@@ -38,9 +38,10 @@ toast.configure();
 
 const useStyles = makeStyles((theme) => ({
   navColor: {
-    backgroundColor: "#00d5ff86",
+    // backgroundColor: "#00d5ff86",
+    background:'none',
     // backgroundColor:'transparent',
-    backdropFilter: "blur(8px)",
+    backdropFilter: "blur(30px)",
   },
   grow: {
     flexGrow: 1,
@@ -69,8 +70,13 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: "white",
+    boxShadow:"",
+    color:' black',
+    boxShadow: '0px 0px 36px 3px grey',
+    padding: '3px 11px',
+    borderRadius:' 19px',
     "&:hover": {
-      backgroundColor: "#f5f5f5",
+      backgroundColor: "#f5f5f9",
       // backgroundColor: '#000',
     },
     marginRight: theme.spacing(2),
@@ -126,7 +132,8 @@ export default function Navbar() {
 
   // const [status, setStatus] = useState(true);
 
-  const search = (search) => {
+  const search = (e) => {
+    e.preventDefault();
     const user = searchUser;
     axios
       .get(`http://localhost:4000/show/${user}`)
@@ -306,9 +313,9 @@ export default function Navbar() {
   );
 
   return (
-    <div>
+    <div style={{marginBottom:'10px'}}>
       <div className={`${classes.grow} `}>
-        <AppBar position="fixed" className={classes.navColor}>
+        <AppBar position="fixed" className={classes.navColor} style={{padding: '9px 0px',}}>
           <Toolbar>
             <IconButton
               edge="start"
@@ -331,7 +338,7 @@ export default function Navbar() {
 
             {/* <Typography className={classes.title} noWrap>
           </Typography> */}
-            <div className={classes.search}>
+            <form className={classes.search} onSubmit={search}>
               <InputBase
                 placeholder="Search…"
                 onChange={(val) => {
@@ -344,15 +351,15 @@ export default function Navbar() {
                 setSearchUser('');
                 return ;
               }} />*/}
-            </div>
-            <Button
+            </form>
+           {/*  <Button
               variant="outlined"
               color="primary"
               style={{ border: "1px solid black" }}
               onClick={search}
             >
               <SearchIcon style={{ color: "black" }} />
-            </Button>
+            </Button> */}
 
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>
@@ -362,7 +369,7 @@ export default function Navbar() {
                   to="/home"
                   activeStyle={{ borderBottom: "2px solid black" }}
                 >
-                  <HomeIcon style={{ color: "black", fontSize: 28 }} />
+                  <HomeIcon style={{ color: "black", fontSize:27 }} />
                 </NavLink>
                 {/* </Router> */}
               </IconButton>
@@ -376,7 +383,7 @@ export default function Navbar() {
                   to="/chat"
                   activeStyle={{ borderBottom: "2px solid black" }}
                 >
-                  <ForumIcon style={{ color: "black" }} />
+                  <ForumIcon style={{ color: "black", paddingTop:6,fontSize:30 }} />
                 </NavLink>
               </IconButton>
 
@@ -389,7 +396,7 @@ export default function Navbar() {
                   to="/createpost"
                   activeStyle={{ borderBottom: "2px solid black" }}
                 >
-                  <PostAddIcon style={{ color: "black" }} />
+                  <PostAddIcon style={{ color: "black",fontSize:30 }} />
                 </NavLink>
               </IconButton>
 
@@ -407,7 +414,7 @@ export default function Navbar() {
                 color="inherit"
                 title="profile"
               >
-                <AccountCircle style={{ color: "black" }} />
+                <AccountCircle style={{ color: "black",paddingTop:6,fontSize:30 }} />
               </IconButton>
             </div>
             <div className={classes.sectionMobile}>

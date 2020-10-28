@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useHistory } from "react-router-dom";
-
+import LoginBackImage from '../images/login2.jpg'
 import backgroundImg from "../images/back.png";
 import logo from "../images/Logo.png";
 
@@ -31,14 +31,15 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     fontSize: 16,
     // color: '#000000',
-    background: "black",
+    background: "#346bac",
     color: "white",
-    textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+    textShadow:' 3px 4px 5px black',
+    // textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
     // border:'0px 0px 0px transparent',
     borderRadius: "8px",
     "&:hover": {
       background: "transparent",
-      color: "black",
+      color: "white",
     },
   },
   form_header: {
@@ -117,7 +118,7 @@ function Join() {
           window.sessionStorage.setItem("name", res.data.name);
           window.sessionStorage.setItem("email", res.data.email);
           window.sessionStorage.setItem("currentRoom", "both");
-          toast.success('Registered...',{
+          toast.success('Registered...', {
             position: "bottom-left",
             autoClose: 4000,
           })
@@ -138,13 +139,14 @@ function Join() {
   return (
     <div
       style={{
-        position: "absolute",
-        background: `url(${backgroundImg}) `,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        // height:'',
-        width: "100vw",
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${LoginBackImage}) `,
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          // height:'',
+          height: "100vh",
+          width:'100vw',
+          overflow:'hidden'
       }}
     >
       <div
@@ -162,7 +164,7 @@ function Join() {
             height: "auto",
           }}
         />
-        <Link to="/">
+        {/*  <Link to="/">
           <Button
             variant="outlined"
             color="primary"
@@ -170,11 +172,16 @@ function Join() {
           >
             Login
           </Button>
+        </Link> */}
+        <Link to="/why?">
+          <h3 style={{color:'white'}}>
+            Why?
+          </h3>
         </Link>
       </div>
       <hr />
 
-      <div className="container " style={{ height: "100vh", marginTop: "4%" }}>
+      <div className="container " style={{ height: "100vh", marginTop: "2%", }}>
         <form onSubmit={sendJoinForm}>
           <div
             style={{
@@ -191,18 +198,19 @@ function Join() {
               style={{
                 padding: "5% 15%",
                 background: "transparent",
-                border: "3px solid #000000",
+                border: "4px dotted white",
                 boxSizing: "border-box",
                 borderRadius: "16px",
                 textAlign: "center",
+                color:'white'
               }}
               className={classes.papershadow}
             >
               <h1
                 className={classes.form_header}
-                style={{ display: "flex", justifyContent: "center" }}
+                style={{ display: "flex", justifyContent: "center",color:'white' }}
               >
-                Join Us
+                JOIN
               </h1>
 
               <div className={classes.margin}>
@@ -213,9 +221,10 @@ function Join() {
                   className="mt-2 mb-4 p-2"
                   style={{
                     backgroundColor: "transparent",
-                    border: "2px solid black",
+                    border: "2px solid  white",
                     borderRadius: "8px",
                     fontWeight: "bolder",
+                    color:'white'
                   }}
                   onChange={(e) => {
                     setUserDetails({ ...userDetails, name: e.target.value });
@@ -230,9 +239,10 @@ function Join() {
                   className="mt-2 p-2"
                   style={{
                     backgroundColor: "transparent",
-                    border: "2px solid black",
+                    border: "2px solid  white",
                     borderRadius: "8px",
                     fontWeight: "bolder",
+                    color:'white'
                   }}
                   onChange={(e) => {
                     setUserDetails({
@@ -241,9 +251,9 @@ function Join() {
                     });
                   }}
                 />
-                <p>
+                <p >
                   {" "}
-                  <small className="text-danger">
+                  <small style={{fontWeight:'bold'}}className="text-danger ">
                     only "student" "teacher" "principle" are accepted.
                   </small>
                 </p>
@@ -255,9 +265,10 @@ function Join() {
                   className="mb-4 p-2"
                   style={{
                     backgroundColor: "transparent",
-                    border: "2px solid black",
+                    border: "2px solid  white",
                     borderRadius: "8px",
                     fontWeight: "bolder",
+                    color:'white'
                   }}
                   onChange={(e) => {
                     setUserDetails({ ...userDetails, email: e.target.value });
@@ -271,9 +282,10 @@ function Join() {
                   className="mb-4 p-2"
                   style={{
                     backgroundColor: "transparent",
-                    border: "2px solid black",
+                    border: "2px solid white",
                     borderRadius: "8px",
                     fontWeight: "bolder",
+                    color:'white'
                   }}
                   onChange={(e) => {
                     setUserDetails({
@@ -305,8 +317,11 @@ function Join() {
                   >
                     Add me
                   </Button>
-                  <Link to="/" className="ml-md-3 ml-0">
-                    <strong>&nbsp; *Already have an account.</strong>
+                </div>
+                <div style={{ paddingTop: '10px',color:'white' }}>
+                  Already a member?
+                  <Link to="/" className=" ">{/*   ml-md-3 ml-0 */}
+                    <strong> Sign In Here</strong> 
                   </Link>
                 </div>
               </div>
@@ -315,7 +330,7 @@ function Join() {
         </form>
       </div>
 
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 }

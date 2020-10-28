@@ -92,6 +92,12 @@ const deleteUser = (id) => {
 const getUserInRoom = (room) => {
   return users.find((user) => user.room === room);
 };
+
+const getAllUserInRoom= (room)=>{
+  var user=[]
+  user= users.filter((user)=> user.room===room);
+  return user;
+}
 //basic commands end
 
 
@@ -99,7 +105,7 @@ const getUserInRoom = (room) => {
 //total calls/on=> new_user & user_message & change_user_room &( disconnect & connection)
 
 io.on("connection", (socket) => {
-  console.log("user connected");
+  // console.log("user connected");
 
   socket.on('new_user', ({name, email, room})=>{
     const promise = new Promise(resolve=>{
@@ -120,7 +126,21 @@ io.on("connection", (socket) => {
       // console.log(getUserInRoom('both'))
       io.to(socket.id).emit('admin_message', {name: 'admin', message: `Welcome "${name}" in "${room}" room`,time: new Date().getTime});
       socket.in(room).emit('admin_message',{name: 'admin', message: `"${name}" has joined say hi.`,time: new Date().getTime})
+
+      
     }).catch(e=>{ })  
+  })
+  socket.on('getOnlineUserServer',(room)=>{
+    console.log('in get online user')
+    var onlineUsers;
+    const promise= new Promise(resolve=>{
+      onlineUsers= getAllUserInRoom(room)
+      resolve();
+    })
+    promise.then(e=>{
+      socket.emit('getOnlineUserClient', onlineUsers)
+      // console.log(onlineUsers)
+    }).catch(e=> { console.log(e)})
   })
 
   socket.on('user_message',(message)=>{
@@ -131,7 +151,7 @@ io.on("connection", (socket) => {
       resolve();
     })
     promise.then(r=>{
-      console.log(user.name, message, user.room)
+      // console.log(user.name, message, user.room)
       io.in(user.room).emit('server_user_message',{name: user.name, message,time:new Date().getTime() });
       // users.map(m=>console.log(m))
     }).catch(e=>{ })  
@@ -164,6 +184,8 @@ io.on("connection", (socket) => {
     }).catch(e=>{ })  
   })
 
+  
+
 
   socket.on("disconnect", () => {
     var user;
@@ -188,17 +210,3 @@ io.on("connection", (socket) => {
 server.listen(port, () => {
   console.log(`running on ${port}`);
 });
-
-// const key = require('./utils/utils.js')
-// console.log(key)
-
-
-
-  /* var currentRoom = Object.keys(io.sockets.adapter.sids[socket.id]).filter(
-    (item) => item != socket.id
-  );
-  console.log(currentRoom); 
-  
-  console.log(addUser({id: socket.id, room: 'official'}))
-  console.log(getAllUsers());
-  console.log(getUser(socket.id)) */
