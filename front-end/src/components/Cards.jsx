@@ -233,7 +233,7 @@ function Cards(props) {
   };
   // console.log(props.totalUsers)
   return (
-    <div className="my-4 container"> {/*  data-aos="zoom-in" */}
+    <div className="my-4 container " data-aos="zoom-in"> {/*   */}
       {!showChart ? (
         ""
       ) : (
