@@ -52,7 +52,7 @@ export default function App() {
         <Route exact path="/other/profile">
           <div className="mt-4">
             {/* <Link to="/home" style={{ position: "fixed" }} > */}
-              <IconButton color="secondary" onClick={()=>window.history.back() }>
+              <IconButton color="secondary" style={{ position: "fixed" }}  onClick={()=>window.history.back() }>
                 <ArrowBackIcon />
               </IconButton>
             {/* </Link> */}

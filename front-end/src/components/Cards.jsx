@@ -292,7 +292,9 @@ function Cards(props) {
               onClick={postLiked}
               title="like"
             >
-              <Badge color="secondary" badgeContent={props.value.likes.length}>
+              <Badge
+                style={{zIndex:0}}
+                 color="secondary" badgeContent={props.value.likes.length}>
                 <FavoriteIcon style={isLiked ? liked : {}} />
               </Badge>
             </IconButton>
@@ -320,6 +322,7 @@ function Cards(props) {
             title="show more"
           >
             <Badge
+              style={{zIndex:0}}
               color="secondary"
               badgeContent={props.value.comments.length + numberComment}
             >

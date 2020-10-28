@@ -150,7 +150,7 @@ function Chat() {
 
   useEffect(() => {
     socket.emit("connection");
-    console.log('first render')
+    // console.log('first render')
     socket.emit("new_user", {
       name: sessionStorage.getItem("name"),
       email: sessionStorage.getItem("email"),
@@ -204,7 +204,14 @@ function Chat() {
   useEffect(() => {
     setChat([...chat, x])
     // sety(e=>!e)
-    console.log(chat)
+    // console.log(chat)
+    // console.log('in effect')
+    socket.emit('getOnlineUserServer', sessionStorage.getItem('currentRoom'))
+    
+    socket.once('getOnlineUserClient',(users)=>{
+      setOnlineUsers(users)
+      // console.log(onlineUsers)
+    })
   }, [x])
 
 
@@ -244,6 +251,20 @@ function Chat() {
     scrollToBottom();
   });
 
+  const [onlineUsers, setOnlineUsers]= useState([])
+//TODO implementOnlineUser method in ui
+
+  const displayOnlineUser= () =>{
+    return(<div>
+      {onlineUsers.map((user,index )=>{
+        return <div>
+          {user.name}
+          {console.log(user.name)}
+        </div>
+      })}
+    </div>)
+  }
+  
   const displayChat = () => {
     return (
       <div className="autoscroll-container">
@@ -313,7 +334,7 @@ function Chat() {
             <h3 style={{ color: "skyblue", fontWeight: "bolder" }}>
               <center>Chatting</center>
             </h3>
-            <div className="px-0 px-md-5" style={{ marginBottom: '90px' }}>
+            <div className="px-0 px-md-5" style={{ marginBottom: '120px' }}>
               {/* <div className="row"> */}
 
               <div
@@ -355,6 +376,7 @@ function Chat() {
                     marginTop: '20px',
                   }}
                 >
+                  
                   <form onSubmit={sendMessage} style={{ marginTop: '20px' }}>
                     <div className="d-flex" style={{
 

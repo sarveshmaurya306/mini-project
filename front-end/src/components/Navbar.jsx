@@ -70,8 +70,13 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: "white",
+    boxShadow:"",
+    color:' black',
+    boxShadow: '0px 0px 36px 3px grey',
+    padding: '3px 11px',
+    borderRadius:' 19px',
     "&:hover": {
-      backgroundColor: "#f5f5f5",
+      backgroundColor: "#f5f5f9",
       // backgroundColor: '#000',
     },
     marginRight: theme.spacing(2),
@@ -127,7 +132,8 @@ export default function Navbar() {
 
   // const [status, setStatus] = useState(true);
 
-  const search = (search) => {
+  const search = (e) => {
+    e.preventDefault();
     const user = searchUser;
     axios
       .get(`http://localhost:4000/show/${user}`)
@@ -332,7 +338,7 @@ export default function Navbar() {
 
             {/* <Typography className={classes.title} noWrap>
           </Typography> */}
-            <div className={classes.search}>
+            <form className={classes.search} onSubmit={search}>
               <InputBase
                 placeholder="Search…"
                 onChange={(val) => {
@@ -345,15 +351,15 @@ export default function Navbar() {
                 setSearchUser('');
                 return ;
               }} />*/}
-            </div>
-            <Button
+            </form>
+           {/*  <Button
               variant="outlined"
               color="primary"
               style={{ border: "1px solid black" }}
               onClick={search}
             >
               <SearchIcon style={{ color: "black" }} />
-            </Button>
+            </Button> */}
 
             <div className={classes.grow} />
             <div className={classes.sectionDesktop}>

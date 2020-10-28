@@ -4,7 +4,7 @@ import logo from "../images/Logo.png";
 import { Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import useStyles from "./Styles";
-import LoginBackImage from '../images/login1.jpg'
+import LoginBackImage from '../images/login2.jpg'
 import axios from "axios";
 import { useHistory } from "react-router-dom";
 
@@ -80,7 +80,7 @@ export default function Login() {
         style={{
           // position: "absolute",
           // backgroundImage:'',
-          backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.5)), url(${LoginBackImage}) `,
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${LoginBackImage}) `,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center",
@@ -88,7 +88,7 @@ export default function Login() {
           height: "100vh",
           width:'100vw',
           overflow:'hidden',
-            backdropFilter: "blur(10px)"
+           
           // paddingBottom:'40%',
           // overflowX:'hidden'
         }}
@@ -118,7 +118,7 @@ export default function Login() {
             </Button>
           </Link> */}
         </div>
-        <hr />
+        <hr /><br/> <br/>
         <div className="container" style={{height:'100vh'}}>
           <div className="row mb-md-5" style={{ marginTop: "7%" }}>
             <div
@@ -129,10 +129,14 @@ export default function Login() {
               Place where Kietins will talk to each other and get the solution
               of their problems.
             </div>
-            <div className="col-sm-12 col-md-6">  {/* data-aos="fade-left"  */}
+            <div className="col-sm-12 col-md-6" >  {/* data-aos="fade-left"  */}
               <form
                 className={`${classes.form} `}
                 onSubmit={sendLoginForm}
+                style={{
+                  // backdropFilter: "blur(5px) "
+                  border:'4px dotted white'
+                }}
               >
                 <div className="p-5">
                   <div

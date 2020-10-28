@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useHistory } from "react-router-dom";
-import LoginBackImage from '../images/login1.jpg'
+import LoginBackImage from '../images/login2.jpg'
 import backgroundImg from "../images/back.png";
 import logo from "../images/Logo.png";
 
@@ -31,9 +31,10 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     fontSize: 16,
     // color: '#000000',
-    background: "black",
+    background: "#346bac",
     color: "white",
-    textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
+    textShadow:' 3px 4px 5px black',
+    // textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
     // border:'0px 0px 0px transparent',
     borderRadius: "8px",
     "&:hover": {
@@ -138,7 +139,7 @@ function Join() {
   return (
     <div
       style={{
-        backgroundImage: `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.5)), url(${LoginBackImage}) `,
+        backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${LoginBackImage}) `,
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
           backgroundPosition: "center",
@@ -192,7 +193,7 @@ function Join() {
               style={{
                 padding: "5% 15%",
                 background: "transparent",
-                border: "3px solid #000000",
+                border: "4px dotted white",
                 boxSizing: "border-box",
                 borderRadius: "16px",
                 textAlign: "center",
