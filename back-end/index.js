@@ -184,9 +184,28 @@ io.on("connection", (socket) => {
     }).catch(e=>{ })  
   })
 
-  
+  //disconnect will call internally
+  socket.on('disconnect', () => {
+    console.log('dis')
+    var user;
+    const promise=new Promise(resolve=>{
+      user= getUser(socket.id);
+      resolve();
+    })
+    promise.then(r=>{
+      io.in(user.room).emit('admin_message',{name: 'admin',message:`"${user.name}" has left this room`, time: new Date().getTime()})
 
+      socket.leave(user.room);
+      const deleteu=new Promise(res=>{
+      deleteUser(socket.id)
+      })
+      socket.off()
+      deleteu.then(r=>{ console.log("user disconnected.") }).catch(e=>{ })
+      
+    }).catch(e=>{ })  
+  })
 
+  //will call externally
   socket.on("disconnected", () => {
     console.log('dis')
     var user;
@@ -205,7 +224,6 @@ io.on("connection", (socket) => {
       deleteu.then(r=>{ console.log("user disconnected.") }).catch(e=>{ })
       
     }).catch(e=>{ })  
-    
   });
 });
 
