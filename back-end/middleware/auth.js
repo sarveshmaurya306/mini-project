@@ -1,11 +1,11 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/user.js');
-// const utils = require('../utils/utils')
+const KEYS =require("../utils/config.js")
 
 const auth = async function (req, res, next) {
 	try {
 		const token = req.header('Authorization').replace('Bearer ', '')
-		const decoded = jwt.verify(token, 'miniproject')
+		const decoded = jwt.verify(token, KEYS.AUTH_KEY)
 		// const decoded= req.body.id
 		// const user = await User.findOne({ _id: decoded})
 		const user = await User.findById({ _id: decoded._id, token: token })

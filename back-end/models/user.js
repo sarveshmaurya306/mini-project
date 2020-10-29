@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
-// const utils= require('../utils/utils')
-// const Card =require('./card');
+const KEYS= require('../utils/config.js')
 
 
 
@@ -69,7 +68,7 @@ userSchema.virtual('userlikes', {
 */
 userSchema.methods.generateAuthToken = async function () {
     const user = this;
-    const token = jwt.sign({ _id: user._id.toString() }, 'miniproject' , { expiresIn: '3 hour' })
+    const token = jwt.sign({ _id: user._id.toString() }, KEYS.AUTH_KEY, { expiresIn: '3 hour' })
 
     user.token = token;
 

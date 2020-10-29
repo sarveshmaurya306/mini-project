@@ -167,12 +167,12 @@ io.on("connection", (socket) => {
     promise.then(r=>{
       // console.log(user.room)
       socket.leave(user.room,()=>{
-        socket.to(user.room).emit('admin_message',{name: 'admin', message: `"${user.name}" has left this room. `,time: new Date().getTime})
+        socket.to(user.room).emit('admin_message',{name: 'admin', message: `"${user.name}" has left this room. `,time: new Date().getTime()})
         updateUser(socket.id, room);
 
         socket.join(room,()=>{
-          socket.to(room).emit('admin_message',{name: 'admin', message: `"${user.name}" has joined say hi.`,time: new Date().getTime})
-          io.to(socket.id).emit('admin_message', {name: 'admin', message: `Welcome "${user.name}" in "${room}" room`,time: new Date().getTime}); //sending private message
+          socket.to(room).emit('admin_message',{name: 'admin', message: `"${user.name}" has joined say hi.`,time: new Date().getTime()})
+          io.to(socket.id).emit('admin_message', {name: 'admin', message: `Welcome "${user.name}" in "${room}" room`,time: new Date().getTime()}); //sending private message
         })
       });
 

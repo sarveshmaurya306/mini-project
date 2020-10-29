@@ -1,6 +1,6 @@
 const mongoose =require('mongoose');
-
-mongoose.connect('mongodb://127.0.0.1:27017/kiet-talks-app',{
+const KEYS =require('../utils/config')
+mongoose.connect(KEYS.MONGO_KEY,{
     useNewUrlParser:true,
     useCreateIndex:true,
     useUnifiedTopology: true,

@@ -9,7 +9,7 @@ const Post = require("../models/post.js");
 
 const upload = multer({
     limits: {
-        fileSize: 3000000, //3(mb)*1000*1000
+        fileSize: 1000000, //1(mb)*1000*1000
     },
     fileFilter(req, file, cb) {
         if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
