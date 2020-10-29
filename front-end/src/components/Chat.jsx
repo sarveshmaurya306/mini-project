@@ -161,8 +161,6 @@ function Chat() {
 
     return () => {
       socket.emit("disconnected");
-      socket.emit('disconnect')
-      console.log('disconect')
       // sessionStorage.setItem('chat','[]');
     };
   }, []);
