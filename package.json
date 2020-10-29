@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/sarveshmaurya306/mini_project#readme",
   "dependencies": {
-    "front-end": "^0.2.9"
+    "front-end": "^0.2.9",
+    "react-typed": "^1.2.0"
   },
   "devDependencies": {}
 }

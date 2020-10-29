@@ -144,7 +144,7 @@ function Join() {
           backgroundSize: "cover",
           backgroundPosition: "center",
           // height:'',
-          height: "100vh",
+          height: "auto",
           width:'100vw',
           overflow:'hidden'
       }}

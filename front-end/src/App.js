@@ -9,7 +9,7 @@ import Myprofile from "./components/Myprofile";
 import CreatePost from "./components/CreatePost";
 import Chat from "./components/Chat.jsx";
 import OtherProfile from "./components/OthersProfile.jsx";
-import Why from './components/Why'
+import Why from "./components/Why";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import { IconButton } from "@material-ui/core";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
@@ -46,15 +46,20 @@ export default function App() {
         <Route exact path="/chat">
           <Navbar />
           <div className="mt-4">
-            <Chat /></div>
+            <Chat />
+          </div>
         </Route>
 
         <Route exact path="/other/profile">
           <div className="mt-4">
             {/* <Link to="/home" style={{ position: "fixed" }} > */}
-              <IconButton color="secondary" style={{ position: "fixed" }}  onClick={()=>window.history.back() }>
-                <ArrowBackIcon />
-              </IconButton>
+            <IconButton
+              color="secondary"
+              style={{ position: "fixed" }}
+              onClick={() => window.history.back()}
+            >
+              <ArrowBackIcon />
+            </IconButton>
             {/* </Link> */}
             <center>
               <h2>Searched Result</h2>
@@ -64,7 +69,14 @@ export default function App() {
           </div>
         </Route>
         <Route path="/why" exact>
-          <Why/>
+          <IconButton
+            color="secondary"
+            style={{ position: "fixed" ,margin:'50px'}}
+            onClick={() => window.history.back()}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+          <Why />
         </Route>
       </Switch>
     </Router>

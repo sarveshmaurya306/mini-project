@@ -187,7 +187,8 @@ io.on("connection", (socket) => {
   
 
 
-  socket.on("disconnect", () => {
+  socket.on("disconnected", () => {
+    console.log('dis')
     var user;
     const promise=new Promise(resolve=>{
       user= getUser(socket.id);
@@ -204,6 +205,7 @@ io.on("connection", (socket) => {
       deleteu.then(r=>{ console.log("user disconnected.") }).catch(e=>{ })
       
     }).catch(e=>{ })  
+    
   });
 });
 

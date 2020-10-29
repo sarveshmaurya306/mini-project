@@ -2,7 +2,7 @@ import React from 'react'
 
 function Why() {
     return (<>
-        <div style={{height:'100vh',width:'100vw',display:'flex',justifyContent:'center',alignItems:'center'}}>
+        <div className="container" style={{height:'100vh',width:'100vw',display:'flex',justifyContent:'center',alignItems:'center'}}>
             <p>
             <h2>Why? </h2><hr />
                 <span style={{ color: 'red', fontSize: '40px' }}>S</span>

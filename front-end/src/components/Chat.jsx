@@ -160,7 +160,9 @@ function Chat() {
     // setChat(JSON.parse(sessionStorage.getItem('chat')))
 
     return () => {
-      socket.emit("disconnect");
+      socket.emit("disconnected");
+      socket.emit('disconnect')
+      console.log('disconect')
       // sessionStorage.setItem('chat','[]');
     };
   }, []);

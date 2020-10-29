@@ -7,7 +7,7 @@ import useStyles from "./Styles";
 import LoginBackImage from '../images/login2.jpg'
 import axios from "axios";
 import { useHistory } from "react-router-dom";
-
+import Typed from 'react-typed'
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -51,7 +51,7 @@ export default function Login() {
           window.sessionStorage.setItem("name", res.data.name);
           window.sessionStorage.setItem("email", res.data.email);
           window.sessionStorage.setItem("currentRoom", "both");
-          window.sessionStorage.setItem('sortBy','date');
+          window.sessionStorage.setItem('sortBy', 'date');
 
           history.push("/home");
         })
@@ -85,10 +85,10 @@ export default function Login() {
           backgroundSize: "cover",
           backgroundPosition: "center",
           // height:'',
-          height: "100vh",
-          width:'100vw',
-          overflow:'hidden',
-           
+          height: "auto",
+          width: '100vw',
+          overflow: 'hidden',
+
           // paddingBottom:'40%',
           // overflowX:'hidden'
         }}
@@ -118,21 +118,32 @@ export default function Login() {
             </Button>
           </Link> */}
           <Link to="/why?">
-          <h3 style={{color:'white'}}>
-            Why?
+            <h3 style={{ color: 'white' }}>
+              Why?
           </h3>
-        </Link>
+          </Link>
         </div>
-        <hr /><br/> <br/>
-        <div className="container" style={{height:'100vh'}}>
+        <hr /><br /> <br />
+        <div className="container" style={{ height: '100vh' }}>
           <div className="row mb-md-5" style={{ marginTop: "7%" }}>
             <div
               // data-aos="fade-right"
               className={` col-sm-12 col-md-6 d-none mt-5 mb-3 d-md-block ${classes.home_text} text-light `}
-              
+
             >
               Place where Kietins will talk to each other and get the solution
-              of their problems.
+              of their problems. <br/>
+              <span style={{color:"gold" }}>Build For :</span>
+              <Typed
+                strings={['Official' ,'Teacher', 'Student']}
+                loop
+                backSpeed={80}
+                typeSpeed={60}
+                style={{color:'red'}}
+                backDelay={3000}
+                cursorChar="s"
+
+              />
             </div>
             <div className="col-sm-12 col-md-6" >  {/* data-aos="fade-left"  */}
               <form
@@ -140,13 +151,13 @@ export default function Login() {
                 onSubmit={sendLoginForm}
                 style={{
                   // backdropFilter: "blur(5px) "
-                  border:'4px dotted white'
+                  border: '4px dotted white'
                 }}
               >
                 <div className="p-5">
                   <div
                     className={`${classes.form_header}`}
-                    style={{ display: "flex", justifyContent: "center",color:'white' }}
+                    style={{ display: "flex", justifyContent: "center", color: 'white' }}
                   >
                     LOGIN
                   </div>
@@ -161,7 +172,7 @@ export default function Login() {
                       border: "2px solid white",
                       borderRadius: "8px",
                       fontWeight: "bolder",
-                      color:'white'
+                      color: 'white'
                     }}
                     onChange={(e) => {
                       setLoginDetails({
@@ -171,7 +182,7 @@ export default function Login() {
                     }}
                   />
                   <br />
-                  
+
 
                   <input
                     autoComplete="off"
@@ -184,7 +195,7 @@ export default function Login() {
                       border: "2px solid white",
                       borderRadius: "8px",
                       fontWeight: "bolder",
-                      color:'white'
+                      color: 'white'
                     }}
                     onChange={(e) => {
                       setLoginDetails({
@@ -203,15 +214,15 @@ export default function Login() {
                     color="primary"
                     type="submit"
                     className={classes.main_button}
-                    
+
                   >
                     Login
-                  </Button><br/>
-                    <div style={{paddingTop:'8px', color:'white'}}>
+                  </Button><br />
+                  <div style={{ paddingTop: '8px', color: 'white' }}>
                     Not a member? <Link to="/join">
-                    <span style={{color:'blue'}}> <strong>Sign Up Now</strong> </span>
+                      <span style={{ color: 'blue' }}> <strong>Sign Up Now</strong> </span>
                     </Link>
-                    </div>
+                  </div>
                 </div>
               </form>
             </div>
