@@ -142,7 +142,6 @@ export default function Login() {
                 style={{color:'red'}}
                 backDelay={3000}
                 cursorChar="s"
-
               />
             </div>
             <div className="col-sm-12 col-md-6" >  {/* data-aos="fade-left"  */}
@@ -220,7 +219,7 @@ export default function Login() {
                   </Button><br />
                   <div style={{ paddingTop: '8px', color: 'white' }}>
                     Not a member? <Link to="/join">
-                      <span style={{ color: 'blue' }}> <strong>Sign Up Now</strong> </span>
+                      <span style={{}}> <strong>Sign Up Now</strong> </span>
                     </Link>
                   </div>
                 </div>
