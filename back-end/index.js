@@ -55,6 +55,7 @@ app.get("/show/:name", async (req, res) => {
   try {
     const user = await userModel.find({ name: req.params.name });
     if (!user) return res.status(404).send();
+    user= user._id;
     res.send(user);
   } catch (e) {
     res.status(500).send();

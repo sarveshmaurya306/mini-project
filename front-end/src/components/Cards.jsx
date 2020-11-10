@@ -29,6 +29,13 @@ import AddCommentIcon from "@material-ui/icons/AddComment";
 import SendIcon from "@material-ui/icons/Send";
 import BarChartIcon from '@material-ui/icons/BarChart';
 
+
+import CryptoJS from 'crypto-js'
+import { cryptoPass } from './utils/crypto-js'
+
+
+
+
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 toast.configure();
@@ -37,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
   },
- 
+
   media: {
     height: 0,
     paddingTop: "56.25%", // 16:9
@@ -72,6 +79,13 @@ function Cards(props) {
   // console.log(props)
   // console.log(props.value.likes)
   // console.log(props.value, props.cuser)
+
+  const data = {
+    token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    email: CryptoJS.AES.decrypt(sessionStorage.getItem('email'), cryptoPass).toString(CryptoJS.enc.Utf8),
+  }
+
+
   const user = props.cuser;
   var x = false;
 
@@ -104,9 +118,9 @@ function Cards(props) {
   const likes = props.value.likes;
 
   const liked = { color: "red" };
-/* 
-  const [showComment, setShowComment] = useState(false);
- */
+  /* 
+    const [showComment, setShowComment] = useState(false);
+   */
   const comment = { color: "green" };
 
   const [userLikedComment, setUserLikedComment] = useState({
@@ -129,13 +143,13 @@ function Cards(props) {
         });
   };*/
 
-  let nochange=false;
+  let nochange = false;
   useEffect(() => {
     AOS.init({
       once: true,
     });
     // AOS.refresh();
-  },[props]);
+  }, [props]);
 
   // console.log(props.value);
 
@@ -147,7 +161,7 @@ function Cards(props) {
         method: "post",
         url: `${url}/user/${props.value._id}/inclike`,
         headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
+          Authorization: "Bearer " + data.token,
         },
       })
         .then((r) => {
@@ -167,7 +181,7 @@ function Cards(props) {
         method: "delete",
         url: `${url}/user/${props.value._id}/declike`,
         headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
+          Authorization: "Bearer " + data.token,
         },
       })
         .then((r) => {
@@ -195,13 +209,13 @@ function Cards(props) {
       url: `${url}/user/${props.value._id}/addcomment/${commentValue}`,
       data: commentValue,
       headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
+        Authorization: "Bearer " + data.token,
       },
     })
       .then((r) => {
         setCommentValue("");
         setNumberComment((e) => e + 1);
-        toast.success('comment has been added please refresh',{
+        toast.success('comment has been added please refresh', {
           position: "bottom-left",
           autoClose: 4000,
         })
@@ -226,7 +240,7 @@ function Cards(props) {
 
   const [showChart, setShowChart] = useState(false);
   const showchart = () => {
-    setShowChart(e=>!e);
+    setShowChart(e => !e);
   };
   const hidechart = () => {
     setShowChart(false);
@@ -245,7 +259,9 @@ function Cards(props) {
               left: " 50%",
               top: "80%",
               transform: "translate(-50%,-50%)",
-              background: "linear-gradient(90deg, #1cd8d2 0%,#93edc7 100% )",
+
+              background: 'none',
+              backdropFilter: "blur(30px)",
               borderRadius: 10,
               boxShadow: " 0px 2px 5px grey",
             }}
@@ -299,8 +315,8 @@ function Cards(props) {
               title="like"
             >
               <Badge
-                style={{zIndex:0}}
-                 color="secondary" badgeContent={props.value.likes.length}>
+                style={{ zIndex: 0 }}
+                color="secondary" badgeContent={props.value.likes.length}>
                 <FavoriteIcon style={isLiked ? liked : {}} />
               </Badge>
             </IconButton>
@@ -315,7 +331,7 @@ function Cards(props) {
               style={showComment || userLikedComment.comment ? comment : {}}
             />
           </IconButton> */}
-          <IconButton onClick={showchart} title="publicity-chart">      
+          <IconButton onClick={showchart} title="publicity-chart">
             <BarChartIcon />
           </IconButton>
 
@@ -324,11 +340,11 @@ function Cards(props) {
               [classes.expandOpen]: expanded,
             })}
             onClick={handleExpandClick}
-            aria-expanded={expanded}   
+            aria-expanded={expanded}
             title="show more"
           >
             <Badge
-              style={{zIndex:0}}
+              style={{ zIndex: 0 }}
               color="secondary"
               badgeContent={props.value.comments.length + numberComment}
             >
@@ -345,18 +361,18 @@ function Cards(props) {
               {commentValue}
             </div>
           )} */}
-          <form className="d-flex " style={{ backgroundColor: "transparent", }} onSubmit={sendComment} >
-            <TextField
-              id="outlined-textarea"
-              placeholder="Comment..."
-              style={{ width: "100%", backgroundColor: "transparent",padding:'20px 20px' }}
-              value={commentValue}
-              onChange={(e) => setCommentValue(e.target.value)}
-            />
-            <Button variant="filled" type="submit" onClick={sendComment} style={{background:'white'}}>
-              <SendIcon />
-            </Button>
-          </form>
+        <form className="d-flex " style={{ backgroundColor: "transparent", }} onSubmit={sendComment} >
+          <TextField
+            id="outlined-textarea"
+            placeholder="Comment..."
+            style={{ width: "100%", backgroundColor: "transparent", padding: '20px 20px' }}
+            value={commentValue}
+            onChange={(e) => setCommentValue(e.target.value)}
+          />
+          <Button variant="filled" type="submit" onClick={sendComment} style={{ background: 'white' }}>
+            <SendIcon />
+          </Button>
+        </form>
 
         {/*
           <IconButton

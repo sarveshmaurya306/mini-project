@@ -11,6 +11,9 @@ import Typed from 'react-typed'
 import AOS from "aos";
 import "aos/dist/aos.css";
 
+import CryptoJS from 'crypto-js'
+import {cryptoPass} from './utils/crypto-js'
+
 import Footer from "./Footer.jsx";
 
 import { toast } from "react-toastify";
@@ -46,10 +49,18 @@ export default function Login() {
       axios
         .post(`/login`, { ...loginDetails })
         .then((res) => {
+
+          const toStore= {
+            token:CryptoJS.AES.encrypt(res.data.token,cryptoPass).toString(),
+            email:CryptoJS.AES.encrypt(res.data.email,cryptoPass).toString(),
+            name:CryptoJS.AES.encrypt(res.data.name,cryptoPass).toString(),
+            
+          }
+          console.log(toStore)
           setMessage(res.data.message);
-          window.sessionStorage.setItem("token", res.data.token);
-          window.sessionStorage.setItem("name", res.data.name);
-          window.sessionStorage.setItem("email", res.data.email);
+          window.sessionStorage.setItem("token",toStore.token );
+          window.sessionStorage.setItem("name", toStore.name);
+          window.sessionStorage.setItem("email",toStore.email);
           window.sessionStorage.setItem("currentRoom", "both");
           window.sessionStorage.setItem('sortBy', 'date');
 

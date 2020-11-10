@@ -10,6 +10,10 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import InputBase from "@material-ui/core/InputBase";
 import Loading from "./Loading.jsx";
 import HomeImage from '../images/home.jpg'
+
+import CryptoJS from 'crypto-js'
+import {cryptoPass} from './utils/crypto-js'
+
 const BootstrapInput = withStyles((theme) => ({
   root: {
     "label + &": {
@@ -51,6 +55,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Home() {
+  
+  const data={
+    token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    email: CryptoJS.AES.decrypt(sessionStorage.getItem('email'), cryptoPass).toString(CryptoJS.enc.Utf8),
+  }
+
+  // const token = sessionStorage.getItem('token')
+  // const email= sessionStorage.getItem('email')
+
   const classes = useStyles();
   const history = useHistory();
   const [posts, setPosts] = useState(false);
@@ -64,7 +77,7 @@ function Home() {
       method: "get",
       url: `${url}/user/getpostbysorting/${value}/5/${sortBy}`,
       headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
+        Authorization: "Bearer " + data.token,
       },
     })
       .then((res) => {
@@ -89,7 +102,7 @@ function Home() {
       method: "get",
       url: `${url}/user/getpostbysorting/${value}/5/${sortBy}`,
       headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
+        Authorization: "Bearer " + data.token,
       },
     })
       .then((res) => {
@@ -111,7 +124,7 @@ function Home() {
       method: "get",
       url: `${url}/user/getpostbysorting/${value}/5/${sortBy}`,
       headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
+        Authorization: "Bearer " +data.token,
       },
     })
       .then((res) => {

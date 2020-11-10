@@ -81,7 +81,7 @@ router.get("/user/getpost", auth, async (req, res) => {
         const user = await User.findById(req.user._id);
 
         await user.populate("userposts").execPopulate();
-        // console.log(user);
+        console.log(user);
         res.send({ userData: user.userposts, user });
     } catch (e) {
         console.log(e);
@@ -298,12 +298,18 @@ router.delete("/user/:postId/deletepost", auth, async (req, res) => {
 // })
 router.get("/user/other/profile/:userId", auth, async (req, res) => {
     try {
-        const user = await User.findById(req.params.userId);
+        let user = await User.findById(req.params.userId);
 
         await user.populate("userposts").execPopulate();
-        // console.log(user);
-        res.send({ userData: user.userposts, user });
+        // console.log(user.email, user.password, user.token);
+
+        user= {name: user.name, currentStatus:user.currentStatus,userposts: user.userposts }
+        var userData = user.userposts
+        // console.log(user, userData)
+        // console.log(user, user.userposts )
+        res.send({ userData: user.userposts , user });
     } catch (e) {
+        // console.log('in other profile ')
         console.log(e);
         res.status(500).send();
     }

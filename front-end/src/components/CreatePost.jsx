@@ -9,6 +9,9 @@ import Loading from "./Loading.jsx";
 import IconButton from "@material-ui/core/IconButton";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 
+import CryptoJS from 'crypto-js'
+import {cryptoPass} from './utils/crypto-js'
+
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 toast.configure();
@@ -39,6 +42,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function CreatePost() {
+
+
+  
+const data={
+  token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
+  email: CryptoJS.AES.decrypt(sessionStorage.getItem('email'), cryptoPass).toString(CryptoJS.enc.Utf8),
+}
+
   const classes = useStyles();
   const history = useHistory();
   const [loading, setLoading] = useState(true);
@@ -85,7 +96,7 @@ export default function CreatePost() {
               },
               url: `${url}/user/createpost`,
               headers: {
-                Authorization: "Bearer " + sessionStorage.getItem("token"),
+                Authorization: "Bearer " + data.token,
               },
             })
               .then((res) => {
@@ -148,7 +159,7 @@ export default function CreatePost() {
       method: "get",
       url: `/checkuserauth`,
       headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
+        Authorization: "Bearer " +data.token,
       },
     })
       .then((res) => {

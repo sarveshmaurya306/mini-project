@@ -14,8 +14,16 @@ import { Link } from "react-router-dom";
 import { TextField, Button } from "@material-ui/core";
 import Footer from "./Footer.jsx";
 
+import CryptoJS from 'crypto-js'
+import {cryptoPass} from './utils/crypto-js'
+
+
+
 import { toast } from "react-toastify";
 toast.configure();
+
+
+
 
 const socket = io.connect("http://localhost:4000");
 
@@ -133,6 +141,12 @@ const useStyles = makeStyles((theme) => ({
 // window.sessionStorage.getItem('chat','[]')
 
 function Chat() {
+  const data={
+    token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    email: CryptoJS.AES.decrypt(sessionStorage.getItem('email'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    name: CryptoJS.AES.decrypt(sessionStorage.getItem('name'), cryptoPass).toString(CryptoJS.enc.Utf8),
+  }
+
   const history = useHistory();
   const classes = useStyles();
   const [group, setGroup] = React.useState(sessionStorage.getItem('currentRoom'));
@@ -152,8 +166,8 @@ function Chat() {
     socket.emit("connection");
     // console.log('first render')
     socket.emit("new_user", {
-      name: sessionStorage.getItem("name"),
-      email: sessionStorage.getItem("email"),
+      name: data.name,
+      email: data.email,
       room: sessionStorage.getItem("currentRoom"),
     });
 
@@ -172,7 +186,7 @@ function Chat() {
       method: "get",
       url: `/checkuserauth`,
       headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
+        Authorization: "Bearer " + data.token,
       },
     })
       .then((res) => {
@@ -280,7 +294,7 @@ function Chat() {
       <div className="autoscroll-container">
         <div className="scroll-list">
           {chat.map((chat, index) => {
-            let current_name = sessionStorage.getItem("name");
+            let current_name = data.name;
             return (
               <div
                 style={
@@ -309,6 +323,7 @@ function Chat() {
                     <span style={{ color: "blue", fontWeight: "bold" }}>
                       {current_name === chat.name ? "You" : chat.name} :
                     </span>
+                    {current_name.length == 0 ?history.push('/'):''}
                   </Link>
                   <br />
 

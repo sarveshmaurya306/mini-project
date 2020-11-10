@@ -28,6 +28,10 @@ import { Button } from "@material-ui/core";
 import axios from "axios";
 import { Link, NavLink } from "react-router-dom";
 
+import CryptoJS from 'crypto-js'
+import {cryptoPass} from './utils/crypto-js'
+
+
 import ForumIcon from "@material-ui/icons/Forum";
 
 import { toast } from "react-toastify";
@@ -470,8 +474,10 @@ export default function Navbar() {
                         to="/other/profile"
                         key={item._id}
                         onClick={() => {
-                          console.log(item._id);
-                          window.sessionStorage.setItem("userId", item._id); //saving user id in sessionStorage;
+                          console.log(item);
+
+                          const toSave = CryptoJS.AES.encrypt(item._id, cryptoPass).toString();
+                          window.sessionStorage.setItem("userId", toSave); //saving user id in sessionStorage;
                         }}
                         className="container-fluid mb-2"
                         style={{ margin: "10px 0px" }}

@@ -17,6 +17,10 @@ import { Paper } from "@material-ui/core";
 import Loading from "./Loading.jsx";
 import Footer from "./Footer.jsx";
 
+
+import CryptoJS from 'crypto-js'
+import {cryptoPass} from './utils/crypto-js'
+
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 toast.configure();
@@ -33,6 +37,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Myprofile() {
+
+
+  
+  const data={
+    token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    email: CryptoJS.AES.decrypt(sessionStorage.getItem('email'), cryptoPass).toString(CryptoJS.enc.Utf8),
+  }
+  
+
   const history = useHistory();
   const [userData, setUserData] = useState();
 
@@ -41,7 +54,7 @@ export default function Myprofile() {
       method: "get",
       url: "/user/getpost",
       headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
+        Authorization: "Bearer " +data.token,
       },
     })
       .then((data) => {
@@ -77,7 +90,7 @@ export default function Myprofile() {
       url: "/user/avatar",
       data: formData,
       headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
+        Authorization: "Bearer " + data.token,
         "content-type": "multipart/form-data",
       },
     })
@@ -103,7 +116,7 @@ export default function Myprofile() {
         method: "delete",
         url: `/user/${id}/deletepost`,
         headers: {
-          Authorization: "Bearer " + sessionStorage.getItem("token"),
+          Authorization: "Bearer " + data.token,
         },
       })
         .then((r) =>

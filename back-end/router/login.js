@@ -20,7 +20,7 @@ router.post('/login', async (req, res) => {
 
 		// res.redirect('/home')
 		// console.log(user)
-		res.status(201).send({ message: 'logged in', token: user.token, id: user._id, name:user.name,email:user.email });
+		res.status(201).send({ message: 'logged in', token: user.token, userId: user._id, name:user.name,email:user.email});
 
 	} catch (e) {
 		console.log(e);

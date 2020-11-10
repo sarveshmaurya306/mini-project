@@ -12,6 +12,11 @@ import { Button } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 // import IconButton from "@material-ui/core/IconButton";
 
+
+import CryptoJS from 'crypto-js'
+import {cryptoPass} from './utils/crypto-js'
+
+
 import { Paper } from "@material-ui/core";
 import Loading from "./Loading.jsx";
 import Footer from "./Footer.jsx";
@@ -28,23 +33,38 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Myprofile() {
+
+  
+  const data={
+    token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    userId: CryptoJS.AES.decrypt(sessionStorage.getItem('userId'), cryptoPass).toString(CryptoJS.enc.Utf8),
+  }
+
   const history = useHistory();
-  const [userData, setUserData] = useState();
+  const [userData, setUserData] = useState()
+
 
   useEffect(() => {
-    const userId = window.sessionStorage.getItem("userId");
-    window.sessionStorage.removeItem("userId");
+    const userId = data.userId
+    const uri= 'http://127.0.0.1:4000'
     axios({
       method: "get",
-      url: `/user/other/profile/${userId}`,
+      url: `${uri}/user/other/profile/${userId}`,
       headers: {
-        Authorization: "Bearer " + sessionStorage.getItem("token"),
+        Authorization: "Bearer " + data.token,
       },
     })
       .then((data) => {
+        // console.log(data.data)
         setUserData(data.data);
       })
-      .catch((e) => history.push("/"));
+      .catch((e) => {history.push('/')});
+
+      return(()=>{
+        
+      // window.sessionStorage.removeItem("userId");
+      })
+
   }, []);
 
   const classes = useStyles();
@@ -96,7 +116,8 @@ export default function Myprofile() {
                 <div>
                   <h2 className="text-center " style={{ fontWeight: "bold" }}>
                     <small>Name: </small>
-                    {userData.user.name}
+                    {/* {console.log(userData)} */}
+                    {/* {userData.user.name} */}
                   </h2>
                   <h3 className="text-center">
                     <small>Current Position:</small>{" "}
@@ -115,7 +136,7 @@ export default function Myprofile() {
               <hr />
               <br />
               {userData.userData.map((item) => {
-                console.log(item.image)
+                // console.log(item.image)
                 /* const buffer = item.image.data; // e.g., <Buffer 89 50 4e ... >
                 const b64 = new Buffer(buffer).toString("base64");
                 const mimeType = "image/jpg"; // e.g., image/png
