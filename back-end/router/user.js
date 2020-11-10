@@ -304,8 +304,8 @@ router.get("/user/other/profile/:userId", auth, async (req, res) => {
         await user.populate("userposts").execPopulate();
         // console.log(user.email, user.password, user.token);
 
-        user= {name: user.name, currentStatus:user.currentStatus,userposts: user.userposts }
-        var userData = user.userposts
+        user= {name: user.name, currentStatus:user.currentStatus,userposts: user.userposts,_id:user._id,avatar: user.avatar }
+        // console.log(user)
         // console.log(user, userData)
         // console.log(user, user.userposts )
         res.send({ userData: user.userposts , user });

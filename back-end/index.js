@@ -39,25 +39,20 @@ io.on('connection',(socket)=>{
   })
 }) */
 
-app.get("/show", async (req, res) => {
-  try {
-    const user = await userModel.find({});
-    if (!user) return res.send("no user found");
-
-    res.send(user);
-  } catch (e) {
-    res.send({ error: "connection error..." });
-  }
-});
-
 app.get("/show/:name", async (req, res) => {
   // console.log(req.params.name);
   try {
-    const user = await userModel.find({ name: req.params.name });
+    let user = await userModel.find({ name: req.params.name });
     if (!user) return res.status(404).send();
-    user= user._id;
-    res.send(user);
+    // console.log(user)
+    user = user[0]
+    const sharable= [{_id:user._id, avatar:user.avatar, name:user.name, currentStatus:user.currentStatus}]
+
+    console.log(sharable)
+
+    res.send(sharable);
   } catch (e) {
+    console.log(e)
     res.status(500).send();
   }
 });

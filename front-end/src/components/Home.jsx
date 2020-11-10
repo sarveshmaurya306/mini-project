@@ -73,6 +73,7 @@ function Home() {
 
   useEffect(() => {
     const url = `http://127.0.0.1:4000`;
+    
     axios({
       method: "get",
       url: `${url}/user/getpostbysorting/${value}/5/${sortBy}`,

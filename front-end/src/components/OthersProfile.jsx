@@ -117,7 +117,7 @@ export default function Myprofile() {
                   <h2 className="text-center " style={{ fontWeight: "bold" }}>
                     <small>Name: </small>
                     {/* {console.log(userData)} */}
-                    {/* {userData.user.name} */}
+                    {userData.user.name}
                   </h2>
                   <h3 className="text-center">
                     <small>Current Position:</small>{" "}

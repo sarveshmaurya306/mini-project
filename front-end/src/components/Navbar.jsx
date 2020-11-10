@@ -139,13 +139,16 @@ export default function Navbar() {
   const search = (e) => {
     e.preventDefault();
     const user = searchUser;
-    axios
-      .get(`http://localhost:4000/show/${user}`)
+    !user?toast.info("please enter name !!!", {
+      position: "bottom-left",
+      autoClose: 4000,
+    }) : axios.get(`http://localhost:4000/show/${user}`)
       .then((d) => {
+        console.log(d)
         d.data.length === 0 ? setResult("") : setResult(d);
       })
       .catch((e) =>
-        toast.warn("connection failed", {
+        toast.info("this user doesn't exist !!!", {
           position: "bottom-left",
           autoClose: 4000,
         })
@@ -321,14 +324,7 @@ export default function Navbar() {
       <div className={`${classes.grow} `}>
         <AppBar position="fixed" className={classes.navColor} style={{padding: '9px 0px',}}>
           <Toolbar>
-            <IconButton
-              edge="start"
-              className={classes.menuButton}
-              color="inherit"
-              aria-label="open drawer"
-            >
-              {/* <MenuIcon /> */}
-            </IconButton>
+            <span className="ml-5 ml-lg-3"></span>
             <NavLink to="/home">
               <img
                 src={mainLogo}
