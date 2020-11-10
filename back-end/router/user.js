@@ -54,7 +54,8 @@ router.post(
     auth,
     async (req, res) => {
         const { title, description, imageUrl } = req.body;
-        // console.log(req.body);
+        console.log(req.body);
+        // console.log(req)
         try {
             const post = new Post({
                 title,
