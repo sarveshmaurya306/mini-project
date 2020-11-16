@@ -11,7 +11,7 @@ import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import CryptoJS from 'crypto-js'
 import { cryptoPass } from './utils/crypto-js'
 
-import cloudKey, {CLOUD_NAME} from './utils/cloudKey.js'
+import { CLOUD_NAME } from './utils/cloudKey.js'
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -50,7 +50,7 @@ export default function CreatePost() {
     token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
     email: CryptoJS.AES.decrypt(sessionStorage.getItem('email'), cryptoPass).toString(CryptoJS.enc.Utf8),
   }
-  
+
   const classes = useStyles();
   const history = useHistory();
   const [loading, setLoading] = useState(true);

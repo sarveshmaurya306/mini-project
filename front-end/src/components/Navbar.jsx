@@ -29,7 +29,7 @@ import axios from "axios";
 import { Link, NavLink } from "react-router-dom";
 
 import CryptoJS from 'crypto-js'
-import {cryptoPass} from './utils/crypto-js'
+import { cryptoPass } from './utils/crypto-js'
 
 
 import ForumIcon from "@material-ui/icons/Forum";
@@ -43,7 +43,7 @@ toast.configure();
 const useStyles = makeStyles((theme) => ({
   navColor: {
     // backgroundColor: "#00d5ff86",
-    background:'none',
+    background: 'none',
     // backgroundColor:'transparent',
     backdropFilter: "blur(30px)",
   },
@@ -74,11 +74,11 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: "white",
-    boxShadow:"",
-    color:' black',
+    boxShadow: "",
+    color: ' black',
     boxShadow: '0px 0px 36px 3px grey',
     padding: '3px 11px',
-    borderRadius:' 19px',
+    borderRadius: ' 19px',
     "&:hover": {
       backgroundColor: "#f5f5f9",
       // backgroundColor: '#000',
@@ -139,7 +139,7 @@ export default function Navbar() {
   const search = (e) => {
     e.preventDefault();
     const user = searchUser;
-    !user?toast.info("please enter name !!!", {
+    !user ? toast.info("please enter name !!!", {
       position: "bottom-left",
       autoClose: 4000,
     }) : axios.get(`http://localhost:4000/show/${user}`)
@@ -190,7 +190,7 @@ export default function Navbar() {
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
-    
+
   };
 
   const handleMenuClose = () => {
@@ -320,9 +320,9 @@ export default function Navbar() {
   );
 
   return (
-    <div style={{marginBottom:'10px'}}>
+    <div style={{ marginBottom: '10px' }}>
       <div className={`${classes.grow} `}>
-        <AppBar position="fixed" className={classes.navColor} style={{padding: '9px 0px',}}>
+        <AppBar position="fixed" className={classes.navColor} style={{ padding: '9px 0px', }}>
           <Toolbar>
             <span className="ml-5 ml-lg-3"></span>
             <NavLink to="/home">
@@ -352,7 +352,7 @@ export default function Navbar() {
                 return ;
               }} />*/}
             </form>
-           {/*  <Button
+            {/*  <Button
               variant="outlined"
               color="primary"
               style={{ border: "1px solid black" }}
@@ -369,7 +369,7 @@ export default function Navbar() {
                   to="/home"
                   activeStyle={{ borderBottom: "2px solid black" }}
                 >
-                  <HomeIcon style={{ color: "black", fontSize:27 }} />
+                  <HomeIcon style={{ color: "black", fontSize: 27 }} />
                 </NavLink>
                 {/* </Router> */}
               </IconButton>
@@ -383,7 +383,7 @@ export default function Navbar() {
                   to="/chat"
                   activeStyle={{ borderBottom: "2px solid black" }}
                 >
-                  <ForumIcon style={{ color: "black", paddingTop:6,fontSize:30 }} />
+                  <ForumIcon style={{ color: "black", paddingTop: 6, fontSize: 30 }} />
                 </NavLink>
               </IconButton>
 
@@ -396,7 +396,7 @@ export default function Navbar() {
                   to="/createpost"
                   activeStyle={{ borderBottom: "2px solid black" }}
                 >
-                  <PostAddIcon style={{ color: "black",fontSize:30 }} />
+                  <PostAddIcon style={{ color: "black", fontSize: 30 }} />
                 </NavLink>
               </IconButton>
 
@@ -414,7 +414,7 @@ export default function Navbar() {
                 color="inherit"
                 title="profile"
               >
-                <AccountCircle style={{ color: "black",paddingTop:6,fontSize:30 }} />
+                <AccountCircle style={{ color: "black", paddingTop: 6, fontSize: 30 }} />
               </IconButton>
             </div>
             <div className={classes.sectionMobile}>
@@ -434,37 +434,38 @@ export default function Navbar() {
           {!result ? (
             ""
           ) : (
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "flex-end",
-                paddingRight: "48px",
-              }}
-            >
-              <IconButton
-                color="secondary"
-                onClick={() => {
-                  setResult("");
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "flex-end",
+                  paddingRight: "48px",
                 }}
               >
-                <CancelIcon style={{ color: "black" }} />
-              </IconButton>
-            </div>
-          )}
+                <IconButton
+                  color="secondary"
+                  onClick={() => {
+                    setResult("");
+                  }}
+                >
+                  <CancelIcon style={{ color: "black" }} />
+                </IconButton>
+              </div>
+            )}
           {!result ? (
             ""
           ) : (
-            <div
-              style={{
-                position: "relative",
-                height: "75vh",
-                overflowY: "scroll",
-              }}
-            >
-              {!result
-                ? ""
-                : result.data.map((item) => {
+              <div
+                style={{
+                  position: "relative",
+                  height: "75vh",
+                  overflowY: "scroll",
+                }}
+              >
+                {!result
+                  ? ""
+                  : result.data.map((item) => {
+                    console.log(item)
                     return (
                       <NavLink
                         to="/other/profile"
@@ -493,8 +494,12 @@ export default function Navbar() {
                               src={
                                 !item.avatar
                                   ? fakeDp
-                                  : `http://127.0.0.1:4000/user/${item._id}/getavatar`
+                                  : item.avatar
                               }
+                              style={{
+                                objectFit: 'contain',
+                                textAlign: 'center',
+                              }}
                               width="50"
                               height="50"
                             />
@@ -506,8 +511,8 @@ export default function Navbar() {
                       </NavLink>
                     );
                   })}
-            </div>
-          )}
+              </div>
+            )}
         </AppBar>
         {renderMobileMenu}
         {renderMenu}

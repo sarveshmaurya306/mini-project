@@ -281,6 +281,7 @@ function Cards(props) {
             />
           </div>
         )}
+      {console.log(props.value)}
       <Card className={`${classes.cardHover} `}>
         <CardHeader
           avatar={
