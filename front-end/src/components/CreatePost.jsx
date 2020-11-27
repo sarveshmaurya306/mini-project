@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { Button } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
@@ -8,10 +8,8 @@ import Loading from "./Loading.jsx";
 import IconButton from "@material-ui/core/IconButton";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
 
-import CryptoJS from 'crypto-js'
-import { cryptoPass } from './utils/crypto-js'
-
 import { CLOUD_NAME } from './utils/cloudKey.js'
+import { UserData } from '../App.js'
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -44,11 +42,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function CreatePost() {
 
-
+  const { mainUserData, setMainUserData } = useContext(UserData);
 
   const userData = {
-    token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
-    email: CryptoJS.AES.decrypt(sessionStorage.getItem('email'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    token: mainUserData.token,
+    email: mainUserData.email,
   }
 
   const classes = useStyles();
@@ -69,62 +67,93 @@ export default function CreatePost() {
       autoClose: 4000,
     });
     const url = `http://127.0.0.1:4000`;
-    const formData = new FormData();
-    // const title= detail.title;
-    // const description= detail.description;
-    formData.append("file", photo);
-    formData.append("upload_preset", "mini-project");
-    formData.append("cloud_name", CLOUD_NAME);
-
-    !detail.title || !detail.description
-      ? toast.warn("please provide some value", {
-        position: "bottom-left",
-        autoClose: 4000,
-      })
-      : fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+    if (!photo) {
+      axios({
         method: "post",
-        body: formData,
+        url: `${url}/user/createpost`,
+        data: {
+          imageUrl: '',
+          title: detail.title,
+          description: detail.description,
+        },
+        headers: {
+          Authorization: "Bearer " + userData.token
+        },
       })
-        .then((res) => res.json())
-        .then((data) => {
-          // console.log(data.url)
-
-          axios({
-            method: "post",
-            url: `${url}/user/createpost`,
-            data: {
-              imageUrl: data.url,
-              title: detail.title,
-              description: detail.description,
-            },
-            headers: {
-              Authorization: "Bearer " + userData.token
-            },
-          })
-            .then((res) => {
-              toast.success("Post created", {
-                position: "bottom-left",
-                autoClose: 4000,
-              });
-              setDetail({ title: "", description: "", comment: "" });
-              setPhoto(null);
-            })
-            .catch((e) => {
-              console.log(e)
-              toast.error("Post photo must be less than 1MB.", {
-                position: "bottom-left",
-                autoClose: 4000,
-              })
-            });
-        })
-        .catch((e) => {
-          console.log(e)
-          toast.warn("Pardon, server is not responding.", {
+        .then((res) => {
+          toast.success("Post created", {
             position: "bottom-left",
             autoClose: 4000,
           });
+          setDetail({ title: "", description: "", comment: "" });
+          setPhoto(null);
+        })
+        .catch((e) => {
+          // console.log(e)
+          toast.error("Post photo must be less than 1MB.", {
+            position: "bottom-left",
+            autoClose: 4000,
+          })
         });
+    }
+    else {
+      const formData = new FormData();
+      // const title= detail.title;
+      // const description= detail.description;
+      formData.append("file", photo);
+      formData.append("upload_preset", "mini-project");
+      formData.append("cloud_name", CLOUD_NAME);
 
+
+      !detail.title || !detail.description
+        ? toast.warn("please provide some value", {
+          position: "bottom-left",
+          autoClose: 4000,
+        })
+        : fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
+          method: "post",
+          body: formData,
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            // console.log(data.url)
+
+            axios({
+              method: "post",
+              url: `${url}/user/createpost`,
+              data: {
+                imageUrl: data.url,
+                title: detail.title,
+                description: detail.description,
+              },
+              headers: {
+                Authorization: "Bearer " + userData.token
+              },
+            })
+              .then((res) => {
+                toast.success("Post created", {
+                  position: "bottom-left",
+                  autoClose: 4000,
+                });
+                setDetail({ title: "", description: "", comment: "" });
+                setPhoto(null);
+              })
+              .catch((e) => {
+                // console.log(e)
+                toast.error("Post photo must be less than 1MB.", {
+                  position: "bottom-left",
+                  autoClose: 4000,
+                })
+              });
+          })
+          .catch((e) => {
+            // console.log(e)
+            toast.warn("Pardon, server is not responding.", {
+              position: "bottom-left",
+              autoClose: 4000,
+            });
+          });
+    }
     /*!detail.title || !detail.description
       ? toast.warn("please provide some value", {
           position: "bottom-left",
@@ -271,7 +300,7 @@ export default function CreatePost() {
                   color="primary"
                   type="submit"
                   disabled={
-                    !photo || !detail.title || !detail.description ? true : false
+                    !detail.title || !detail.description ? true : false
                   }
                 >
                   Post

@@ -144,7 +144,7 @@ export default function Navbar() {
       autoClose: 4000,
     }) : axios.get(`http://localhost:4000/show/${user}`)
       .then((d) => {
-        console.log(d)
+        // console.log(d)
         d.data.length === 0 ? setResult("") : setResult(d);
       })
       .catch((e) =>
@@ -465,13 +465,13 @@ export default function Navbar() {
                 {!result
                   ? ""
                   : result.data.map((item) => {
-                    console.log(item)
+                    // console.log(item)
                     return (
                       <NavLink
                         to="/other/profile"
                         key={item._id}
                         onClick={() => {
-                          console.log(item);
+                          // console.log(item);
 
                           const toSave = CryptoJS.AES.encrypt(item._id, cryptoPass).toString();
                           window.sessionStorage.setItem("userId", toSave); //saving user id in sessionStorage;

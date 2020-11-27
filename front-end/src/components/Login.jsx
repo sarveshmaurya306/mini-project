@@ -11,16 +11,16 @@ import Typed from 'react-typed'
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-import CryptoJS from 'crypto-js'
-import {cryptoPass} from './utils/crypto-js'
-
 import Footer from "./Footer.jsx";
+import { UserData } from '../App.js'
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useContext } from "react";
 toast.configure();
 
 export default function Login() {
+  const { mainUserData, setMainUserData } = useContext(UserData);
   const classes = useStyles();
 
   const [loginDetails, setLoginDetails] = useState({ email: "", password: "" });
@@ -50,19 +50,18 @@ export default function Login() {
         .post(`/login`, { ...loginDetails })
         .then((res) => {
 
-          const toStore= {
-            token:CryptoJS.AES.encrypt(res.data.token,cryptoPass).toString(),
-            email:CryptoJS.AES.encrypt(res.data.email,cryptoPass).toString(),
-            name:CryptoJS.AES.encrypt(res.data.name,cryptoPass).toString(),
-            
+          const toStore = {
+            token: res.data.token,
+            email: res.data.email,
+            name: res.data.name,
           }
-          console.log(toStore)
-          setMessage(res.data.message);
-          window.sessionStorage.setItem("token",toStore.token );
-          window.sessionStorage.setItem("name", toStore.name);
-          window.sessionStorage.setItem("email",toStore.email);
-          window.sessionStorage.setItem("currentRoom", "both");
-          window.sessionStorage.setItem('sortBy', 'date');
+          setMainUserData({
+            token: toStore.token,
+            name: toStore.name,
+            email: toStore.email,
+            currentRoom: "both",
+            sortBy: 'date',
+          })
 
           history.push("/home");
         })
@@ -143,14 +142,14 @@ export default function Login() {
 
             >
               Place where Kietins will talk to each other and get the solution
-              of their problems. <br/>
-              <span style={{color:"gold" }}>Build For :</span>
+              of their problems. <br />
+              <span style={{ color: "gold" }}>Build For :</span>
               <Typed
-                strings={['Official' ,'Teacher', 'Student']}
+                strings={['Official', 'Teacher', 'Student']}
                 loop
                 backSpeed={80}
                 typeSpeed={60}
-                style={{color:'red'}}
+                style={{ color: 'red' }}
                 backDelay={3000}
                 cursorChar="s"
 

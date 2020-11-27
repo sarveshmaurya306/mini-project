@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 // import PersonIcon from "@material-ui/icons/Person";
 import moment from "moment";
@@ -18,9 +18,7 @@ import { Paper } from "@material-ui/core";
 import Loading from "./Loading.jsx";
 import Footer from "./Footer.jsx";
 
-
-import CryptoJS from 'crypto-js'
-import { cryptoPass } from './utils/crypto-js'
+import { UserData } from '../App.js'
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -39,11 +37,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Myprofile() {
 
-
+  const { mainUserData, setMainUserData } = useContext(UserData);
 
   const data = {
-    token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
-    email: CryptoJS.AES.decrypt(sessionStorage.getItem('email'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    token: mainUserData.token,
+    email: mainUserData.email,
   }
 
 

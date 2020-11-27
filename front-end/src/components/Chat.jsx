@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import io from "socket.io-client";
 import Loading from "./Loading";
 import axios from "axios";
@@ -14,9 +14,7 @@ import { Link } from "react-router-dom";
 import { TextField, Button } from "@material-ui/core";
 import Footer from "./Footer.jsx";
 
-import CryptoJS from 'crypto-js'
-import {cryptoPass} from './utils/crypto-js'
-
+import { UserData } from '../App.js'
 
 
 import { toast } from "react-toastify";
@@ -141,18 +139,20 @@ const useStyles = makeStyles((theme) => ({
 // window.sessionStorage.getItem('chat','[]')
 
 function Chat() {
-  const data={
-    token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
-    email: CryptoJS.AES.decrypt(sessionStorage.getItem('email'), cryptoPass).toString(CryptoJS.enc.Utf8),
-    name: CryptoJS.AES.decrypt(sessionStorage.getItem('name'), cryptoPass).toString(CryptoJS.enc.Utf8),
+  const { mainUserData, setMainUserData } = useContext(UserData);
+  const data = {
+    token: mainUserData.token,
+    email: mainUserData.email,
+    name: mainUserData.name,
   }
+
 
   const history = useHistory();
   const classes = useStyles();
-  const [group, setGroup] = React.useState(sessionStorage.getItem('currentRoom'));
+  const [group, setGroup] = React.useState(mainUserData.currentRoom);
 
   const handleChange = (event) => {
-    sessionStorage.setItem('currentRoom', event.target.value);
+    setMainUserData({ ...mainUserData, currentRoom: event.target.value });
     setGroup(event.target.value);
     changeUserRoom(event.target.value);
   };
@@ -168,7 +168,7 @@ function Chat() {
     socket.emit("new_user", {
       name: data.name,
       email: data.email,
-      room: sessionStorage.getItem("currentRoom"),
+      room: mainUserData.currentRoom
     });
 
     // setChat(JSON.parse(sessionStorage.getItem('chat')))
@@ -176,7 +176,7 @@ function Chat() {
     return () => {
       socket.emit("disconnected");
       socket.emit('disconnect')
-      console.log('disconect')
+      // console.log('disconect')
       // sessionStorage.setItem('chat','[]');
     };
   }, []);
@@ -222,7 +222,7 @@ function Chat() {
     // sety(e=>!e)
     // console.log(chat)
     // console.log('in effect')
-    socket.emit('getOnlineUserServer', sessionStorage.getItem('currentRoom'))
+    socket.emit('getOnlineUserServer', mainUserData.currentRoom)
 
     socket.once('getOnlineUserClient', (users) => {
       setOnlineUsers(users)
@@ -249,7 +249,7 @@ function Chat() {
   };
 
   const changeUserRoom = (room) => {
-    sessionStorage.setItem('currentRoom', room);
+    setMainUserData({ ...mainUserData, currentRoom: room })
     socket.emit("change_user_room", room);
     setChat([]);
   };
@@ -280,7 +280,7 @@ function Chat() {
             <div style={{ width: '10px', height: '10px', background: 'green', borderRadius: '5px', margin: '10px' }}></div>
             <span style={{ margin: '10px' }}>
               {user.name}
-              {console.log(user.name)}
+              {/* {console.log(user.name)} */}
             </span>
 
           </span>
@@ -323,7 +323,7 @@ function Chat() {
                     <span style={{ color: "blue", fontWeight: "bold" }}>
                       {current_name === chat.name ? "You" : chat.name} :
                     </span>
-                    {current_name.length == 0 ?history.push('/'):''}
+                    {current_name.length == 0 ? history.push('/') : ''}
                   </Link>
                   <br />
 
@@ -359,7 +359,7 @@ function Chat() {
             <h3 style={{ color: "skyblue", fontWeight: "bolder" }}>
               <center>Chatting</center>
             </h3>
-           
+
             <div className="px-0 px-md-5" style={{ marginBottom: '120px' }}>
               {/* <div className="row"> */}
 

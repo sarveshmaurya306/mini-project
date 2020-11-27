@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import moment from "moment";
 import Publicity from "./Publicity.jsx";
 import { makeStyles } from "@material-ui/core/styles";
@@ -30,9 +30,7 @@ import SendIcon from "@material-ui/icons/Send";
 import BarChartIcon from '@material-ui/icons/BarChart';
 
 
-import CryptoJS from 'crypto-js'
-import { cryptoPass } from './utils/crypto-js'
-
+import { UserData } from '../App'
 
 
 
@@ -76,13 +74,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Cards(props) {
-  // console.log(props)
-  // console.log(props.value.likes)
-  // console.log(props.value, props.cuser)
+  const { mainUserData, setMainUserData } = useContext(UserData);
 
   const data = {
-    token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
-    email: CryptoJS.AES.decrypt(sessionStorage.getItem('email'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    token: mainUserData.token,
+    email: mainUserData.email,
   }
 
 
@@ -281,7 +277,7 @@ function Cards(props) {
             />
           </div>
         )}
-      {console.log(props.value)}
+      {/* {console.log(props.value)} */}
       <Card className={`${classes.cardHover} `}>
         <CardHeader
           avatar={
@@ -293,13 +289,17 @@ function Cards(props) {
           subheader={moment(time).format("dddd, Do MMMM YYYY, h:mm:ss a")}
         />
 
-        <a href={props.value.image} target="_blank" rel="noopener noreferrer">
-          <CardMedia
-            className={classes.media}
-            image={props.value.image}
-            title="post image"
-          />
-        </a>
+        {
+          !props.value.image ? '' : <a href={props.value.image} target="_blank" rel="noopener noreferrer">
+            <CardMedia
+              className={classes.media}
+              image={props.value.image}
+              title="post image"
+            />
+          </a>
+
+        }
+
 
         <CardContent >
           <Typography variant="body2" color="textPrimary" component="p" >

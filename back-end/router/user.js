@@ -25,6 +25,10 @@ router.get("/", (req, res) => {
 
 router.post("/join", async (req, res) => {
   const { name, email, password, currentStatus } = req.body;
+  if (email.split('@')[1] !== 'kiet.edu')
+    throw new Error('only for kiet students.')
+
+  console.log(email.split('@')[1]);
   const hashPassword = await bcrypt.hash(password, 8);
   // console.log(hashPassword);
 

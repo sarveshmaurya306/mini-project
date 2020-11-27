@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 // import PersonIcon from "@material-ui/icons/Person";
 import moment from "moment";
@@ -12,9 +12,7 @@ import { Button } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 // import IconButton from "@material-ui/core/IconButton";
 
-
-import CryptoJS from 'crypto-js'
-import { cryptoPass } from './utils/crypto-js'
+import { UserData } from '../App.js'
 
 
 import { Paper } from "@material-ui/core";
@@ -33,11 +31,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Myprofile() {
+  const { mainUserData, setMainUserData } = useContext(UserData);
 
 
   const data = {
-    token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
-    userId: CryptoJS.AES.decrypt(sessionStorage.getItem('userId'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    token: mainUserData.token,
+    userId: mainUserData.userId,
   }
 
   const history = useHistory();
@@ -76,7 +75,7 @@ export default function Myprofile() {
         <Loading />
       ) : (
           <div>
-            {console.log(userData)}
+            {/* {console.log(userData)} */}
             <div className="container-md">
               <div>
                 <div
