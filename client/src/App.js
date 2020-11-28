@@ -1,0 +1,95 @@
+import React from "react";
+import { createContext, useState } from 'react'
+import Navbar from "./components/Navbar";
+// import axios from 'axios'
+import Join from "./components/Join";
+import Login from "./components/Login";
+// import Footer from './Footer'
+import Home from "./components/Home";
+import Myprofile from "./components/Myprofile";
+import CreatePost from "./components/CreatePost";
+import Chat from "./components/Chat.jsx";
+import OtherProfile from "./components/OthersProfile.jsx";
+import Why from "./components/Why";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { IconButton } from "@material-ui/core";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+
+export const UserData = createContext();
+
+export default function App() {
+
+  const [mainUserData, setMainUserData] = useState();
+
+  return (
+    <UserData.Provider value={{ mainUserData, setMainUserData }}>
+      <Router>
+        <Switch>
+          <Route exact path="/">
+            <Login />
+          </Route>
+
+          <Route exact path="/join">
+            <Join />
+          </Route>
+
+          <Route exact path="/home">
+            <Navbar />
+            <Home />
+          </Route>
+
+          <Route exact path="/profile">
+            <Navbar />
+            <Myprofile />
+          </Route>
+
+          <Route exact path="/createpost">
+            <Navbar />
+            <div className="mt-4">
+              <CreatePost />
+            </div>
+          </Route>
+
+          <Route exact path="/chat">
+            <Navbar />
+            <div className="mt-4">
+              <Chat />
+            </div>
+          </Route>
+
+          <Route exact path="/other/profile">
+            <div className="mt-4">
+              {/* <Link to="/home" style={{ position: "fixed" }} > */}
+              <IconButton
+                color="secondary"
+                style={{ position: "fixed" }}
+                onClick={() => window.history.back()}
+              >
+                <ArrowBackIcon />
+              </IconButton>
+              {/* </Link> */}
+              <center>
+                <h2>Searched Result</h2>
+              </center>
+
+              <OtherProfile />
+            </div>
+          </Route>
+          <Route path="/why" exact>
+            <IconButton
+              color="secondary"
+              style={{ position: "fixed", margin: '50px' }}
+              onClick={() => window.history.back()}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+            <Why />
+          </Route>
+          <Route path="*">
+            <div style={{ display: 'grid', alignItems: 'center' }}><h1>This page doesn't exist!!!</h1></div>
+          </Route>
+        </Switch>
+      </Router>
+    </UserData.Provider>
+  );
+}
