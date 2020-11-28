@@ -1,10 +1,11 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 import Publicity from "./Publicity.jsx";
 import { makeStyles } from "@material-ui/core/styles";
 import clsx from "clsx";
 import Card from "@material-ui/core/Card";
 import CardHeader from "@material-ui/core/CardHeader";
+import { server} from './utils/backurl.js'
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
 import CardActions from "@material-ui/core/CardActions";
@@ -30,8 +31,9 @@ import SendIcon from "@material-ui/icons/Send";
 import BarChartIcon from '@material-ui/icons/BarChart';
 
 
-import { UserData } from '../App'
-import {server} from './utils/backurl.js'
+import CryptoJS from 'crypto-js'
+import { cryptoPass } from './utils/crypto-js'
+
 
 
 
@@ -75,11 +77,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Cards(props) {
-  const { mainUserData, setMainUserData } = useContext(UserData);
+  // console.log(props)
+  // console.log(props.value.likes)
+  // console.log(props.value, props.cuser)
 
   const data = {
-    token: mainUserData.token ,
-    email: mainUserData.email,
+    token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    email: CryptoJS.AES.decrypt(sessionStorage.getItem('email'), cryptoPass).toString(CryptoJS.enc.Utf8),
   }
 
 
@@ -139,6 +143,7 @@ function Cards(props) {
           url: `/user/${e.target.key}/post`,
         });
   };*/
+  
 
   let nochange = false;
   useEffect(() => {
@@ -151,7 +156,7 @@ function Cards(props) {
   // console.log(props.value);
 
   const postLiked = () => {
-    // const url = `http://127.0.0.1:4000`;
+    const url = `http://127.0.0.1:4000`;
     //if user isliking first time.
     if (!userLikedComment.like || !isLiked) {
       axios({
@@ -200,7 +205,7 @@ function Cards(props) {
 
   const sendComment = (e) => {
     e.preventDefault();
-    // const url = `http://127.0.0.1:4000`;
+    const url = `http://127.0.0.1:4000`;
     axios({
       method: "post",
       url: `${server}/user/${props.value._id}/addcomment/${commentValue}`,
@@ -212,7 +217,7 @@ function Cards(props) {
       .then((r) => {
         setCommentValue("");
         setNumberComment((e) => e + 1);
-        toast.success('comment has been added', {
+        toast.success('comment has been added please refresh', {
           position: "bottom-left",
           autoClose: 4000,
         })
@@ -243,89 +248,88 @@ function Cards(props) {
     setShowChart(false);
   };
   // console.log(props.totalUsers)
-  return (
-    <div className="my-4 container " data-aos="zoom-in"> {/*   */}
-      {!showChart ? (
-        ""
-      ) : (
-          <div
-            style={{
-              zIndex: " 1",
-              /* position: relative; */
-              position: "absolute",
-              left: " 50%",
-              top: "80%",
-              transform: "translate(-50%,-50%)",
+  return (<div className="my-4 container " data-aos="zoom-in"> {/*   */}
+    {!showChart ? (
+      ""
+    ) : (
+        <div
+          style={{
+            zIndex: " 1",
+            /* position: relative; */
+            position: "absolute",
+            left: " 50%",
+            top: "80%",
+            transform: "translate(-50%,-50%)",
 
-              background: 'none',
-              backdropFilter: "blur(30px)",
-              borderRadius: 10,
-              boxShadow: " 0px 2px 5px grey",
-            }}
-            onDoubleClick={hidechart}
+            background: 'none',
+            backdropFilter: "blur(30px)",
+            borderRadius: 10,
+            boxShadow: " 0px 2px 5px grey",
+          }}
+          onDoubleClick={hidechart}
+        >
+          <IconButton
+            aria-label="add to favorites"
+            title="close"
+            onClick={hidechart}
           >
-            <IconButton
-              aria-label="add to favorites"
-              title="close"
-              onClick={hidechart}
-            >
-              <CloseIcon />
-            </IconButton>
-            <Publicity
-              totalComments={props.value.comments.length}
-              totalLikes={props.value.likes.length}
-              totalUsers={props.totalUsers}
-            />
-          </div>
-        )}
-      
-      {/* {console.log(props.value)} */}
-      <Card className={`${classes.cardHover} `}>
-        <CardHeader
-          avatar={
-            <Avatar aria-label="recipe" className={classes.avatar}>
-              {avatarChar}
-            </Avatar>
-          }
-          title={props.value.ownername}
-          subheader={moment(time).format("dddd, Do MMMM YYYY, h:mm:ss a")}
-        />
+            <CloseIcon />
+          </IconButton>
+          <Publicity
+            totalComments={props.value.comments.length}
+            totalLikes={props.value.likes.length}
+            totalUsers={props.totalUsers}
+          />
+        </div>
+      )}
 
-        {
-          !props.value.image ? '' : <a href={props.value.image} target="_blank" rel="noopener noreferrer">
-            <CardMedia
-              className={classes.media}
-              image={props.value.image}
-              title="post image"
-            />
-          </a>
-
+    {/* {console.log(props.value)} */}
+    <Card className={`${classes.cardHover} `}>
+      <CardHeader
+        avatar={
+          <Avatar aria-label="recipe" className={classes.avatar}>
+            {avatarChar}
+          </Avatar>
         }
+        title={props.value.ownername}
+        subheader={moment(time).format("dddd, Do MMMM YYYY, h:mm:ss a")}
+      />
+
+      {
+        !props.value.image ? '' : <a href={props.value.image} target="_blank" rel="noopener noreferrer">
+          <CardMedia
+            className={classes.media}
+            image={props.value.image}
+            title="post image"
+          />
+        </a>
+
+      }
 
 
-        <CardContent >
-          <Typography variant="body2" color="textPrimary" component="p" >
-            <h2>{props.value.title}</h2>
-            <p> {props.value.description} </p>
-          </Typography>
-        </CardContent>
+      <CardContent >
+        <Typography variant="body2" color="textPrimary" component="p" >
+          <h2>{props.value.title}</h2>
+          <p> {props.value.description} </p>
+        </Typography>
+      </CardContent>
 
-        <CardActions disableSpacing>
-          <div >
-            <IconButton
-              aria-label="add to favorites"
-              onClick={postLiked}
-              title="like"
-            >
-              <Badge
-                style={{ zIndex: 0 }}
-                color="secondary" badgeContent={props.value.likes.length}>
-                <FavoriteIcon style={isLiked ? liked : {}} />
-              </Badge>
-            </IconButton>
-          </div>
+      <CardActions disableSpacing>
+        <div >
+          <IconButton
+            aria-label="add to favorites"
+            onClick={postLiked}
+            title="like"
+          >
+            <Badge
+              style={{ zIndex: 0 }}
+              color="secondary" badgeContent={props.value.likes.length}>
+              <FavoriteIcon style={isLiked ? liked : {}} />
+            </Badge>
+          </IconButton>
+        </div>
 
-          {/* <IconButton
+        {/* <IconButton
             aria-label="share"
             onClick={() => setShowComment((e) => !e)}
             title="comment"
@@ -334,29 +338,29 @@ function Cards(props) {
               style={showComment || userLikedComment.comment ? comment : {}}
             />
           </IconButton> */}
-          <IconButton onClick={showchart} title="publicity-chart">
-            <BarChartIcon />
-          </IconButton>
+        <IconButton onClick={showchart} title="publicity-chart">
+          <BarChartIcon />
+        </IconButton>
 
-          <IconButton
-            className={clsx(classes.expand, {
-              [classes.expandOpen]: expanded,
-            })}
-            onClick={handleExpandClick}
-            aria-expanded={expanded}
-            title="show more"
+        <IconButton
+          className={clsx(classes.expand, {
+            [classes.expandOpen]: expanded,
+          })}
+          onClick={handleExpandClick}
+          aria-expanded={expanded}
+          title="show more"
+        >
+          <Badge
+            style={{ zIndex: 0 }}
+            color="secondary"
+            badgeContent={props.value.comments.length + numberComment}
           >
-            <Badge
-              style={{ zIndex: 0 }}
-              color="secondary"
-              badgeContent={props.value.comments.length + numberComment}
-            >
-              <CommentIcon />
-            </Badge>
-          </IconButton>
-        </CardActions>
+            <CommentIcon />
+          </Badge>
+        </IconButton>
+      </CardActions>
 
-        {/* {!commentValue ? (
+      {/* {!commentValue ? (
           ""
         ) : (
             <div className="container mb-4">
@@ -364,20 +368,20 @@ function Cards(props) {
               {commentValue}
             </div>
           )} */}
-        <form className="d-flex " style={{ backgroundColor: "transparent", }} onSubmit={sendComment} >
-          <TextField
-            id="outlined-textarea"
-            placeholder="Comment..."
-            style={{ width: "100%", backgroundColor: "transparent", padding: '20px 20px' }}
-            value={commentValue}
-            onChange={(e) => setCommentValue(e.target.value)}
-          />
-          <Button variant="filled" type="submit" onClick={sendComment} style={{ background: 'white' }}>
-            <SendIcon />
-          </Button>
-        </form>
+      <form className="d-flex " style={{ backgroundColor: "transparent", }} onSubmit={sendComment} >
+        <TextField
+          id="outlined-textarea"
+          placeholder="Comment..."
+          style={{ width: "100%", backgroundColor: "transparent", padding: '20px 20px' }}
+          value={commentValue}
+          onChange={(e) => setCommentValue(e.target.value)}
+        />
+        <Button variant="filled" type="submit" onClick={sendComment} style={{ background: 'white' }}>
+          <SendIcon />
+        </Button>
+      </form>
 
-        {/*
+      {/*
           <IconButton
             className={clsx(classes.expand, {
               [classes.expandOpen]: expanded,
@@ -390,28 +394,28 @@ function Cards(props) {
           </IconButton>
  */}
 
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <CardContent>
-            {props.value.comments.map((comment) => {
-              return (
-                <div className="container row">
-                  <Typography
-                    paragraph
-                    className="row"
-                    style={{ float: "left" }}
-                  >
-                    <strong style={{ color: "skyblue" }}>
-                      {comment.commentowner} :
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent>
+          {props.value.comments.map((comment) => {
+            return (
+              <div className="container row">
+                <Typography
+                  paragraph
+                  className="row"
+                  style={{ float: "left" }}
+                >
+                  <strong style={{ color: "skyblue" }}>
+                    {comment.commentowner} :
                     </strong>
-                    <p> {comment.comment}</p>
-                  </Typography>
-                </div>
-              );
-            })}
-          </CardContent>
-        </Collapse>
-      </Card>
-    </div>
+                  <p> {comment.comment}</p>
+                </Typography>
+              </div>
+            );
+          })}
+        </CardContent>
+      </Collapse>
+    </Card>
+  </div>
   );
 }
 

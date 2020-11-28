@@ -8,11 +8,12 @@ import axios from "axios";
 import { useHistory } from "react-router-dom";
 import { makeStyles, withStyles } from "@material-ui/core/styles";
 import InputBase from "@material-ui/core/InputBase";
+import { server } from './utils/backurl.js'
 import Loading from "./Loading.jsx";
 import HomeImage from '../images/home.jpg'
-import { UserData } from '../App.js'
-import { useContext } from "react";
-import { server } from './utils/backurl.js'
+
+import CryptoJS from 'crypto-js'
+import {cryptoPass} from './utils/crypto-js'
 
 const BootstrapInput = withStyles((theme) => ({
   root: {
@@ -55,11 +56,14 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Home() {
-  const { mainUserData, setMainUserData } = useContext(UserData)
-  const data = {
-    token: mainUserData.token,
-    email: mainUserData.email,
+  
+  const data={
+    token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    email: CryptoJS.AES.decrypt(sessionStorage.getItem('email'), cryptoPass).toString(CryptoJS.enc.Utf8),
   }
+
+  // const token = sessionStorage.getItem('token')
+  // const email= sessionStorage.getItem('email')
 
   const classes = useStyles();
   const history = useHistory();
@@ -69,11 +73,11 @@ function Home() {
   const [pageCount, setPageCount] = useState(1);
 
   useEffect(() => {
-    // const url = `http://127.0.0.1:4000`;
-
+    const url = `http://127.0.0.1:4000`;
+    
     axios({
       method: "get",
-      url: `${server}/user/getpostbysorting/${value}/5/${sortBy}`,
+      url: `${url}/user/getpostbysorting/${value}/5/${sortBy}`,
       headers: {
         Authorization: "Bearer " + data.token,
       },
@@ -95,7 +99,7 @@ function Home() {
   const nextPage = (e, xvalue) => {
     // console.log(xvalue)
 
-    // const url = `http://127.0.0.1:4000`;
+    const url = `http://127.0.0.1:4000`;
     axios({
       method: "get",
       url: `${server}/user/getpostbysorting/${value}/5/${sortBy}`,
@@ -113,16 +117,16 @@ function Home() {
       });
   };
 
-  const [sortBy, setSortBy] = useState(mainUserData.sortBy);
+  const [sortBy, setSortBy] = useState(sessionStorage.getItem("sortBy"));
 
   useEffect(() => {
     // console.log(sortBy)
-    // const url = `http://127.0.0.1:4000`;
+    const url = `http://127.0.0.1:4000`;
     axios({
       method: "get",
       url: `${server}/user/getpostbysorting/${value}/5/${sortBy}`,
       headers: {
-        Authorization: "Bearer " + data.token,
+        Authorization: "Bearer " +data.token,
       },
     })
       .then((res) => {
@@ -136,14 +140,13 @@ function Home() {
 
   const handleSorting = (e) => {
     setSortBy(e.target.value);
-    setMainUserData({ ...mainUserData, sortBy: e.target.value })
-    // sessionStorage.setItem("sortBy", e.target.value);
+    sessionStorage.setItem("sortBy", e.target.value);
     // console.log(e.target.value)
   };
 
   return (
     <div style={{
-
+      
     }}>
       {!posts ? (
         <Loading />
@@ -165,7 +168,7 @@ function Home() {
               <div className="container-fluid ">
 
                 <FormControl className={`${classes.margin} mt-5`} style={{
-                  position: "fixed", zIndex: 5, fontWeight: "bolder"
+                  position: "fixed", zIndex: 5, fontWeight: "bolder" 
                 }}>
                   <InputLabel id="demo-customized-select-label">
                     Sort By

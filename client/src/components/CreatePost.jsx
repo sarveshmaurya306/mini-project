@@ -11,6 +11,9 @@ import { server } from './utils/backurl.js'
 import { CLOUD_NAME } from './utils/cloudKey.js'
 import { UserData } from '../App.js'
 
+import CryptoJS from 'crypto-js'
+import { cryptoPass } from './utils/crypto-js'
+
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 toast.configure();
@@ -45,10 +48,9 @@ export default function CreatePost() {
   const { mainUserData, setMainUserData } = useContext(UserData);
 
   const userData = {
-    token: mainUserData.token,
-    email: mainUserData.email,
+    token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    email: CryptoJS.AES.decrypt(sessionStorage.getItem('email'), cryptoPass).toString(CryptoJS.enc.Utf8),
   }
-
   const classes = useStyles();
   const history = useHistory();
   const [loading, setLoading] = useState(true);

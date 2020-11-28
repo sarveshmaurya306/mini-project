@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import io from "socket.io-client";
 import Loading from "./Loading";
 import axios from "axios";
@@ -7,14 +7,17 @@ import { makeStyles, withStyles } from "@material-ui/core/styles";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
+import { server } from './utils/backurl.js'
 import Select from "@material-ui/core/Select";
 import InputBase from "@material-ui/core/InputBase";
 import moment from "moment";
 import { Link } from "react-router-dom";
 import { TextField, Button } from "@material-ui/core";
 import Footer from "./Footer.jsx";
-import { server } from './utils/backurl.js'
-import { UserData } from '../App.js'
+
+import CryptoJS from 'crypto-js'
+import {cryptoPass} from './utils/crypto-js'
+
 
 
 import { toast } from "react-toastify";
@@ -23,8 +26,8 @@ toast.configure();
 
 
 
-// const socket = io.connect("http://localhost:4000");
-const socket= io.connect(server)
+const socket = io.connect("http://localhost:4000");
+
 const BootstrapInput = withStyles((theme) => ({
   root: {
     "label + &": {
@@ -139,20 +142,18 @@ const useStyles = makeStyles((theme) => ({
 // window.sessionStorage.getItem('chat','[]')
 
 function Chat() {
-  const { mainUserData, setMainUserData } = useContext(UserData);
-  const data = {
-    token: mainUserData.token,
-    email: mainUserData.email,
-    name: mainUserData.name,
+  const data={
+    token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    email: CryptoJS.AES.decrypt(sessionStorage.getItem('email'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    name: CryptoJS.AES.decrypt(sessionStorage.getItem('name'), cryptoPass).toString(CryptoJS.enc.Utf8),
   }
-
 
   const history = useHistory();
   const classes = useStyles();
-  const [group, setGroup] = React.useState(mainUserData.currentRoom);
+  const [group, setGroup] = React.useState(sessionStorage.getItem('currentRoom'));
 
   const handleChange = (event) => {
-    setMainUserData({ ...mainUserData, currentRoom: event.target.value });
+    sessionStorage.setItem('currentRoom', event.target.value);
     setGroup(event.target.value);
     changeUserRoom(event.target.value);
   };
@@ -168,7 +169,7 @@ function Chat() {
     socket.emit("new_user", {
       name: data.name,
       email: data.email,
-      room: mainUserData.currentRoom
+      room: sessionStorage.getItem("currentRoom"),
     });
 
     // setChat(JSON.parse(sessionStorage.getItem('chat')))
@@ -222,7 +223,7 @@ function Chat() {
     // sety(e=>!e)
     // console.log(chat)
     // console.log('in effect')
-    socket.emit('getOnlineUserServer', mainUserData.currentRoom)
+    socket.emit('getOnlineUserServer', sessionStorage.getItem('currentRoom'))
 
     socket.once('getOnlineUserClient', (users) => {
       setOnlineUsers(users)
@@ -249,7 +250,7 @@ function Chat() {
   };
 
   const changeUserRoom = (room) => {
-    setMainUserData({ ...mainUserData, currentRoom: room })
+    sessionStorage.setItem('currentRoom', room);
     socket.emit("change_user_room", room);
     setChat([]);
   };
@@ -323,7 +324,7 @@ function Chat() {
                     <span style={{ color: "blue", fontWeight: "bold" }}>
                       {current_name === chat.name ? "You" : chat.name} :
                     </span>
-                    {current_name.length == 0 ? history.push('/') : ''}
+                    {current_name.length == 0 ?history.push('/'):''}
                   </Link>
                   <br />
 
@@ -359,7 +360,7 @@ function Chat() {
             <h3 style={{ color: "skyblue", fontWeight: "bolder" }}>
               <center>Chatting</center>
             </h3>
-
+           
             <div className="px-0 px-md-5" style={{ marginBottom: '120px' }}>
               {/* <div className="row"> */}
 

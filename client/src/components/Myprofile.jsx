@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 // import PersonIcon from "@material-ui/icons/Person";
 import moment from "moment";
@@ -7,19 +7,21 @@ import fakeDp from '../images/contant-image.png'
 import { makeStyles } from "@material-ui/core/styles";
 import IconButton from "@material-ui/core/IconButton";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
+import { server } from './utils/backurl.js'
 // import {Avatar } from '@material-ui/core'
 import { Button } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SaveIcon from '@material-ui/icons/Save';
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 // import IconButton from "@material-ui/core/IconButton";
-import { server } from './utils/backurl.js'
 import { CLOUD_NAME } from './utils/cloudKey.js'
 import { Paper } from "@material-ui/core";
 import Loading from "./Loading.jsx";
 import Footer from "./Footer.jsx";
 
-import { UserData } from '../App.js'
+
+import CryptoJS from 'crypto-js'
+import { cryptoPass } from './utils/crypto-js'
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -38,11 +40,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Myprofile() {
 
-  const { mainUserData, setMainUserData } = useContext(UserData);
+
 
   const data = {
-    token: mainUserData.token,
-    email: mainUserData.email,
+    token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    email: CryptoJS.AES.decrypt(sessionStorage.getItem('email'), cryptoPass).toString(CryptoJS.enc.Utf8),
   }
 
 
@@ -82,7 +84,7 @@ export default function Myprofile() {
   };
 
   const deleteAvatar = (e) => {
-    // const url = `http://127.0.0.1:4000`
+    const url = `http://127.0.0.1:4000`
     e.preventDefault();
     const deleteit = window.confirm('do you really want to delete this profile picture');
 
@@ -94,13 +96,13 @@ export default function Myprofile() {
           Authorization: "Bearer " + data.token,
         },
       }).then(r => {
-        console.log(r)
-        toast.success("Profile photo has been deleted.", {
+        // console.log(r)
+        toast.success("Profile photo has been deleted please refresh.", {
           position: "bottom-left",
           autoClose: 4000,
         })
       }).catch(e => {
-        console.log(e)
+        // console.log(e)
         toast.error("Server error.", {
           position: "bottom-left",
           autoClose: 4000,
@@ -116,7 +118,7 @@ export default function Myprofile() {
       position: "bottom-left",
       autoClose: 4000,
     });
-    // const url = `http://127.0.0.1:4000`;
+    const url = `http://127.0.0.1:4000`;
 
     const formData = new FormData();
     // formData.append("photo", photo);
@@ -139,12 +141,12 @@ export default function Myprofile() {
           Authorization: "Bearer " + data.token,
         },
       }).then(x => {
-        toast.success("Profile photo has been uploaded.", {
+        toast.success("Profile photo has been uploaded please refresh.", {
           position: "bottom-left",
           autoClose: 4000,
         })
       }).catch(e => {
-        console.log(e)
+        // console.log(e)
         toast.error("Server error.", {
           position: "bottom-left",
           autoClose: 4000,
@@ -152,7 +154,7 @@ export default function Myprofile() {
       })
     })
       .catch((e) => {
-        console.log(e)
+        // console.log(e)
         toast.error("Profile photo must be less than 1MB.", {
           position: "bottom-left",
           autoClose: 4000,

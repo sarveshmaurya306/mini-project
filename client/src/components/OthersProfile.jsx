@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 // import PersonIcon from "@material-ui/icons/Person";
 import moment from "moment";
@@ -11,9 +11,12 @@ import PhotoCamera from "@material-ui/icons/PhotoCamera";
 import { Button } from "@material-ui/core";
 import DeleteIcon from "@material-ui/icons/Delete";
 // import IconButton from "@material-ui/core/IconButton";
-
-import { UserData } from '../App.js'
 import { server } from './utils/backurl.js'
+
+
+import CryptoJS from 'crypto-js'
+import { cryptoPass } from './utils/crypto-js'
+
 
 import { Paper } from "@material-ui/core";
 import Loading from "./Loading.jsx";
@@ -30,13 +33,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Otherprofile() {
-  const { mainUserData, setMainUserData } = useContext(UserData);
+export default function Myprofile() {
 
 
   const data = {
-    token: mainUserData.token,
-    userId: sessionStorage.getItem("userId")
+    token: CryptoJS.AES.decrypt(sessionStorage.getItem('token'), cryptoPass).toString(CryptoJS.enc.Utf8),
+    userId: CryptoJS.AES.decrypt(sessionStorage.getItem('userId'), cryptoPass).toString(CryptoJS.enc.Utf8),
   }
 
   const history = useHistory();
@@ -45,7 +47,7 @@ export default function Otherprofile() {
 
   useEffect(() => {
     const userId = data.userId
-    // const uri = 'http://127.0.0.1:4000'
+    const uri = 'http://127.0.0.1:4000'
     axios({
       method: "get",
       url: `${server}/user/other/profile/${userId}`,

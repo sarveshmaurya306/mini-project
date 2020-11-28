@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) => ({
     // color: '#000000',
     background: "#346bac",
     color: "white",
-    textShadow: ' 3px 4px 5px black',
+    textShadow:' 3px 4px 5px black',
     // textShadow: "0px 4px 4px rgba(0, 0, 0, 0.25)",
     // border:'0px 0px 0px transparent',
     borderRadius: "8px",
@@ -83,27 +83,24 @@ function Join() {
     AOS.refresh();
   }, []);
 
-
   const sendJoinForm = (e) => {
     e.preventDefault();
 
-    // if()
     // console.log(userDetails);
-    // const url = `http://127.0.0.1`;
+    const url = `http://127.0.0.1`;
 
     const isCurrect = (data) => {
       if (
         (data.currentStatus.toLowerCase() === "principle" ||
           data.currentStatus.toLowerCase() === "student" ||
           data.currentStatus.toLowerCase() === "teacher") &&
-        data.email &&
+        data.email.split('@')[1]==='kiet.edu' &&
         data.password.length >= 7 &&
-        data.name &&
-        userDetails.email.split('@')[1] === 'kiet.edu'
+        data.name
       ) {
         return true;
       } else {
-        toast.error("please provide your college id.", {
+        toast.error("please fill currect values.", {
           position: "bottom-left",
           autoClose: 4000,
         });
@@ -139,13 +136,13 @@ function Join() {
     <div
       style={{
         backgroundImage: `linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), url(${LoginBackImage}) `,
-        backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        // height:'',
-        height: "auto",
-        width: '100vw',
-        overflow: 'hidden'
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          // height:'',
+          height: "auto",
+          width:'100vw',
+          overflow:'hidden'
       }}
     >
       <div
@@ -173,7 +170,7 @@ function Join() {
           </Button>
         </Link> */}
         <Link to="/why?">
-          <h3 style={{ color: 'white' }}>
+          <h3 style={{color:'white'}}>
             Why?
           </h3>
         </Link>
@@ -201,13 +198,13 @@ function Join() {
                 boxSizing: "border-box",
                 borderRadius: "16px",
                 textAlign: "center",
-                color: 'white'
+                color:'white'
               }}
               className={classes.papershadow}
             >
               <h1
                 className={classes.form_header}
-                style={{ display: "flex", justifyContent: "center", color: 'white' }}
+                style={{ display: "flex", justifyContent: "center",color:'white' }}
               >
                 JOIN
               </h1>
@@ -223,7 +220,7 @@ function Join() {
                     border: "2px solid  white",
                     borderRadius: "8px",
                     fontWeight: "bolder",
-                    color: 'white'
+                    color:'white'
                   }}
                   onChange={(e) => {
                     setUserDetails({ ...userDetails, name: e.target.value });
@@ -241,7 +238,7 @@ function Join() {
                     border: "2px solid  white",
                     borderRadius: "8px",
                     fontWeight: "bolder",
-                    color: 'white'
+                    color:'white'
                   }}
                   onChange={(e) => {
                     setUserDetails({
@@ -252,7 +249,7 @@ function Join() {
                 />
                 <p >
                   {" "}
-                  <small style={{ fontWeight: 'bold' }} className="text-danger ">
+                  <small style={{fontWeight:'bold'}}className="text-danger ">
                     only "student" "teacher" "principle" are accepted.
                   </small>
                 </p>
@@ -267,7 +264,7 @@ function Join() {
                     border: "2px solid  white",
                     borderRadius: "8px",
                     fontWeight: "bolder",
-                    color: 'white'
+                    color:'white'
                   }}
                   onChange={(e) => {
                     setUserDetails({ ...userDetails, email: e.target.value });
@@ -284,7 +281,7 @@ function Join() {
                     border: "2px solid white",
                     borderRadius: "8px",
                     fontWeight: "bolder",
-                    color: 'white'
+                    color:'white'
                   }}
                   onChange={(e) => {
                     setUserDetails({
@@ -309,16 +306,18 @@ function Join() {
                     className={classes.main_button}
                     onClick={(e) => {
                       setLoading(true);
-
+                      loading
+                        ? (e.target.innerHTML = "adding...")
+                        : (e.target.innerHTML = "add me");
                     }}
                   >
                     Add me
                   </Button>
                 </div>
-                <div style={{ paddingTop: '10px', color: 'white' }}>
+                <div style={{ paddingTop: '10px',color:'white' }}>
                   Already a member?
                   <Link to="/" className=" ">{/*   ml-md-3 ml-0 */}
-                    <strong> Sign In Here</strong>
+                    <strong> Sign In Here</strong> 
                   </Link>
                 </div>
               </div>
