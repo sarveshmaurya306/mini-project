@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom";
 import Typed from 'react-typed'
 import AOS from "aos";
 import "aos/dist/aos.css";
-
+import { server } from './utils/backurl.js'
 import Footer from "./Footer.jsx";
 import { UserData } from '../App.js'
 
@@ -47,30 +47,43 @@ export default function Login() {
 
     if (isCurrect) {
       axios
-        .post(`/login`, { ...loginDetails })
+        .post(`${server}/login`, { ...loginDetails })
         .then((res) => {
 
           const toStore = {
-            token: res.data.token,
-            email: res.data.email,
             name: res.data.name,
-          }
-          setMainUserData({
-            token: toStore.token,
-            name: toStore.name,
-            email: toStore.email,
+            email: res.data.email,
+            token: res.data.token,
             currentRoom: "both",
             sortBy: 'date',
+            userId: ''
+          }
+          
+          // sessionStorage.setItem( "name", res.data.name)
+          // sessionStorage.setItem( "email", res.data.email)
+          // sessionStorage.setItem( "token", res.data.token)
+          // sessionStorage.setItem( "currentRoom", "both")
+          // sessionStorage.setItem( "sortBy", 'date')
+          // sessionStorage.setItem(" userId", '')
+
+          setMainUserData({
+            name: toStore.name,
+            email: toStore.email,
+            token: toStore.token,
+            currentRoom: "both",
+            sortBy: 'date',
+            userId: ''
           })
 
           history.push("/home");
         })
-        .catch((err) =>
+        .catch((err) =>{
+          console.log(err)
           toast.error("Please provide currect details.", {
             position: "bottom-left",
             autoClose: 4000,
           })
-        );
+        });
     }
   };
 

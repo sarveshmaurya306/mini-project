@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom";
 import LoginBackImage from '../images/login2.jpg'
 import backgroundImg from "../images/back.png";
 import logo from "../images/Logo.png";
-
+import { server } from './utils/backurl.js'
 import Footer from "./Footer.jsx";
 
 import { toast } from "react-toastify";
@@ -89,7 +89,7 @@ function Join() {
 
     // if()
     // console.log(userDetails);
-    const url = `http://127.0.0.1`;
+    // const url = `http://127.0.0.1`;
 
     const isCurrect = (data) => {
       if (
@@ -115,7 +115,7 @@ function Join() {
 
     if (isDataCurect) {
       axios
-        .post(`/join`, userDetails)
+        .post(`${server}/join`, userDetails)
         .then((res) => {
           toast.success('Registered...', {
             position: "bottom-left",

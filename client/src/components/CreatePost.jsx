@@ -7,7 +7,7 @@ import { useHistory } from "react-router-dom";
 import Loading from "./Loading.jsx";
 import IconButton from "@material-ui/core/IconButton";
 import PhotoCamera from "@material-ui/icons/PhotoCamera";
-
+import { server } from './utils/backurl.js'
 import { CLOUD_NAME } from './utils/cloudKey.js'
 import { UserData } from '../App.js'
 
@@ -66,11 +66,11 @@ export default function CreatePost() {
       position: "bottom-left",
       autoClose: 4000,
     });
-    const url = `http://127.0.0.1:4000`;
+    // const url = `http://127.0.0.1:4000`;
     if (!photo) {
       axios({
         method: "post",
-        url: `${url}/user/createpost`,
+        url: `${server}/user/createpost`,
         data: {
           imageUrl: '',
           title: detail.title,
@@ -120,7 +120,7 @@ export default function CreatePost() {
 
             axios({
               method: "post",
-              url: `${url}/user/createpost`,
+              url: `${server}/user/createpost`,
               data: {
                 imageUrl: data.url,
                 title: detail.title,
@@ -190,7 +190,7 @@ export default function CreatePost() {
   useEffect(() => {
     axios({
       method: "get",
-      url: `/checkuserauth`,
+      url: `${server}/checkuserauth`,
       headers: {
         Authorization: "Bearer " + userData.token,
       },

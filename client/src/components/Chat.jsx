@@ -13,7 +13,7 @@ import moment from "moment";
 import { Link } from "react-router-dom";
 import { TextField, Button } from "@material-ui/core";
 import Footer from "./Footer.jsx";
-
+import { server } from './utils/backurl.js'
 import { UserData } from '../App.js'
 
 
@@ -23,8 +23,8 @@ toast.configure();
 
 
 
-const socket = io.connect("http://localhost:4000");
-
+// const socket = io.connect("http://localhost:4000");
+const socket= io.connect(server)
 const BootstrapInput = withStyles((theme) => ({
   root: {
     "label + &": {
@@ -184,7 +184,7 @@ function Chat() {
   useEffect(() => {
     axios({
       method: "get",
-      url: `/checkuserauth`,
+      url: `${server}/checkuserauth`,
       headers: {
         Authorization: "Bearer " + data.token,
       },

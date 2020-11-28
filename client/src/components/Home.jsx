@@ -12,6 +12,7 @@ import Loading from "./Loading.jsx";
 import HomeImage from '../images/home.jpg'
 import { UserData } from '../App.js'
 import { useContext } from "react";
+import { server } from './utils/backurl.js'
 
 const BootstrapInput = withStyles((theme) => ({
   root: {
@@ -68,11 +69,11 @@ function Home() {
   const [pageCount, setPageCount] = useState(1);
 
   useEffect(() => {
-    const url = `http://127.0.0.1:4000`;
+    // const url = `http://127.0.0.1:4000`;
 
     axios({
       method: "get",
-      url: `${url}/user/getpostbysorting/${value}/5/${sortBy}`,
+      url: `${server}/user/getpostbysorting/${value}/5/${sortBy}`,
       headers: {
         Authorization: "Bearer " + data.token,
       },
@@ -94,10 +95,10 @@ function Home() {
   const nextPage = (e, xvalue) => {
     // console.log(xvalue)
 
-    const url = `http://127.0.0.1:4000`;
+    // const url = `http://127.0.0.1:4000`;
     axios({
       method: "get",
-      url: `${url}/user/getpostbysorting/${value}/5/${sortBy}`,
+      url: `${server}/user/getpostbysorting/${value}/5/${sortBy}`,
       headers: {
         Authorization: "Bearer " + data.token,
       },
@@ -116,10 +117,10 @@ function Home() {
 
   useEffect(() => {
     // console.log(sortBy)
-    const url = `http://127.0.0.1:4000`;
+    // const url = `http://127.0.0.1:4000`;
     axios({
       method: "get",
-      url: `${url}/user/getpostbysorting/${value}/5/${sortBy}`,
+      url: `${server}/user/getpostbysorting/${value}/5/${sortBy}`,
       headers: {
         Authorization: "Bearer " + data.token,
       },

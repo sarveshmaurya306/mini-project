@@ -10,11 +10,12 @@ import {
   AppBar,
 } from "@material-ui/core";
 // import MenuIcon from '@material-ui/icons/Menu';
-
+import { server } from './utils/backurl.js'
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 // import MailIcon from "@material-ui/icons/Mail";
 // import NotificationsIcon from "@material-ui/icons/Notifications";
+import Message from './Message.jsx'
 import fakeDp from '../images/contant-image.png'
 import MoreIcon from "@material-ui/icons/MoreVert";
 import mainLogo from "../images/Logo.png";
@@ -28,8 +29,6 @@ import { Button } from "@material-ui/core";
 import axios from "axios";
 import { Link, NavLink } from "react-router-dom";
 
-import CryptoJS from 'crypto-js'
-import { cryptoPass } from './utils/crypto-js'
 
 
 import ForumIcon from "@material-ui/icons/Forum";
@@ -142,7 +141,7 @@ export default function Navbar() {
     !user ? toast.info("please enter name !!!", {
       position: "bottom-left",
       autoClose: 4000,
-    }) : axios.get(`http://localhost:4000/show/${user}`)
+    }) : axios.get(`${server}/show/${user}`)
       .then((d) => {
         // console.log(d)
         d.data.length === 0 ? setResult("") : setResult(d);
@@ -229,6 +228,7 @@ export default function Navbar() {
             handleMenuClose();
             // window.sessionStorage.removeItem("token");
             window.sessionStorage.clear()
+            
           }}
         >
           Log Out
@@ -321,6 +321,7 @@ export default function Navbar() {
 
   return (
     <div style={{ marginBottom: '10px' }}>
+    {/* <Message /> */}
       <div className={`${classes.grow} `}>
         <AppBar position="fixed" className={classes.navColor} style={{ padding: '9px 0px', }}>
           <Toolbar>
@@ -458,7 +459,7 @@ export default function Navbar() {
               <div
                 style={{
                   position: "relative",
-                  height: "75vh",
+                  height: "45vh",
                   overflowY: "scroll",
                 }}
               >
@@ -471,10 +472,7 @@ export default function Navbar() {
                         to="/other/profile"
                         key={item._id}
                         onClick={() => {
-                          // console.log(item);
-
-                          const toSave = CryptoJS.AES.encrypt(item._id, cryptoPass).toString();
-                          window.sessionStorage.setItem("userId", toSave); //saving user id in sessionStorage;
+                          window.sessionStorage.setItem("userId",item._id); //saving user id in sessionStorage;
                         }}
                         className="container-fluid mb-2"
                         style={{ margin: "10px 0px" }}

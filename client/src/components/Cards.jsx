@@ -31,6 +31,7 @@ import BarChartIcon from '@material-ui/icons/BarChart';
 
 
 import { UserData } from '../App'
+import {server} from './utils/backurl.js'
 
 
 
@@ -77,7 +78,7 @@ function Cards(props) {
   const { mainUserData, setMainUserData } = useContext(UserData);
 
   const data = {
-    token: mainUserData.token,
+    token: mainUserData.token ,
     email: mainUserData.email,
   }
 
@@ -150,12 +151,12 @@ function Cards(props) {
   // console.log(props.value);
 
   const postLiked = () => {
-    const url = `http://127.0.0.1:4000`;
+    // const url = `http://127.0.0.1:4000`;
     //if user isliking first time.
     if (!userLikedComment.like || !isLiked) {
       axios({
         method: "post",
-        url: `${url}/user/${props.value._id}/inclike`,
+        url: `${server}/user/${props.value._id}/inclike`,
         headers: {
           Authorization: "Bearer " + data.token,
         },
@@ -175,7 +176,7 @@ function Cards(props) {
 
       axios({
         method: "delete",
-        url: `${url}/user/${props.value._id}/declike`,
+        url: `${server}/user/${props.value._id}/declike`,
         headers: {
           Authorization: "Bearer " + data.token,
         },
@@ -199,10 +200,10 @@ function Cards(props) {
 
   const sendComment = (e) => {
     e.preventDefault();
-    const url = `http://127.0.0.1:4000`;
+    // const url = `http://127.0.0.1:4000`;
     axios({
       method: "post",
-      url: `${url}/user/${props.value._id}/addcomment/${commentValue}`,
+      url: `${server}/user/${props.value._id}/addcomment/${commentValue}`,
       data: commentValue,
       headers: {
         Authorization: "Bearer " + data.token,
@@ -211,7 +212,7 @@ function Cards(props) {
       .then((r) => {
         setCommentValue("");
         setNumberComment((e) => e + 1);
-        toast.success('comment has been added please refresh', {
+        toast.success('comment has been added', {
           position: "bottom-left",
           autoClose: 4000,
         })
@@ -277,6 +278,7 @@ function Cards(props) {
             />
           </div>
         )}
+      
       {/* {console.log(props.value)} */}
       <Card className={`${classes.cardHover} `}>
         <CardHeader

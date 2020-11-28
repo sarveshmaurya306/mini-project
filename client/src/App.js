@@ -20,7 +20,6 @@ export const UserData = createContext();
 export default function App() {
 
   const [mainUserData, setMainUserData] = useState();
-  console.log(mainUserData);
 
   return (
     <UserData.Provider value={{ mainUserData, setMainUserData }}>
@@ -85,6 +84,9 @@ export default function App() {
               <ArrowBackIcon />
             </IconButton>
             <Why />
+          </Route>
+          <Route path="*">
+            <div style={{ display: 'grid', alignItems: 'center' }}><h1>This page doesn't exist!!!</h1></div>
           </Route>
         </Switch>
       </Router>

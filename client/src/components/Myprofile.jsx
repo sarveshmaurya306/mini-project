@@ -13,6 +13,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import SaveIcon from '@material-ui/icons/Save';
 import DoneAllIcon from "@material-ui/icons/DoneAll";
 // import IconButton from "@material-ui/core/IconButton";
+import { server } from './utils/backurl.js'
 import { CLOUD_NAME } from './utils/cloudKey.js'
 import { Paper } from "@material-ui/core";
 import Loading from "./Loading.jsx";
@@ -51,7 +52,7 @@ export default function Myprofile() {
   useEffect(() => {
     axios({
       method: "get",
-      url: "/user/getpost",
+      url: `${server}/user/getpost`,
       headers: {
         Authorization: "Bearer " + data.token,
       },
@@ -81,20 +82,20 @@ export default function Myprofile() {
   };
 
   const deleteAvatar = (e) => {
-    const url = `http://127.0.0.1:4000`
+    // const url = `http://127.0.0.1:4000`
     e.preventDefault();
     const deleteit = window.confirm('do you really want to delete this profile picture');
 
     if (deleteit) {
       axios({
-        url: `${url}/user/avatar`,
+        url: `${server}/user/avatar`,
         method: 'delete',
         headers: {
           Authorization: "Bearer " + data.token,
         },
       }).then(r => {
         console.log(r)
-        toast.success("Profile photo has been deleted please refresh.", {
+        toast.success("Profile photo has been deleted.", {
           position: "bottom-left",
           autoClose: 4000,
         })
@@ -115,7 +116,7 @@ export default function Myprofile() {
       position: "bottom-left",
       autoClose: 4000,
     });
-    const url = `http://127.0.0.1:4000`;
+    // const url = `http://127.0.0.1:4000`;
 
     const formData = new FormData();
     // formData.append("photo", photo);
@@ -129,7 +130,7 @@ export default function Myprofile() {
       data: formData,
     }).then((cloud) => {
       axios({
-        url: `${url}/user/avatar`,
+        url: `${server}/user/avatar`,
         method: 'post',
         data: {
           imageUrl: cloud.data.url,
@@ -138,7 +139,7 @@ export default function Myprofile() {
           Authorization: "Bearer " + data.token,
         },
       }).then(x => {
-        toast.success("Profile photo has been uploaded please refresh.", {
+        toast.success("Profile photo has been uploaded.", {
           position: "bottom-left",
           autoClose: 4000,
         })
@@ -165,7 +166,7 @@ export default function Myprofile() {
     if (userRxn) {
       axios({
         method: "delete",
-        url: `/user/${id}/deletepost`,
+        url: `${server}/user/${id}/deletepost`,
         headers: {
           Authorization: "Bearer " + data.token,
         },

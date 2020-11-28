@@ -13,7 +13,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 // import IconButton from "@material-ui/core/IconButton";
 
 import { UserData } from '../App.js'
-
+import { server } from './utils/backurl.js'
 
 import { Paper } from "@material-ui/core";
 import Loading from "./Loading.jsx";
@@ -30,13 +30,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Myprofile() {
+export default function Otherprofile() {
   const { mainUserData, setMainUserData } = useContext(UserData);
 
 
   const data = {
     token: mainUserData.token,
-    userId: mainUserData.userId,
+    userId: sessionStorage.getItem("userId")
   }
 
   const history = useHistory();
@@ -45,10 +45,10 @@ export default function Myprofile() {
 
   useEffect(() => {
     const userId = data.userId
-    const uri = 'http://127.0.0.1:4000'
+    // const uri = 'http://127.0.0.1:4000'
     axios({
       method: "get",
-      url: `${uri}/user/other/profile/${userId}`,
+      url: `${server}/user/other/profile/${userId}`,
       headers: {
         Authorization: "Bearer " + data.token,
       },
