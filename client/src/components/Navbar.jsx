@@ -15,7 +15,6 @@ import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 // import MailIcon from "@material-ui/icons/Mail";
 // import NotificationsIcon from "@material-ui/icons/Notifications";
-import Message from './Message.jsx'
 import fakeDp from '../images/contant-image.png'
 import MoreIcon from "@material-ui/icons/MoreVert";
 import mainLogo from "../images/Logo.png";
@@ -29,6 +28,8 @@ import { Button } from "@material-ui/core";
 import axios from "axios";
 import { Link, NavLink } from "react-router-dom";
 
+import CryptoJS from 'crypto-js'
+import { cryptoPass } from './utils/crypto-js'
 
 
 import ForumIcon from "@material-ui/icons/Forum";
@@ -228,7 +229,6 @@ export default function Navbar() {
             handleMenuClose();
             // window.sessionStorage.removeItem("token");
             window.sessionStorage.clear()
-            
           }}
         >
           Log Out
@@ -248,20 +248,14 @@ export default function Navbar() {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      {/* <Router> */}
       <NavLink to="/home" activeStyle={{ borderBottom: "2px solid black" }}>
         <MenuItem
-          style={{
-            display: "flex",
-            alignItems: "baseline",
-            color: "black",
-            textDecoration: "none",
-          }}
+          style={{ display: "flex", color: "black", textDecoration: "none" }}
         >
           <IconButton color="inherit">
             <HomeIcon />
           </IconButton>
-          <p>Home</p>
+          <p style={{ marginBottom: 0 }}>home</p>
         </MenuItem>
       </NavLink>
       {/* </Router> */}
@@ -270,7 +264,7 @@ export default function Navbar() {
         <MenuItem
           style={{ display: "flex", color: "black", textDecoration: "none" }}
         >
-          <IconButton aria-label="show 4 new mails" color="inherit">
+          <IconButton color="inherit">
             <ForumIcon />
           </IconButton>
           <p style={{ marginBottom: 0 }}>chat</p>
@@ -306,12 +300,7 @@ export default function Navbar() {
         onClick={handleProfileMenuOpen}
         style={{ display: "flex", color: "black", textDecoration: "none" }}
       >
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
+        <IconButton color="inherit" >
           <AccountCircle />
         </IconButton>
         <p style={{ marginBottom: 0 }}>Profile</p>
@@ -321,7 +310,6 @@ export default function Navbar() {
 
   return (
     <div style={{ marginBottom: '10px' }}>
-    {/* <Message /> */}
       <div className={`${classes.grow} `}>
         <AppBar position="fixed" className={classes.navColor} style={{ padding: '9px 0px', }}>
           <Toolbar>
@@ -363,60 +351,71 @@ export default function Navbar() {
             </Button> */}
 
             <div className={classes.grow} />
-            <div className={classes.sectionDesktop}>
-              <IconButton color="inherit" title="home">
-                {/* <Router> */}
-                <NavLink
-                  to="/home"
-                  activeStyle={{ borderBottom: "2px solid black" }}
-                >
-                  <HomeIcon style={{ color: "black", fontSize: 27 }} />
-                </NavLink>
-                {/* </Router> */}
-              </IconButton>
+            <div className={classes.sectionDesktop} >
+              <div style={{
+                width: '200px',
+                display: 'flex',
+                justifyContent: 'space-between'
+              }}>
 
-              <IconButton
-                aria-label="show 4 new mails"
-                color="inherit"
-                title="chat"
-              >
-                <NavLink
-                  to="/chat"
-                  activeStyle={{ borderBottom: "2px solid black" }}
-                >
-                  <ForumIcon style={{ color: "black", paddingTop: 6, fontSize: 30 }} />
-                </NavLink>
-              </IconButton>
+                <IconButton size="small" color="inherit" title="home">
+                  {/* <Router> */}
+                  <NavLink
+                    to="/home"
+                    activeStyle={{ borderBottom: "2px solid black" }}
+                  >
+                    <HomeIcon style={{ color: "black", fontSize: 27 }} />
+                  </NavLink>
+                  {/* </Router> */}
+                </IconButton>
 
-              <IconButton
-                aria-label="show 4 new mails"
-                color="inherit"
-                title="create post"
-              >
-                <NavLink
-                  to="/createpost"
-                  activeStyle={{ borderBottom: "2px solid black" }}
+                <IconButton
+                  aria-label="show 4 new mails"
+                  color="inherit"
+                  title="chat"
+                  size="small"
                 >
-                  <PostAddIcon style={{ color: "black", fontSize: 30 }} />
-                </NavLink>
-              </IconButton>
+                  <NavLink
+                    to="/chat"
+                    activeStyle={{ borderBottom: "2px solid black" }}
+                  >
+                    <ForumIcon style={{ color: "black", paddingTop: 6, fontSize: 30 }} />
+                  </NavLink>
+                </IconButton>
 
-              {/*
+                <IconButton
+                  size="small"
+                  aria-label="show 4 new mails"
+                  color="inherit"
+                  title="create post"
+                >
+                  <NavLink
+                    to="/createpost"
+                    activeStyle={{ borderBottom: "2px solid black" }}
+                  >
+                    <PostAddIcon style={{ color: "black", fontSize: 30 }} />
+                  </NavLink>
+                </IconButton>
+
+                {/*
             <IconButton aria-label="show 17 new notifications" color="inherit">
               <NotificationsIcon style={{color:'black'}}/>
             </IconButton>
             */}
-              <IconButton
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-                title="profile"
-              >
-                <AccountCircle style={{ color: "black", paddingTop: 6, fontSize: 30 }} />
-              </IconButton>
+                <IconButton
+                  size="small"
+                  edge="end"
+                  aria-label="account of current user"
+                  aria-controls={menuId}
+                  aria-haspopup="true"
+                  onClick={handleProfileMenuOpen}
+                  color="inherit"
+                  title="profile"
+                >
+                  <AccountCircle style={{ color: "black", paddingTop: 6, fontSize: 30 }} />
+                </IconButton>
+              </div>
+
             </div>
             <div className={classes.sectionMobile}>
               <IconButton
@@ -459,7 +458,7 @@ export default function Navbar() {
               <div
                 style={{
                   position: "relative",
-                  height: "45vh",
+                  height: "75vh",
                   overflowY: "scroll",
                 }}
               >
@@ -472,7 +471,10 @@ export default function Navbar() {
                         to="/other/profile"
                         key={item._id}
                         onClick={() => {
-                          window.sessionStorage.setItem("userId",item._id); //saving user id in sessionStorage;
+                          // console.log(item);
+
+                          const toSave = CryptoJS.AES.encrypt(item._id, cryptoPass).toString();
+                          window.sessionStorage.setItem("userId", toSave); //saving user id in sessionStorage;
                         }}
                         className="container-fluid mb-2"
                         style={{ margin: "10px 0px" }}
